@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aryan's Fitness App</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c14;--s1:#13131f;--s2:#1c1c2e;--s3:#252538;
+  --border:#2e2e48;--border2:#3a3a58;
+  --accent:#f5c842;--blue:#4db8ff;--green:#3de8a0;--red:#ff5c7c;--purple:#b47cff;
+  --text:#eeeef5;--muted:#7878a0;--dim:#4a4a6a;
+  --r:10px;--r2:16px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+button{cursor:pointer;border:none;font-family:'Inter',sans-serif}
+input{font-family:'Inter',sans-serif}
+
+/* ── APP SHELL ── */
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:72px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:8px;flex-shrink:0}
+.main-area{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+
+/* ── SIDEBAR ── */
+.sb-logo{width:44px;height:44px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#0c0c14;margin-bottom:12px}
+.sb-btn{width:48px;height:48px;background:none;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .2s;position:relative}
+.sb-btn:hover,.sb-btn.active{background:var(--s3);color:var(--text)}
+.sb-btn.active::before{content:'';position:absolute;left:-1px;top:50%;transform:translateY(-50%);width:3px;height:24px;background:var(--accent);border-radius:0 2px 2px 0}
+.sb-btn svg{width:22px;height:22px}
+
+/* ── HEADER ── */
+.top-bar{padding:20px 28px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0}
+.top-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.top-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.top-right{display:flex;align-items:center;gap:10px}
+.badge{background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;font-family:'Space Mono',monospace;color:var(--muted)}
+.badge span{color:var(--accent);font-weight:700}
+
+/* ── PAGES ── */
+.page{display:none;padding:24px 28px;flex:1}
+.page.active{display:block}
+
+/* ── SECTION HEADERS ── */
+.sh{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;margin-top:28px}
+.sh:first-child{margin-top:0}
+
+/* ── STAT GRID ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:28px}
+.stat-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:18px 16px}
+.sc-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.sc-val{font-size:32px;font-weight:800;line-height:1;margin-bottom:3px}
+.sc-sub{font-size:11px;color:var(--muted)}
+.sc-accent{color:var(--accent)}.sc-blue{color:var(--blue)}.sc-green{color:var(--green)}.sc-red{color:var(--red)}
+
+/* ── CARDS ── */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:16px}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-body{padding:16px 18px}
+.card-title{font-size:15px;font-weight:600}
+.card-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ── DAY SELECTOR ── */
+.day-tabs{display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px}
+.day-tab{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;background:var(--s2);color:var(--muted);border:1px solid var(--border);white-space:nowrap;transition:all .2s}
+.day-tab:hover{border-color:var(--border2);color:var(--text)}
+.day-tab.active{background:var(--accent);color:#0c0c14;border-color:var(--accent)}
+.day-tab.rest-day{background:var(--s1)}
+.day-tab.done{border-color:var(--green);color:var(--green)}
+
+/* ── EXERCISE CARDS ── */
+.ex-wrap{display:flex;flex-direction:column;gap:12px}
+.ex-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;transition:border-color .2s}
+.ex-card:hover{border-color:var(--border2)}
+.ex-card.expanded{border-color:var(--accent)}
+.ex-top{display:grid;grid-template-columns:140px 1fr auto;cursor:pointer}
+.ex-svg-wrap{background:var(--s3);border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;padding:12px;min-height:100px}
+.ex-svg-wrap svg{width:116px;height:82px}
+.ex-info{padding:12px 14px}
+.ex-num{font-size:10px;font-family:'Space Mono',monospace;color:var(--muted);margin-bottom:3px}
+.ex-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.ex-sets{font-size:12px;font-family:'Space Mono',monospace;color:var(--accent);margin-bottom:6px}
+.ex-muscles{font-size:11px;color:var(--blue)}
+.ex-toggle{padding:12px 14px;display:flex;align-items:center;color:var(--muted);font-size:18px;transition:transform .2s}
+.ex-toggle.open{transform:rotate(180deg)}
+.ex-detail{border-top:1px solid var(--border);display:none}
+.ex-detail.open{display:grid;grid-template-columns:1fr 1fr}
+.ex-cues{padding:14px 16px;border-right:1px solid var(--border)}
+.ex-cues-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+.cue-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:12px;color:var(--text);line-height:1.4}
+.cue-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:5px}
+.ex-mistakes{padding:14px 16px}
+.ex-mistakes-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.mistake-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:12px;color:var(--text);line-height:1.4}
+.mistake-dot{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:5px}
+.ex-set-tracker{padding:14px 16px;border-top:1px solid var(--border);grid-column:1/-1}
+.set-tracker-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.sets-row{display:flex;gap:8px;flex-wrap:wrap}
+.set-btn{width:44px;height:44px;border-radius:10px;font-size:12px;font-weight:700;background:var(--s3);border:1px solid var(--border);color:var(--muted);transition:all .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.set-btn.done{background:rgba(61,232,160,.12);border-color:var(--green);color:var(--green)}
+.set-btn-label{font-size:9px;font-weight:400;letter-spacing:.5px;color:inherit;opacity:.7}
+
+/* ── TIMER ── */
+.timer-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-bottom:16px}
+.timer-display{font-size:52px;font-weight:800;font-family:'Space Mono',monospace;color:var(--accent);text-align:center;line-height:1;letter-spacing:-2px;margin-bottom:16px}
+.timer-controls{display:flex;gap:8px;justify-content:center}
+.timer-btn{padding:10px 24px;border-radius:30px;font-size:13px;font-weight:700;transition:all .2s}
+.timer-start{background:var(--green);color:#0c0c14}
+.timer-pause{background:var(--accent);color:#0c0c14}
+.timer-reset{background:var(--s3);border:1px solid var(--border);color:var(--muted)}
+.timer-presets{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.preset-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;background:var(--s3);border:1px solid var(--border);color:var(--muted);transition:all .2s}
+.preset-btn:hover,.preset-btn.sel{background:var(--s2);border-color:var(--border2);color:var(--text)}
+.timer-label{text-align:center;font-size:11px;color:var(--muted);margin-bottom:12px;font-family:'Space Mono',monospace;letter-spacing:.5px}
+
+/* ── CARDIO BLOCK ── */
+.cardio-block{background:rgba(61,232,160,.06);border:1px solid rgba(61,232,160,.2);border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+.cb-left-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green)}
+.cb-detail{font-size:12px;color:var(--muted);margin-top:3px}
+.cb-icon{font-size:24px}
+
+/* ── PROGRESS BAR ── */
+.prog-wrap{margin-bottom:16px}
+.prog-top{display:flex;justify-content:space-between;margin-bottom:6px}
+.prog-label{font-size:13px;font-weight:500}
+.prog-val{font-size:12px;font-family:'Space Mono',monospace;color:var(--accent)}
+.prog-bar{height:6px;background:var(--s3);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width 1s ease}
+
+/* ── DIET PAGE ── */
+.macro-ring{display:flex;gap:16px;align-items:center;margin-bottom:24px}
+.ring-svg{flex-shrink:0}
+.ring-legend{display:flex;flex-direction:column;gap:8px}
+.ring-item{display:flex;align-items:center;gap:8px;font-size:13px}
+.ring-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── FOOD CARDS ── */
+.food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.food-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px}
+.food-icon{font-size:28px;margin-bottom:8px}
+.food-name{font-size:14px;font-weight:700;margin-bottom:3px}
+.food-protein{font-family:'Space Mono',monospace;font-size:12px;color:var(--accent);margin-bottom:6px}
+.food-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.ftag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px}
+.ftag-p{background:rgba(245,200,66,.12);color:var(--accent)}
+.ftag-c{background:rgba(77,184,255,.1);color:var(--blue)}
+.ftag-f{background:rgba(255,92,124,.1);color:var(--red)}
+.food-tip{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* ── MEAL TIMELINE ── */
+.meal-item{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:10px;display:grid;grid-template-columns:90px 1fr 80px;gap:14px;align-items:start}
+.meal-time{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent);padding-top:3px;line-height:1.5}
+.meal-name{font-size:14px;font-weight:700;margin-bottom:5px}
+.meal-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.meal-kcal{font-size:22px;font-weight:800;color:var(--green);text-align:right;font-family:'Space Mono',monospace}
+.meal-kcal-label{font-size:9px;color:var(--muted);text-align:right;letter-spacing:.5px;text-transform:uppercase}
+
+/* ── OVERVIEW CARDS ── */
+.strat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.strat-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:18px}
+.strat-icon{font-size:26px;margin-bottom:10px}
+.strat-title{font-size:14px;font-weight:700;margin-bottom:6px}
+.strat-text{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── REST DAY ── */
+.rest-panel{background:rgba(180,124,255,.05);border:1px dashed rgba(180,124,255,.25);border-radius:var(--r2);padding:28px;text-align:center}
+.rest-emoji{font-size:48px;margin-bottom:12px}
+.rest-title{font-size:20px;font-weight:800;margin-bottom:8px}
+.rest-text{font-size:13px;color:var(--muted);line-height:1.7;max-width:440px;margin:0 auto}
+
+/* ── TIPS PAGE ── */
+.tip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.tip-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:18px}
+.tip-icon{font-size:24px;margin-bottom:10px}
+.tip-title{font-size:14px;font-weight:700;margin-bottom:6px}
+.tip-text{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── SUPP TABLE ── */
+.supp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.supp-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.supp-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.supp-dose{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent);margin-bottom:6px}
+.supp-info{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* ── WEEKLY VIEW ── */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:20px}
+.wday{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s}
+.wday:hover{border-color:var(--border2)}
+.wday.active{border-color:var(--accent);background:rgba(245,200,66,.08)}
+.wday.done{border-color:var(--green)}
+.wday-name{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.wday-tag{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px}
+.wday-tag.push{background:rgba(255,92,124,.12);color:var(--red)}
+.wday-tag.pull{background:rgba(77,184,255,.1);color:var(--blue)}
+.wday-tag.legs{background:rgba(245,200,66,.12);color:var(--accent)}
+.wday-tag.core{background:rgba(180,124,255,.1);color:var(--purple)}
+.wday-tag.rest{background:rgba(120,120,160,.1);color:var(--muted)}
+.wday-check{font-size:14px;margin-top:6px}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border2)}
+
+/* ── RESP ── */
+@media(max-width:640px){
+  .ex-top{grid-template-columns:100px 1fr auto}
+  .ex-svg-wrap svg{width:86px;height:70px}
+  .ex-detail.open{grid-template-columns:1fr}
+  .ex-cues{border-right:none;border-bottom:1px solid var(--border)}
+  .meal-item{grid-template-columns:70px 1fr;grid-template-rows:auto auto}
+  .meal-kcal{grid-column:2;text-align:left}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ── SIDEBAR ── -->
+<div class="sidebar">
+  <div class="sb-logo">A</div>
+  <button class="sb-btn active" onclick="nav('overview')" title="Overview">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('workout')" title="Workout">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('timer')" title="Rest Timer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 2h6"/><path d="M12 2v3"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('diet')" title="Diet & Protein">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('meals')" title="Meal Plan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('tips')" title="Recovery & Tips">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+  </button>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main-area">
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div>
+    <div class="top-title" id="page-title">Dashboard</div>
+    <div class="top-sub" id="page-sub">72 kg · 175 cm · BMI 23.5 · Goal: Lean Muscle</div>
+  </div>
+  <div class="top-right">
+    <div class="badge">Protein <span id="daily-protein-badge">0</span>/130g</div>
+    <div class="badge">Day <span id="gym-day-count">4</span></div>
+  </div>
+</div>
+
+<!-- ════════════ OVERVIEW PAGE ════════════ -->
+<div class="page active" id="page-overview">
+  <div class="stat-grid">
+    <div class="stat-card"><div class="sc-label">Daily Protein</div><div class="sc-val sc-accent">130<span style="font-size:16px">g</span></div><div class="sc-sub">72kg × 1.8g/kg</div></div>
+    <div class="stat-card"><div class="sc-label">Daily Calories</div><div class="sc-val sc-blue">2350<span style="font-size:16px">kcal</span></div><div class="sc-sub">Lean recomp</div></div>
+    <div class="stat-card"><div class="sc-label">Gym Days/wk</div><div class="sc-val sc-green">5<span style="font-size:16px">days</span></div><div class="sc-sub">PPL split</div></div>
+    <div class="stat-card"><div class="sc-label">Cardio/wk</div><div class="sc-val sc-red">3×<span style="font-size:16px"></span></div><div class="sc-sub">15–20 min</div></div>
+    <div class="stat-card"><div class="sc-label">BMR</div><div class="sc-val" style="color:var(--purple)">1760<span style="font-size:16px">kcal</span></div><div class="sc-sub">At rest</div></div>
+    <div class="stat-card"><div class="sc-label">TDEE</div><div class="sc-val sc-accent">2640<span style="font-size:16px">kcal</span></div><div class="sc-sub">With training</div></div>
+  </div>
+
+  <div class="sh">Body Stats</div>
+  <div class="prog-wrap"><div class="prog-top"><span class="prog-label">BMI — 23.5</span><span class="prog-val">Normal (18.5–24.9)</span></div><div class="prog-bar"><div class="prog-fill" style="width:72%;background:var(--green)"></div></div><div style="font-size:11px;color:var(--muted);margin-top:5px">You're in the healthy range. Ideal starting point for lean recomp.</div></div>
+  <div class="prog-wrap"><div class="prog-top"><span class="prog-label">TDEE Coverage</span><span class="prog-val">2350 / 2640 kcal</span></div><div class="prog-bar"><div class="prog-fill" style="width:89%;background:var(--blue)"></div></div><div style="font-size:11px;color:var(--muted);margin-top:5px">~290 kcal deficit — gentle recomp without muscle loss.</div></div>
+  <div class="prog-wrap"><div class="prog-top"><span class="prog-label">Protein Target</span><span class="prog-val">130g / day</span></div><div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--accent)"></div></div><div style="font-size:11px;color:var(--muted);margin-top:5px">Split across 5 meals. Hit this every day — non-negotiable for muscle.</div></div>
+
+  <div class="sh">This Week</div>
+  <div class="week-grid">
+    <div class="wday active" onclick="goWorkout(0)"><div class="wday-name">MON</div><div class="wday-tag push">Push</div><div class="wday-check" id="wc0">○</div></div>
+    <div class="wday" onclick="goWorkout(1)"><div class="wday-name">TUE</div><div class="wday-tag pull">Pull</div><div class="wday-check" id="wc1">○</div></div>
+    <div class="wday" onclick="goWorkout(2)"><div class="wday-name">WED</div><div class="wday-tag rest">Rest</div><div class="wday-check" id="wc2">○</div></div>
+    <div class="wday" onclick="goWorkout(3)"><div class="wday-name">THU</div><div class="wday-tag legs">Legs</div><div class="wday-check" id="wc3">○</div></div>
+    <div class="wday" onclick="goWorkout(4)"><div class="wday-name">FRI</div><div class="wday-tag push">Push</div><div class="wday-check" id="wc4">○</div></div>
+    <div class="wday" onclick="goWorkout(5)"><div class="wday-name">SAT</div><div class="wday-tag core">Core</div><div class="wday-check" id="wc5">○</div></div>
+    <div class="wday" onclick="goWorkout(6)"><div class="wday-name">SUN</div><div class="wday-tag rest">Rest</div><div class="wday-check" id="wc6">○</div></div>
+  </div>
+
+  <div class="sh">Strategy</div>
+  <div class="strat-grid">
+    <div class="strat-card"><div class="strat-icon">🎯</div><div class="strat-title">Lean Recomp</div><div class="strat-text">Build muscle while reducing fat at a ~290 kcal deficit. Clean, steady progress. No crash diets.</div></div>
+    <div class="strat-card"><div class="strat-icon">📐</div><div class="strat-title">Push / Pull / Legs</div><div class="strat-text">Each muscle group gets 48–72 hrs to recover. Chest+Shoulders+Triceps → Back+Biceps → Legs.</div></div>
+    <div class="strat-card"><div class="strat-icon">📈</div><div class="strat-title">Progressive Overload</div><div class="strat-text">Add 2.5–5 kg or 1–2 reps every 2 weeks. This is the only way muscles keep growing.</div></div>
+    <div class="strat-card"><div class="strat-icon">🌙</div><div class="strat-title">Sleep = Growth</div><div class="strat-text">Growth hormone peaks during deep sleep. 7–8 hrs is part of your training program.</div></div>
+  </div>
+</div>
+
+<!-- ════════════ WORKOUT PAGE ════════════ -->
+<div class="page" id="page-workout">
+  <div class="day-tabs" id="day-tabs">
+    <button class="day-tab active" onclick="selectDay(0)">Monday — Push</button>
+    <button class="day-tab" onclick="selectDay(1)">Tuesday — Pull</button>
+    <button class="day-tab rest-day" onclick="selectDay(2)">Wednesday — Rest</button>
+    <button class="day-tab" onclick="selectDay(3)">Thursday — Legs</button>
+    <button class="day-tab" onclick="selectDay(4)">Friday — Push 2</button>
+    <button class="day-tab" onclick="selectDay(5)">Saturday — Core</button>
+    <button class="day-tab rest-day" onclick="selectDay(6)">Sunday — Rest</button>
+  </div>
+  <div id="workout-content"></div>
+</div>
+
+<!-- ════════════ TIMER PAGE ════════════ -->
+<div class="page" id="page-timer">
+  <div class="sh">Rest Timer</div>
+  <div class="timer-wrap">
+    <div class="timer-label" id="timer-label">READY</div>
+    <div class="timer-display" id="timer-disp">01:30</div>
+    <div class="timer-controls">
+      <button class="timer-btn timer-start" id="timer-main-btn" onclick="timerToggle()">Start</button>
+      <button class="timer-btn timer-reset" onclick="timerReset()">Reset</button>
+    </div>
+    <div class="timer-presets">
+      <button class="preset-btn sel" onclick="setPreset(45,'45s — Core')">45s</button>
+      <button class="preset-btn" onclick="setPreset(60,'60s — Isolation')">60s</button>
+      <button class="preset-btn" onclick="setPreset(90,'90s — Default')">90s</button>
+      <button class="preset-btn" onclick="setPreset(120,'2m — Compound')">2m</button>
+      <button class="preset-btn" onclick="setPreset(180,'3m — Heavy lift')">3m</button>
+    </div>
+  </div>
+
+  <div class="sh">Rest Guide</div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="sc-label">Compound Lifts</div><div class="sc-val sc-accent" style="font-size:24px">90s</div><div class="sc-sub">Press, squat, deadlift, rows</div></div>
+    <div class="stat-card"><div class="sc-label">Isolation Moves</div><div class="sc-val sc-blue" style="font-size:24px">60s</div><div class="sc-sub">Curls, raises, extensions</div></div>
+    <div class="stat-card"><div class="sc-label">Core Exercises</div><div class="sc-val sc-green" style="font-size:24px">45s</div><div class="sc-sub">Planks, crunches, twists</div></div>
+    <div class="stat-card"><div class="sc-label">Heavy Sets</div><div class="sc-val" style="color:var(--purple);font-size:24px">2–3m</div><div class="sc-sub">When weight is near max</div></div>
+  </div>
+
+  <div class="sh">Warm-Up Checklist</div>
+  <div id="warmup-list"></div>
+</div>
+
+<!-- ════════════ DIET PAGE ════════════ -->
+<div class="page" id="page-diet">
+  <div class="sh">Daily Macros</div>
+  <div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-bottom:24px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Daily Target</div>
+      <div style="font-size:56px;font-weight:800;line-height:1;color:var(--accent)">130<span style="font-size:22px;color:var(--muted)">g protein</span></div>
+      <div style="font-size:13px;color:var(--muted);margin-top:8px">72 kg × 1.8 g/kg = 129.6 ≈ 130g</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;flex:1;min-width:180px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--s2);border-radius:var(--r);font-size:13px"><span>Protein (130g)</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">520 kcal</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--s2);border-radius:var(--r);font-size:13px"><span>Carbs (260g)</span><span style="font-family:'Space Mono',monospace;color:var(--blue)">1040 kcal</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--s2);border-radius:var(--r);font-size:13px"><span>Fats (88g)</span><span style="font-family:'Space Mono',monospace;color:var(--red)">792 kcal</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);border-radius:var(--r);font-size:13px;font-weight:700"><span>Total</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">2352 kcal</span></div>
+    </div>
+  </div>
+
+  <div class="sh">Best Indian Protein Sources</div>
+  <div class="food-grid" id="food-grid"></div>
+
+  <!-- Protein counter -->
+  <div class="sh">Protein Tracker (Today)</div>
+  <div style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-bottom:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:13px;color:var(--muted)">Consumed today</div>
+      <div style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--green)" id="protein-count">0g / 130g</div>
+    </div>
+    <div class="prog-bar" style="height:10px;margin-bottom:16px"><div class="prog-fill" id="protein-bar" style="width:0%;background:var(--green)"></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" id="protein-btns"></div>
+  </div>
+</div>
+
+<!-- ════════════ MEALS PAGE ════════════ -->
+<div class="page" id="page-meals">
+  <div class="sh">Full Day Meal Plan — ~2350 kcal · 148g protein</div>
+  <div id="meal-list"></div>
+  <div style="background:rgba(61,232,160,.06);border:1px solid rgba(61,232,160,.2);border-radius:var(--r2);padding:16px 18px;margin-top:8px">
+    <div style="font-size:12px;font-weight:700;color:var(--green);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Daily Protein Tally</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="background:var(--s2);border-radius:var(--r);padding:8px 14px;font-size:12px;font-family:'Space Mono',monospace;color:var(--accent)">Post-Workout: 38g</div>
+      <div style="background:var(--s2);border-radius:var(--r);padding:8px 14px;font-size:12px;font-family:'Space Mono',monospace;color:var(--blue)">Lunch: 45g</div>
+      <div style="background:var(--s2);border-radius:var(--r);padding:8px 14px;font-size:12px;font-family:'Space Mono',monospace;color:var(--green)">Snack: 20g</div>
+      <div style="background:var(--s2);border-radius:var(--r);padding:8px 14px;font-size:12px;font-family:'Space Mono',monospace;color:var(--purple)">Dinner: 35g</div>
+      <div style="background:var(--s2);border-radius:var(--r);padding:8px 14px;font-size:12px;font-family:'Space Mono',monospace;color:var(--muted)">Night: 10g</div>
+      <div style="background:rgba(61,232,160,.12);border:1px solid rgba(61,232,160,.3);border-radius:var(--r);padding:8px 14px;font-size:12px;font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">Total: ~148g ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ TIPS PAGE ════════════ -->
+<div class="page" id="page-tips">
+  <div class="sh">Recovery & Lifestyle</div>
+  <div class="tip-grid" id="tip-grid"></div>
+  <div class="sh">Optional Supplements</div>
+  <div class="supp-grid" id="supp-grid"></div>
+  <div style="background:rgba(255,92,124,.05);border:1px solid rgba(255,92,124,.2);border-radius:var(--r2);padding:14px 18px;margin-top:20px;font-size:12px;color:var(--muted);line-height:1.7">
+    <strong style="color:var(--red)">Disclaimer:</strong> This is general fitness guidance for a healthy 23-year-old. Not a substitute for advice from a certified trainer, sports nutritionist, or medical professional. If you feel pain, dizziness, or unusual fatigue — stop and consult a doctor.
+  </div>
+</div>
+
+</div><!-- end main-area -->
+</div><!-- end app -->
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+
+const DAYS = [
+  {name:'Monday',tag:'Push Day',tagClass:'push',
+   focus:'Chest · Shoulders · Triceps',
+   cardio:'Treadmill · 15 min · Brisk walk 5.5–6 km/h · Incline 2–3%',
+   exercises:[
+    {name:'Flat Dumbbell Press',sets:'3',reps:'10–12',muscles:'Chest, Front Delts, Triceps',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- bench -->
+      <rect x="18" y="52" width="84" height="10" rx="3" fill="#2e2e48"/>
+      <rect x="22" y="62" width="6" height="14" rx="2" fill="#2e2e48"/>
+      <rect x="92" y="62" width="6" height="14" rx="2" fill="#2e2e48"/>
+      <!-- body lying -->
+      <rect x="30" y="40" width="60" height="14" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="95" cy="42" r="8" fill="#f5c842"/>
+      <!-- arms holding dumbbells -->
+      <line x1="44" y1="42" x2="34" y2="30" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="76" y1="42" x2="86" y2="30" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- dumbbells -->
+      <rect x="26" y="26" width="16" height="6" rx="3" fill="#3de8a0"/>
+      <rect x="78" y="26" width="16" height="6" rx="3" fill="#3de8a0"/>
+      <!-- elbow angle indicator -->
+      <text x="10" y="20" fill="#f5c842" font-size="8" font-family="monospace">45°</text>
+      <text x="60" y="18" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Press up &amp; in</text>
+      <path d="M55 20 L60 14 L65 20" stroke="#fff" stroke-width="1.2" fill="none" opacity=".4"/>
+     </svg>`,
+     cues:['Elbows at 45° — not flared wide','Arch back slightly on bench','Feet flat on floor, planted firmly','Wrists straight — never bent back','Touch DBs at top, don\'t slam together','3 sec lower, 1 sec press up'],
+     mistakes:['Flaring elbows 90° (shoulder stress)','Bouncing off chest — no momentum','Half reps — full range of motion only','Letting wrists bend backward']},
+    {name:'Incline Dumbbell Press',sets:'3',reps:'10',muscles:'Upper Chest, Front Delts',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- incline bench -->
+      <rect x="15" y="55" width="50" height="8" rx="3" fill="#2e2e48" transform="rotate(-30 40 55)"/>
+      <rect x="58" y="50" width="36" height="8" rx="3" fill="#2e2e48"/>
+      <rect x="16" y="65" width="6" height="12" rx="2" fill="#2e2e48"/>
+      <!-- body on incline -->
+      <rect x="20" y="28" width="55" height="13" rx="6" fill="#4db8ff" opacity=".8" transform="rotate(-30 47 34)"/>
+      <!-- head -->
+      <circle cx="26" cy="24" r="8" fill="#f5c842"/>
+      <!-- arms -->
+      <line x1="38" y1="28" x2="28" y2="16" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="58" y1="22" x2="68" y2="12" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- dumbbells -->
+      <rect x="20" y="10" width="16" height="6" rx="3" fill="#3de8a0"/>
+      <rect x="62" y="7" width="16" height="6" rx="3" fill="#3de8a0"/>
+      <!-- 45 degree label -->
+      <text x="80" y="66" fill="#f5c842" font-size="8" font-family="monospace">45°</text>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Upper chest focus</text>
+     </svg>`,
+     cues:['Set bench exactly to 45° — not steeper','Squeeze upper chest hard at top','Elbows still tucked 45°, not flared','Raise seat to prevent sliding down','Full stretch at the bottom'],
+     mistakes:['Bench angle above 60° (shoulder dominant)','Not retracting shoulder blades','Going too heavy too soon']},
+    {name:'Seated DB Shoulder Press',sets:'3',reps:'10–12',muscles:'All 3 Deltoid heads, Triceps',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- seat -->
+      <rect x="42" y="60" width="36" height="8" rx="3" fill="#2e2e48"/>
+      <rect x="46" y="68" width="6" height="14" rx="2" fill="#2e2e48"/>
+      <rect x="68" y="68" width="6" height="14" rx="2" fill="#2e2e48"/>
+      <!-- back rest -->
+      <rect x="74" y="30" width="8" height="32" rx="3" fill="#2e2e48"/>
+      <!-- torso -->
+      <rect x="48" y="32" width="24" height="30" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="60" cy="24" r="8" fill="#f5c842"/>
+      <!-- arms pressing up -->
+      <line x1="50" y1="38" x2="34" y2="22" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="70" y1="38" x2="86" y2="22" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- dumbbells overhead -->
+      <rect x="26" y="16" width="16" height="7" rx="3" fill="#3de8a0"/>
+      <rect x="78" y="16" width="16" height="7" rx="3" fill="#3de8a0"/>
+      <!-- arrows showing direction -->
+      <path d="M34 14 L34 8" stroke="#fff" stroke-width="1.5" stroke-dasharray="2 1" opacity=".4"/>
+      <path d="M86 14 L86 8" stroke="#fff" stroke-width="1.5" stroke-dasharray="2 1" opacity=".4"/>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Back flush on pad</text>
+     </svg>`,
+     cues:['Back flat against bench back rest','Start DBs at ear level, palms forward','Don\'t lock elbows at top','Exhale forcefully on the press up','No arching lower back off the pad'],
+     mistakes:['Back arching away from pad','Pressing DBs apart instead of in','Going behind the head (shoulder stress)']},
+    {name:'Dumbbell Lateral Raises',sets:'3',reps:'15',muscles:'Side Deltoids (lateral head)',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- legs -->
+      <rect x="50" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <rect x="62" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <!-- torso -->
+      <rect x="46" y="30" width="28" height="30" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="60" cy="22" r="8" fill="#f5c842"/>
+      <!-- arms raised to side — correct form -->
+      <line x1="48" y1="42" x2="22" y2="38" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="72" y1="42" x2="98" y2="38" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- dumbbells at side -->
+      <rect x="12" y="34" width="12" height="7" rx="3" fill="#3de8a0"/>
+      <rect x="96" y="34" width="12" height="7" rx="3" fill="#3de8a0"/>
+      <!-- shoulder height line -->
+      <line x1="8" y1="42" x2="112" y2="42" stroke="#f5c842" stroke-width="1" stroke-dasharray="3 2" opacity=".35"/>
+      <text x="60" y="16" fill="#f5c842" font-size="7" text-anchor="middle">Shoulder height max</text>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Pinky slightly higher than thumb</text>
+     </svg>`,
+     cues:['Raise ONLY to shoulder height — no higher','Slight elbow bend (10–15°) always','Pinky slightly higher than thumb (tilt)','ZERO swinging — pure shoulder movement','Slow 3-second descent every rep','Light weight — this is isolation work'],
+     mistakes:['Raising arms above shoulder height','Using momentum / body swing','Too heavy = trapezius takes over']},
+    {name:'Tricep Rope Pushdown',sets:'3',reps:'12',muscles:'All 3 Tricep heads',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- cable pulley -->
+      <circle cx="60" cy="8" r="5" fill="#2e2e48" stroke="#3de8a0" stroke-width="1.5"/>
+      <!-- cable line -->
+      <line x1="60" y1="13" x2="60" y2="28" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="2 1"/>
+      <!-- rope -->
+      <path d="M52 28 Q60 32 68 28" stroke="#3de8a0" stroke-width="2" fill="none"/>
+      <!-- legs -->
+      <rect x="50" y="60" width="10" height="22" rx="4" fill="#4db8ff" opacity=".6"/>
+      <rect x="62" y="60" width="10" height="22" rx="4" fill="#4db8ff" opacity=".6"/>
+      <!-- torso leaning slight -->
+      <rect x="46" y="30" width="28" height="32" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="60" cy="22" r="8" fill="#f5c842"/>
+      <!-- upper arms glued to torso -->
+      <rect x="38" y="36" width="10" height="18" rx="4" fill="#f5c842" opacity=".7"/>
+      <rect x="72" y="36" width="10" height="18" rx="4" fill="#f5c842" opacity=".7"/>
+      <!-- forearms extended down -->
+      <line x1="42" y1="54" x2="52" y2="68" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="78" y1="54" x2="68" y2="68" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- rope ends -->
+      <rect x="46" y="65" width="10" height="6" rx="3" fill="#3de8a0"/>
+      <rect x="64" y="65" width="10" height="6" rx="3" fill="#3de8a0"/>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Elbows glued to sides</text>
+     </svg>`,
+     cues:['Elbows locked tight to torso — key cue','Lean forward slightly at the hip','Spread rope ends apart at the bottom','Full extension — lock out elbows at bottom','Control the cable back up slowly'],
+     mistakes:['Elbows flaring out to the sides','Using shoulder/body momentum','Not achieving full extension at bottom']},
+    {name:'Push-Ups (Finisher)',sets:'2',reps:'To failure',muscles:'Chest, Triceps, Core',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- floor -->
+      <line x1="8" y1="76" x2="112" y2="76" stroke="#2e2e48" stroke-width="2"/>
+      <!-- body in push-up position -->
+      <rect x="20" y="44" width="80" height="14" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="106" cy="48" r="8" fill="#f5c842"/>
+      <!-- arms -->
+      <line x1="36" y1="52" x2="28" y2="68" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="84" y1="52" x2="92" y2="68" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- hands on floor -->
+      <ellipse cx="28" cy="72" rx="7" ry="4" fill="#f5c842" opacity=".7"/>
+      <ellipse cx="92" cy="72" rx="7" ry="4" fill="#f5c842" opacity=".7"/>
+      <!-- feet -->
+      <rect x="14" y="56" width="12" height="8" rx="4" fill="#f5c842" opacity=".5"/>
+      <!-- straight body line indicator -->
+      <line x1="14" y1="44" x2="106" y2="44" stroke="#3de8a0" stroke-width="1" stroke-dasharray="2 2" opacity=".4"/>
+      <text x="60" y="22" fill="#3de8a0" font-size="7" text-anchor="middle">Straight line head to heel</text>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Chest all the way to floor</text>
+     </svg>`,
+     cues:['Body is a straight plank — head to heel','Hands slightly wider than shoulders','Elbows 45° angle — never flared','Chest must touch or graze the floor','No sagging hips, no piked hips','Squeeze core and glutes throughout'],
+     mistakes:['Hips sagging downward','Only going halfway down','Head drooping forward','Hands too wide or too narrow']}
+  ]},
+  {name:'Tuesday',tag:'Pull Day',tagClass:'pull',
+   focus:'Back · Biceps · Rear Delts',
+   cardio:'Stationary Cycling · 15 min · Moderate resistance · RPM 70–85',
+   exercises:[
+    {name:'Wide-Grip Lat Pulldown',sets:'3',reps:'10–12',muscles:'Lats, Biceps, Rear Delts',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- overhead bar -->
+      <rect x="10" y="12" width="100" height="5" rx="2.5" fill="#3de8a0"/>
+      <!-- hands gripping wide -->
+      <ellipse cx="18" cy="18" rx="6" ry="4" fill="#f5c842" opacity=".8"/>
+      <ellipse cx="102" cy="18" rx="6" ry="4" fill="#f5c842" opacity=".8"/>
+      <!-- seat/machine hint -->
+      <rect x="40" y="66" width="40" height="8" rx="3" fill="#2e2e48"/>
+      <rect x="44" y="74" width="8" height="10" rx="2" fill="#2e2e48"/>
+      <rect x="68" y="74" width="8" height="10" rx="2" fill="#2e2e48"/>
+      <!-- body seated -->
+      <rect x="44" y="36" width="32" height="32" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head lean back 15 -->
+      <circle cx="62" cy="26" r="9" fill="#f5c842"/>
+      <!-- arms pulling down wide -->
+      <line x1="46" y1="42" x2="18" y2="20" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="74" y1="42" x2="102" y2="20" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- target zone arrow -->
+      <path d="M52 30 L60 38" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="2 1" opacity=".6"/>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Pull to upper chest, elbows down</text>
+     </svg>`,
+     cues:['Drive elbows down toward your hip pockets','Pull bar to upper chest — NOT chin/neck','Lean back only 15° — not 45°','Arms fully extended at top (full stretch)','Squeeze lats hard at the bottom position'],
+     mistakes:['Pulling bar behind the neck (injury risk!)','Excessive backward lean (becomes a row)','Shrugging shoulders up at the top']},
+    {name:'Seated Cable Row',sets:'3',reps:'10–12',muscles:'Mid Back, Rhomboids, Biceps',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- cable machine wall -->
+      <rect x="4" y="20" width="10" height="50" rx="2" fill="#2e2e48"/>
+      <circle cx="9" cy="48" r="4" fill="#3de8a0" opacity=".6"/>
+      <!-- cable -->
+      <line x1="14" y1="48" x2="50" y2="50" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="2 1"/>
+      <!-- foot plate -->
+      <rect x="16" y="64" width="24" height="6" rx="2" fill="#2e2e48"/>
+      <!-- seated body -->
+      <rect x="50" y="34" width="28" height="30" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head upright -->
+      <circle cx="72" cy="24" r="9" fill="#f5c842"/>
+      <!-- arms holding handle -->
+      <line x1="52" y1="50" x2="40" y2="50" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="52" y1="50" x2="50" y2="50" stroke="#f5c842" stroke-width="2"/>
+      <!-- handle shape -->
+      <rect x="42" y="46" width="10" height="8" rx="4" fill="#3de8a0"/>
+      <!-- shoulder blades indicator -->
+      <path d="M52 38 L64 38 L64 30" stroke="#3de8a0" stroke-width="1.2" stroke-dasharray="1.5 1" opacity=".5"/>
+      <text x="80" y="14" fill="#3de8a0" font-size="7" text-anchor="middle" opacity=".8">Squeeze</text>
+      <text x="80" y="22" fill="#3de8a0" font-size="7" text-anchor="middle" opacity=".8">blades</text>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Pull to navel, chest up, no rocking</text>
+     </svg>`,
+     cues:['Pull handle to belly button area','Sit upright — chest tall, no slouching','Pinch shoulder blades together at peak','Zero torso rocking back and forth','Full stretch forward between reps'],
+     mistakes:['Rocking the torso for momentum','Pulling too high (to chest)','Slouching forward on the return']},
+    {name:'One-Arm Dumbbell Row',sets:'3',reps:'10 each side',muscles:'Lats, Rhomboids, Rear Delts',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- bench support -->
+      <rect x="12" y="46" width="40" height="10" rx="4" fill="#2e2e48"/>
+      <rect x="16" y="56" width="8" height="20" rx="3" fill="#2e2e48"/>
+      <rect x="36" y="56" width="8" height="20" rx="3" fill="#2e2e48"/>
+      <!-- body horizontal (flat back like table) -->
+      <rect x="28" y="28" width="64" height="16" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- flat back line indicator -->
+      <line x1="28" y1="28" x2="92" y2="28" stroke="#3de8a0" stroke-width="1" stroke-dasharray="2 1" opacity=".5"/>
+      <text x="60" y="24" fill="#3de8a0" font-size="7" text-anchor="middle">Back flat — parallel to floor</text>
+      <!-- head looking down -->
+      <circle cx="98" cy="34" r="8" fill="#f5c842"/>
+      <!-- supporting hand on bench -->
+      <line x1="36" y1="36" x2="30" y2="46" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- rowing arm pulling up -->
+      <line x1="76" y1="36" x2="76" y2="56" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- dumbbell -->
+      <rect x="68" y="56" width="16" height="7" rx="3" fill="#3de8a0"/>
+      <!-- pull to hip arrow -->
+      <path d="M76 56 L76 46" stroke="#f5c842" stroke-width="1.5" stroke-dasharray="2 1" opacity=".6"/>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Pull elbow to hip — not shoulder</text>
+     </svg>`,
+     cues:['Back parallel to floor — like a table top','Pull elbow toward hip, not toward ear','Don\'t rotate your spine at all','Full arm hang at the bottom each rep','Retract shoulder blade at peak contraction'],
+     mistakes:['Rotating spine — twisting the back','Pulling too high (to shoulder level)','Rounding the back — major injury risk']},
+    {name:'Cable Face Pulls',sets:'3',reps:'15',muscles:'Rear Delts, Rotator Cuff, Traps',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- cable machine -->
+      <rect x="4" y="10" width="10" height="60" rx="2" fill="#2e2e48"/>
+      <circle cx="9" cy="38" r="4" fill="#3de8a0" opacity=".6"/>
+      <!-- rope attachment -->
+      <path d="M14 38 Q30 34 38 36" stroke="#3de8a0" stroke-width="1.5" fill="none" stroke-dasharray="2 1"/>
+      <!-- legs standing -->
+      <rect x="50" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <rect x="64" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <!-- torso -->
+      <rect x="46" y="28" width="32" height="32" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="62" cy="20" r="9" fill="#f5c842"/>
+      <!-- arms pulling rope to face level — ELBOWS HIGH -->
+      <line x1="48" y1="34" x2="28" y2="26" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="76" y1="34" x2="86" y2="26" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- elbow height line -->
+      <line x1="20" y1="30" x2="100" y2="30" stroke="#f5c842" stroke-width="1" stroke-dasharray="2 2" opacity=".4"/>
+      <text x="62" y="9" fill="#f5c842" font-size="7" text-anchor="middle">Elbows parallel to ground</text>
+      <text x="62" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Pull to forehead, separate hands at end</text>
+     </svg>`,
+     cues:['Cable at eye / forehead height','Elbows out — parallel to ground','Pull rope to FOREHEAD (not chin)','Separate hands apart at peak','Light weight — this is rehab work too'],
+     mistakes:['Pulling to chin (traps take over)','Elbows dropping below shoulder height','Too much weight = form breakdown']},
+    {name:'Alternating Bicep Curls',sets:'3',reps:'12 each arm',muscles:'Biceps Brachii (both heads)',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- legs standing -->
+      <rect x="50" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <rect x="62" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <!-- torso -->
+      <rect x="44" y="28" width="34" height="32" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="61" cy="20" r="9" fill="#f5c842"/>
+      <!-- right arm curled up (active) -->
+      <line x1="46" y1="40" x2="38" y2="42" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="38" y1="42" x2="32" y2="26" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <rect x="24" y="20" width="14" height="7" rx="3" fill="#3de8a0"/>
+      <!-- left arm hanging down -->
+      <line x1="76" y1="40" x2="84" y2="42" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="84" y1="42" x2="86" y2="60" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <rect x="82" y="58" width="14" height="7" rx="3" fill="#3de8a0" opacity=".4"/>
+      <!-- elbow fixed marker -->
+      <circle cx="38" cy="42" r="3" fill="#f5c842" opacity=".5"/>
+      <text x="20" y="50" fill="#f5c842" font-size="7">Fixed</text>
+      <text x="20" y="58" fill="#f5c842" font-size="7">elbow</text>
+      <text x="62" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Supinate wrist at top, no swinging</text>
+     </svg>`,
+     cues:['Elbow stays fixed to torso — it\'s the pivot','Supinate wrist (turn out) at the very top','Squeeze the bicep peak — hold 1 second','Full hang/stretch at the bottom','No shoulder swinging at all'],
+     mistakes:['Swinging torso to get weight up','Elbow moving forward (bicep loses tension)','Partial reps — must fully extend']},
+    {name:'Hammer Curls',sets:'2',reps:'12 each arm',muscles:'Brachialis, Brachioradialis',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <rect x="50" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <rect x="62" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <rect x="44" y="28" width="34" height="32" rx="6" fill="#4db8ff" opacity=".8"/>
+      <circle cx="61" cy="20" r="9" fill="#f5c842"/>
+      <!-- right arm hammer curl — neutral grip (vertical dumbbell) -->
+      <line x1="46" y1="40" x2="38" y2="42" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="38" y1="42" x2="32" y2="28" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- vertical dumbbell (neutral grip) -->
+      <rect x="28" y="18" width="7" height="16" rx="3" fill="#3de8a0"/>
+      <!-- neutral grip indicator -->
+      <text x="12" y="18" fill="#3de8a0" font-size="7">Neutral</text>
+      <text x="12" y="26" fill="#3de8a0" font-size="7">grip</text>
+      <!-- left arm down -->
+      <line x1="76" y1="40" x2="84" y2="42" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="84" y1="42" x2="86" y2="58" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <rect x="84" y="56" width="7" height="16" rx="3" fill="#3de8a0" opacity=".3"/>
+      <text x="62" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Palms facing each other — don't rotate</text>
+     </svg>`,
+     cues:['Palms face each other throughout — no rotation','Elbow fixed to side — don\'t let it drift','Both arms or alternating — both work','Slow controlled descent — 3 seconds down','Builds arm width, not peak'],
+     mistakes:['Rotating wrist (that\'s a regular curl)','Swinging the upper arm forward']}
+   ]},
+  {name:'Wednesday',tag:'Rest Day',tagClass:'rest',rest:true,
+   restMsg:'Muscles grow during recovery, not during training. Wednesday is strategically placed to let your push and pull muscles fully repair. Do 20–30 min light walk, foam rolling, and full-body stretching today.',
+   restTips:['20–30 min light walk or yoga','Foam roll: quads, lats, upper back, IT band','Hip flexor and hamstring stretches (hold 30s each)','Drink 3+ litres of water today','Sleep 7–8 hours tonight — GH peaks here']},
+  {name:'Thursday',tag:'Legs Day',tagClass:'legs',
+   focus:'Quads · Hamstrings · Glutes · Calves',
+   cardio:'Incline treadmill walk ONLY · 10 min · Legs are already worked hard today!',
+   exercises:[
+    {name:'Leg Press Machine',sets:'3',reps:'12',muscles:'Quads, Glutes, Hamstrings',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- machine seat angle -->
+      <rect x="8" y="40" width="50" height="10" rx="3" fill="#2e2e48" transform="rotate(-30 33 45)"/>
+      <!-- back rest -->
+      <rect x="10" y="14" width="10" height="36" rx="3" fill="#2e2e48"/>
+      <!-- footplate -->
+      <rect x="72" y="18" width="40" height="10" rx="3" fill="#2e2e48" transform="rotate(30 92 23)"/>
+      <!-- body on machine -->
+      <rect x="20" y="20" width="48" height="16" rx="6" fill="#4db8ff" opacity=".8" transform="rotate(-20 44 28)"/>
+      <!-- head -->
+      <circle cx="24" cy="18" r="8" fill="#f5c842"/>
+      <!-- legs pressing plate -->
+      <line x1="40" y1="34" x2="62" y2="22" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <line x1="48" y1="38" x2="70" y2="26" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <!-- feet on plate -->
+      <ellipse cx="74" cy="24" rx="10" ry="5" fill="#f5c842" opacity=".7" transform="rotate(-20 74 24)"/>
+      <!-- 90 degree angle marker -->
+      <text x="56" y="52" fill="#f5c842" font-size="8">90°</text>
+      <text x="60" y="78" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Never lock knees. Feet shoulder-width.</text>
+     </svg>`,
+     cues:['Feet shoulder-width, mid-platform position','Lower to exactly 90° knee bend','NEVER fully lock knees at top','Back flat against pad throughout','Push through the entire foot — not toes only'],
+     mistakes:['Locking knees out (knee joint stress)','Feet too high/low on platform','Lifting hips off the seat pad']},
+    {name:'Goblet Squat (Dumbbell)',sets:'3',reps:'12',muscles:'Quads, Glutes, Core, Hip Flexors',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- floor line -->
+      <line x1="10" y1="80" x2="110" y2="80" stroke="#2e2e48" stroke-width="2"/>
+      <!-- feet wide, toes out -->
+      <ellipse cx="38" cy="78" rx="10" ry="4" fill="#f5c842" opacity=".6" transform="rotate(-15 38 78)"/>
+      <ellipse cx="82" cy="78" rx="10" ry="4" fill="#f5c842" opacity=".6" transform="rotate(15 82 78)"/>
+      <!-- legs bent deep -->
+      <line x1="38" y1="74" x2="46" y2="56" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <line x1="82" y1="74" x2="74" y2="56" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <!-- thighs below parallel indicator -->
+      <line x1="26" y1="56" x2="94" y2="56" stroke="#3de8a0" stroke-width="1" stroke-dasharray="2 1" opacity=".5"/>
+      <text x="14" y="54" fill="#3de8a0" font-size="6">Hip</text>
+      <text x="14" y="61" fill="#3de8a0" font-size="6">depth</text>
+      <!-- torso upright -->
+      <rect x="48" y="30" width="24" height="28" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="60" cy="21" r="9" fill="#f5c842"/>
+      <!-- dumbbell at chest -->
+      <rect x="52" y="34" width="16" height="10" rx="4" fill="#3de8a0"/>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Chest tall, knees track over toes</text>
+     </svg>`,
+     cues:['Heels shoulder-width, toes 30° out','Go deep — hips below knee level','Chest stays TALL — don\'t lean forward','Knees track over toes — push out','Hold DB at chest, use elbows to push knees out'],
+     mistakes:['Heels rising off floor (flexibility issue)','Knees caving inward','Leaning torso too far forward']},
+    {name:'Romanian Deadlift (DB)',sets:'3',reps:'10',muscles:'Hamstrings, Glutes, Lower Back',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- floor -->
+      <line x1="10" y1="82" x2="110" y2="82" stroke="#2e2e48" stroke-width="2"/>
+      <!-- feet -->
+      <ellipse cx="50" cy="80" rx="8" ry="3" fill="#f5c842" opacity=".6"/>
+      <ellipse cx="70" cy="80" rx="8" ry="3" fill="#f5c842" opacity=".6"/>
+      <!-- legs with soft knee -->
+      <line x1="50" y1="76" x2="50" y2="56" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <line x1="70" y1="76" x2="70" y2="56" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <!-- hinging torso - parallel to floor -->
+      <rect x="42" y="30" width="52" height="16" rx="6" fill="#4db8ff" opacity=".8" transform="rotate(10 68 38)"/>
+      <!-- FLAT BACK line -->
+      <line x1="40" y1="28" x2="96" y2="36" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="2 1" opacity=".6"/>
+      <text x="100" y="28" fill="#3de8a0" font-size="7">Flat!</text>
+      <!-- head neutral -->
+      <circle cx="96" cy="30" r="8" fill="#f5c842"/>
+      <!-- arms with DBs tracking down thighs -->
+      <line x1="48" y1="44" x2="42" y2="62" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="64" y1="46" x2="70" y2="64" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <rect x="34" y="58" width="14" height="7" rx="3" fill="#3de8a0"/>
+      <rect x="66" y="60" width="14" height="7" rx="3" fill="#3de8a0"/>
+      <text x="60" y="86" fill="#ff5c7c" font-size="7" text-anchor="middle" font-weight="700">NEVER ROUND BACK</text>
+     </svg>`,
+     cues:['HINGE at hips — soft knee, not a squat','Keep DBs touching/near legs on way down','BACK FLAT — never round the spine (serious injury risk)','Stop when you feel hamstring pull/stretch','Squeeze glutes hard as you come back up'],
+     mistakes:['Rounding the lower back — #1 injury risk','Bending knees too much (becomes a squat)','DBs drifting away from legs (stress on back)']},
+    {name:'Lying Leg Curl Machine',sets:'3',reps:'12',muscles:'Hamstrings (all 3 heads)',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- machine pad -->
+      <rect x="10" y="44" width="80" height="10" rx="3" fill="#2e2e48"/>
+      <rect x="16" y="54" width="8" height="16" rx="2" fill="#2e2e48"/>
+      <rect x="76" y="54" width="8" height="16" rx="2" fill="#2e2e48"/>
+      <!-- leg pad -->
+      <rect x="90" y="26" width="16" height="10" rx="4" fill="#2e2e48"/>
+      <!-- body lying face down -->
+      <rect x="20" y="30" width="70" height="16" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="98" cy="38" r="8" fill="#f5c842"/>
+      <!-- legs -- one curling up -->
+      <line x1="30" y1="44" x2="28" y2="60" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <!-- curled leg -->
+      <line x1="40" y1="44" x2="38" y2="38" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <line x1="38" y1="38" x2="50" y2="28" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <!-- ankle pad contact -->
+      <rect x="46" y="24" width="12" height="8" rx="3" fill="#3de8a0" opacity=".7"/>
+      <!-- hips down marker -->
+      <text x="20" y="26" fill="#3de8a0" font-size="7">Hips flat</text>
+      <text x="60" y="80" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Curl heel to glutes, hold 1 sec, slow down</text>
+     </svg>`,
+     cues:['Hips stay flat on pad throughout','Knee aligned with machine pivot point','Curl heel all the way toward glutes','Hold contraction 1 second at top','3-second slow descent — don\'t drop it'],
+     mistakes:['Hips rising off the pad','Not going through full range of motion','Dropping weight too fast on return']},
+    {name:'Standing Calf Raises',sets:'4',reps:'15',muscles:'Gastrocnemius, Soleus',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- step edge -->
+      <rect x="34" y="64" width="52" height="6" rx="2" fill="#2e2e48"/>
+      <rect x="28" y="70" width="64" height="14" rx="2" fill="#1c1c2e" stroke="#2e2e48" stroke-width="1"/>
+      <!-- heel below step (bottom position) - shown dashed -->
+      <line x1="44" y1="68" x2="44" y2="76" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="2 1" opacity=".5"/>
+      <line x1="76" y1="68" x2="76" y2="76" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="2 1" opacity=".5"/>
+      <!-- legs on rise (top position) -->
+      <line x1="48" y1="64" x2="50" y2="34" stroke="#f5c842" stroke-width="5" stroke-linecap="round"/>
+      <line x1="72" y1="64" x2="70" y2="34" stroke="#f5c842" stroke-width="5" stroke-linecap="round"/>
+      <!-- body -->
+      <rect x="44" y="14" width="32" height="22" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="60" cy="10" r="7" fill="#f5c842"/>
+      <!-- raised heel indicator -->
+      <ellipse cx="48" cy="65" rx="10" ry="4" fill="#f5c842" opacity=".8"/>
+      <ellipse cx="72" cy="65" rx="10" ry="4" fill="#f5c842" opacity=".8"/>
+      <!-- top of rise arrow -->
+      <text x="34" y="14" fill="#3de8a0" font-size="7">Rise up!</text>
+      <text x="14" y="72" fill="#3de8a0" font-size="7">Deep</text>
+      <text x="14" y="79" fill="#3de8a0" font-size="7">stretch</text>
+      <text x="60" y="86" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">2-sec hold at top, full range of motion</text>
+     </svg>`,
+     cues:['Full range — lower heel BELOW step level','Rise ALL the way up on balls of feet','2-second hold at the very top','Slow 3-second descent — no bouncing','Calves grow with TIME under tension'],
+     mistakes:['Partial range of motion (just going halfway)','Bouncing at the bottom','Too fast — calves need slow, deliberate reps']}
+   ]},
+  {name:'Friday',tag:'Push Day 2',tagClass:'push',
+   focus:'Chest · Shoulders · Triceps (variation)',
+   cardio:'Cycling or Treadmill · 20 min · Push intensity slightly higher — end of week burn!',
+   exercises:[
+    {name:'Machine Chest Press',sets:'3',reps:'12',muscles:'Pec Major, Triceps, Front Delts',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- machine frame -->
+      <rect x="4" y="16" width="10" height="56" rx="2" fill="#2e2e48"/>
+      <rect x="106" y="16" width="10" height="56" rx="2" fill="#2e2e48"/>
+      <!-- handles -->
+      <rect x="14" y="30" width="24" height="8" rx="4" fill="#3de8a0" opacity=".7"/>
+      <rect x="82" y="30" width="24" height="8" rx="4" fill="#3de8a0" opacity=".7"/>
+      <!-- seat -->
+      <rect x="44" y="62" width="32" height="8" rx="3" fill="#2e2e48"/>
+      <rect x="48" y="70" width="8" height="12" rx="2" fill="#2e2e48"/>
+      <rect x="64" y="70" width="8" height="12" rx="2" fill="#2e2e48"/>
+      <!-- back pad -->
+      <rect x="76" y="28" width="8" height="38" rx="3" fill="#2e2e48"/>
+      <!-- body seated -->
+      <rect x="44" y="28" width="30" height="36" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="59" cy="20" r="8" fill="#f5c842"/>
+      <!-- arms pressing handles -->
+      <line x1="46" y1="36" x2="38" y2="34" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="72" y1="36" x2="82" y2="34" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Seat: handles at nipple line</text>
+     </svg>`,
+     cues:['Adjust seat: handles level with nipple/mid-chest','Back flat against machine back pad','Feet planted firmly on the floor','Squeeze chest fully at extension','Don\'t let stack rest between reps'],
+     mistakes:['Seat too high (shoulder press, not chest)','Arching back off the pad','Partial reps']},
+    {name:'Pec Deck / Chest Fly',sets:'3',reps:'12',muscles:'Chest (inner, sternal head)',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <rect x="4" y="16" width="10" height="56" rx="2" fill="#2e2e48"/>
+      <rect x="106" y="16" width="10" height="56" rx="2" fill="#2e2e48"/>
+      <!-- arm pads wide (start) -->
+      <rect x="14" y="30" width="20" height="26" rx="6" fill="#3de8a0" opacity=".3" stroke="#3de8a0" stroke-width="1" stroke-dasharray="2 1"/>
+      <rect x="86" y="30" width="20" height="26" rx="6" fill="#3de8a0" opacity=".3" stroke="#3de8a0" stroke-width="1" stroke-dasharray="2 1"/>
+      <!-- arm pads together (end) -->
+      <rect x="40" y="34" width="16" height="18" rx="5" fill="#3de8a0" opacity=".7"/>
+      <rect x="64" y="34" width="16" height="18" rx="5" fill="#3de8a0" opacity=".7"/>
+      <!-- seat/body -->
+      <rect x="44" y="60" width="32" height="8" rx="3" fill="#2e2e48"/>
+      <rect x="46" y="34" width="28" height="28" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="60" cy="26" r="8" fill="#f5c842"/>
+      <!-- arc movement indicator -->
+      <path d="M20 38 Q40 50 48 42" stroke="#f5c842" stroke-width="1" stroke-dasharray="2 1" opacity=".5"/>
+      <path d="M100 38 Q80 50 72 42" stroke="#f5c842" stroke-width="1" stroke-dasharray="2 1" opacity=".5"/>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Squeeze at center, full stretch at back</text>
+     </svg>`,
+     cues:['Elbows soft — slight bend (never straight)','Elbows at shoulder height on pads','Move in arc — like hugging a barrel','Full stretch at back — feel chest open','Squeeze and hold 1 second at center'],
+     mistakes:['Straightening elbows (elbow joint stress)','Elbows dropping below shoulder height','Not stretching fully at the back']},
+    {name:'Arnold Press',sets:'3',reps:'10',muscles:'All 3 Deltoid Heads (complete shoulder)',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <rect x="44" y="60" width="32" height="8" rx="3" fill="#2e2e48"/>
+      <rect x="48" y="68" width="8" height="16" rx="2" fill="#2e2e48"/>
+      <rect x="64" y="68" width="8" height="16" rx="2" fill="#2e2e48"/>
+      <rect x="76" y="28" width="8" height="36" rx="3" fill="#2e2e48"/>
+      <rect x="44" y="28" width="30" height="34" rx="6" fill="#4db8ff" opacity=".8"/>
+      <circle cx="59" cy="20" r="8" fill="#f5c842"/>
+      <!-- START: palms facing you (bicep curl position) - shown dashed -->
+      <line x1="46" y1="34" x2="28" y2="42" stroke="#f5c842" stroke-width="2" stroke-dasharray="2 1" opacity=".5"/>
+      <rect x="18" y="38" width="14" height="8" rx="3" fill="#3de8a0" opacity=".3"/>
+      <!-- END: palms forward, arms extended (shown solid) -->
+      <line x1="46" y1="34" x2="30" y2="18" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="74" y1="34" x2="90" y2="18" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <rect x="22" y="12" width="14" height="8" rx="3" fill="#3de8a0"/>
+      <rect x="84" y="12" width="14" height="8" rx="3" fill="#3de8a0"/>
+      <!-- rotation arrows -->
+      <path d="M26 40 Q20 30 24 16" stroke="#f5c842" stroke-width="1.2" fill="none" opacity=".5"/>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Rotate palms outward as you press up</text>
+     </svg>`,
+     cues:['Start: palms FACING YOU (like top of a curl)','Rotate outward as arms extend upward','Fully reverse the rotation on descent','Core braced throughout — no back arch','Controlled pace — the rotation is the point'],
+     mistakes:['Going too fast (losing the rotation benefit)','Arching lower back on the press up','Incomplete rotation range']},
+    {name:'Dumbbell Front Raises',sets:'2',reps:'12',muscles:'Anterior (Front) Deltoids',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <rect x="50" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <rect x="62" y="58" width="10" height="24" rx="4" fill="#4db8ff" opacity=".6"/>
+      <rect x="44" y="26" width="34" height="34" rx="6" fill="#4db8ff" opacity=".8"/>
+      <circle cx="61" cy="18" r="9" fill="#f5c842"/>
+      <!-- right arm raised to front - shoulder height -->
+      <line x1="46" y1="36" x2="28" y2="22" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <rect x="18" y="16" width="16" height="8" rx="4" fill="#3de8a0"/>
+      <!-- shoulder height line -->
+      <line x1="14" y1="36" x2="108" y2="36" stroke="#f5c842" stroke-width="1" stroke-dasharray="2 2" opacity=".35"/>
+      <text x="96" y="33" fill="#f5c842" font-size="6">Max</text>
+      <!-- left arm down -->
+      <line x1="76" y1="36" x2="86" y2="56" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <rect x="82" y="52" width="14" height="7" rx="3" fill="#3de8a0" opacity=".3"/>
+      <text x="62" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Raise to shoulder height only, no swinging</text>
+     </svg>`,
+     cues:['Raise to shoulder height max — no higher','Thumbs-up grip helps with shoulder comfort','Zero torso lean backward','Slow 3-second descent','This is light — don\'t go heavy here'],
+     mistakes:['Raising above shoulder height (impingement)','Swinging torso backward','Too heavy — use very light dumbbells']},
+    {name:'Overhead Tricep Extension',sets:'3',reps:'12',muscles:'Triceps Long Head (biggest)',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <rect x="44" y="60" width="32" height="8" rx="3" fill="#2e2e48"/>
+      <rect x="48" y="68" width="8" height="16" rx="2" fill="#2e2e48"/>
+      <rect x="64" y="68" width="8" height="16" rx="2" fill="#2e2e48"/>
+      <rect x="76" y="28" width="8" height="36" rx="3" fill="#2e2e48"/>
+      <rect x="44" y="28" width="30" height="34" rx="6" fill="#4db8ff" opacity=".8"/>
+      <circle cx="59" cy="20" r="8" fill="#f5c842"/>
+      <!-- arms overhead holding DB together -->
+      <line x1="50" y1="30" x2="44" y2="12" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="68" y1="30" x2="74" y2="12" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- dumbbell at top -->
+      <rect x="46" y="6" width="28" height="10" rx="4" fill="#3de8a0"/>
+      <!-- bent elbows (lowered position) dashed -->
+      <line x1="50" y1="30" x2="46" y2="18" stroke="#f5c842" stroke-width="2" stroke-dasharray="2 1" opacity=".4"/>
+      <path d="M50 30 Q44 36 48 44" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="1 1" opacity=".5"/>
+      <!-- elbows pointing forward indicator -->
+      <text x="30" y="10" fill="#3de8a0" font-size="7">Elbows</text>
+      <text x="30" y="17" fill="#3de8a0" font-size="7">forward</text>
+      <text x="60" y="82" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Elbows pointing forward, not flaring out</text>
+     </svg>`,
+     cues:['Elbows pointing FORWARD — not flaring out','Lower until 90° — feel the tricep stretch','Full lockout extension at the top','Core tight — no lower back arch','Both hands grip one dumbbell'],
+     mistakes:['Elbows flaring wide to the sides','Partial range — missing the stretch','Back arching off the seat pad']}
+   ]},
+  {name:'Saturday',tag:'Core + Pull',tagClass:'core',
+   focus:'Core Strength · Back Volume · Abs',
+   cardio:'Optional light cycling · 10–15 min · No pressure on this day',
+   exercises:[
+    {name:'Assisted Pull-Ups',sets:'3',reps:'6–8',muscles:'Lats, Biceps, Core, Rear Delts',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- bar -->
+      <rect x="14" y="10" width="92" height="6" rx="3" fill="#3de8a0"/>
+      <!-- hands gripping -->
+      <ellipse cx="34" cy="14" rx="7" ry="4" fill="#f5c842" opacity=".8"/>
+      <ellipse cx="86" cy="14" rx="7" ry="4" fill="#f5c842" opacity=".8"/>
+      <!-- body hanging -->
+      <rect x="46" y="22" width="28" height="36" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head (chin over bar) -->
+      <circle cx="60" cy="16" r="8" fill="#f5c842"/>
+      <!-- arms pulling -->
+      <line x1="48" y1="26" x2="34" y2="16" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="72" y1="26" x2="86" y2="16" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- legs hanging slightly bent -->
+      <line x1="52" y1="58" x2="48" y2="76" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <line x1="68" y1="58" x2="72" y2="76" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <!-- elbow drive arrows -->
+      <path d="M26 24 L34 30" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="2 1" opacity=".5"/>
+      <text x="8" y="36" fill="#3de8a0" font-size="6">Elbows</text>
+      <text x="8" y="43" fill="#3de8a0" font-size="6">drive down</text>
+      <text x="60" y="84" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Drive elbows down to hips, chin over bar</text>
+     </svg>`,
+     cues:['Full dead hang at the bottom (arms straight)','Drive elbows DOWN toward hip pockets','Pull CHEST to bar — not just chin','No kipping or swinging momentum','Use assisted machine: set assist to 50% bodyweight'],
+     mistakes:['Half reps — not reaching dead hang at bottom','Kipping to create momentum','Looking up too aggressively (neck strain)']},
+    {name:'Forearm Plank',sets:'3',reps:'45 seconds',muscles:'Transverse Abdominis, Obliques, Lower Back',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- floor line -->
+      <line x1="8" y1="76" x2="112" y2="76" stroke="#2e2e48" stroke-width="2"/>
+      <!-- body in plank (straight line) -->
+      <rect x="18" y="46" width="84" height="14" rx="6" fill="#4db8ff" opacity=".8"/>
+      <!-- head -->
+      <circle cx="108" cy="50" r="8" fill="#f5c842"/>
+      <!-- forearms on ground -->
+      <rect x="24" y="60" width="20" height="7" rx="3" fill="#f5c842" opacity=".7"/>
+      <rect x="50" y="60" width="20" height="7" rx="3" fill="#f5c842" opacity=".7"/>
+      <!-- toes on floor -->
+      <ellipse cx="18" cy="72" rx="6" ry="4" fill="#f5c842" opacity=".5"/>
+      <!-- STRAIGHT LINE indicator -->
+      <line x1="16" y1="46" x2="108" y2="46" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="2 2" opacity=".6"/>
+      <text x="60" y="38" fill="#3de8a0" font-size="7" text-anchor="middle">Straight line — head to heel</text>
+      <!-- WRONG: hips sagging (red dashed) -->
+      <path d="M30 52 Q62 72 90 52" stroke="#ff5c7c" stroke-width="1.5" stroke-dasharray="3 1" opacity=".4"/>
+      <text x="60" y="82" fill="#ff5c7c" font-size="7" text-anchor="middle" opacity=".7">❌ Don't sag hips like this dashed line</text>
+     </svg>`,
+     cues:['Elbows directly under shoulders','Hips level — perfectly straight line','Squeeze glutes AND abs simultaneously','Neutral neck — eyes look at floor','Breathe normally — don\'t hold breath'],
+     mistakes:['Hips sagging downward (lower back collapses)','Hips piked up too high (easy mode — doesn\'t work)','Holding breath throughout']},
+    {name:'Hanging Knee Raises',sets:'3',reps:'12',muscles:'Lower Abs, Hip Flexors, Core',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- bar -->
+      <rect x="24" y="6" width="72" height="6" rx="3" fill="#3de8a0"/>
+      <ellipse cx="38" cy="9" rx="8" ry="4" fill="#f5c842" opacity=".8"/>
+      <ellipse cx="82" cy="9" rx="8" ry="4" fill="#f5c842" opacity=".8"/>
+      <!-- body -->
+      <rect x="46" y="16" width="28" height="30" rx="6" fill="#4db8ff" opacity=".8"/>
+      <circle cx="60" cy="12" r="7" fill="#f5c842"/>
+      <!-- arms up -->
+      <line x1="48" y1="20" x2="38" y2="11" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <line x1="72" y1="20" x2="82" y2="11" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- knees raised to chest -->
+      <path d="M52 46 Q46 56 50 66 Q56 72 64 68 Q70 56 68 46" fill="#f5c842" opacity=".6" stroke="#f5c842" stroke-width="1.5"/>
+      <!-- control arrow down -->
+      <path d="M70 66 L78 76" stroke="#3de8a0" stroke-width="1.5" stroke-dasharray="2 1" opacity=".5"/>
+      <text x="80" y="80" fill="#3de8a0" font-size="6">Slow down</text>
+      <text x="60" y="84" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Knees to chest, control descent, no swing</text>
+     </svg>`,
+     cues:['Engage core BEFORE you lift your knees','Bring knees ALL THE WAY to chest','Slow 3-sec descent — don\'t drop knees','Eliminate swing before next rep (pause)','Exhale as knees come up'],
+     mistakes:['Using momentum to swing legs up','Knees only reaching hip height (partial)','Swinging like a pendulum between reps']},
+    {name:'Russian Twists',sets:'3',reps:'20 (10 each side)',muscles:'Obliques, Core Rotators',
+     svg:`<svg viewBox="0 0 120 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="86" fill="#1c1c2e"/>
+      <!-- floor line -->
+      <line x1="10" y1="82" x2="110" y2="82" stroke="#2e2e48" stroke-width="2"/>
+      <!-- 45 degree torso -->
+      <rect x="42" y="36" width="36" height="22" rx="6" fill="#4db8ff" opacity=".8" transform="rotate(-30 60 47)"/>
+      <!-- head -->
+      <circle cx="56" cy="26" r="8" fill="#f5c842"/>
+      <!-- feet raised slightly -->
+      <line x1="54" y1="64" x2="44" y2="78" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <line x1="66" y1="64" x2="78" y2="78" stroke="#f5c842" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="44" cy="78" rx="8" ry="4" fill="#f5c842" opacity=".6"/>
+      <ellipse cx="78" cy="78" rx="8" ry="4" fill="#f5c842" opacity=".6"/>
+      <!-- arms twisting to side with weight -->
+      <line x1="60" y1="46" x2="86" y2="52" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <rect x="84" y="48" width="16" height="8" rx="3" fill="#3de8a0"/>
+      <!-- rotation arrow -->
+      <path d="M86 40 Q94 52 84 60" stroke="#f5c842" stroke-width="1.2" fill="none" opacity=".5"/>
+      <text x="30" y="46" fill="#f5c842" font-size="7">45°</text>
+      <text x="60" y="84" fill="#fff" font-size="7" text-anchor="middle" opacity=".6">Rotate from torso, not just arms</text>
+     </svg>`,
+     cues:['Lean back at 45° — not fully reclined','Feet raised for harder version','Rotate from the TORSO — not just your arms','Touch floor on each side = 1 full rep','Stay controlled — no fast swinging'],
+     mistakes:['Swinging arms without rotating torso','Lowering back too far (loses tension)','Going too fast for form']}
+   ]},
+  {name:'Sunday',tag:'Full Rest',tagClass:'rest',rest:true,
+   restMsg:'This is not laziness — it\'s programming. Your body has just completed a full week of Push/Pull/Legs training. All the micro-tears from the week repair tonight and come back stronger.',
+   restTips:['Sleep 7–8 hours — GH peaks here','Keep eating your protein (130g) even on rest days','Evening walk 20 min is perfectly fine','Reflect: did you hit all 5 training days?','Hydrate well — 3L water minimum']}
+];
+
+const FOODS = [
+  {icon:'🥚',name:'Whole Eggs',protein:'6g / egg',tags:[{l:'6g prot',c:'p'},{l:'5g fat',c:'f'}],tip:'4–5 eggs/day. Yolk has Vitamin D & cholesterol for testosterone. Don\'t skip it.'},
+  {icon:'🐔',name:'Chicken Breast',protein:'31g / 100g',tags:[{l:'31g prot',c:'p'},{l:'3.6g fat',c:'f'}],tip:'150g grilled = ~47g protein. Boil, grill or air-fry. Avoid deep frying. Best source.'},
+  {icon:'🧀',name:'Paneer (Cottage Cheese)',protein:'18g / 100g',tags:[{l:'18g prot',c:'p'},{l:'21g fat',c:'f'}],tip:'100g at dinner — slow-digesting casein protein that feeds muscles during sleep.'},
+  {icon:'🫘',name:'Moong / Masoor Dal',protein:'9g / 100g cooked',tags:[{l:'9g prot',c:'p'},{l:'20g carbs',c:'c'}],tip:'Combine with rice for complete amino acids. Eat 2 katori/day. Chana dal is highest.'},
+  {icon:'🥛',name:'Greek Yogurt / Dahi',protein:'10–17g / 100g',tags:[{l:'17g prot',c:'p'},{l:'6g carbs',c:'c'}],tip:'200g Greek yogurt = 17–20g protein. Prefer Epigamia or Sach over regular dahi.'},
+  {icon:'🐟',name:'Tuna / Rohu Fish',protein:'22–25g / 100g',tags:[{l:'25g prot',c:'p'},{l:'5g fat',c:'f'}],tip:'Canned tuna (water) is cheapest high-protein food. 1 can = ~25g protein.'},
+  {icon:'🥜',name:'Peanut Butter',protein:'4g / tbsp',tags:[{l:'4g prot',c:'p'},{l:'8g fat',c:'f'}],tip:'2 tbsp with breakfast = 8g protein + healthy fats. Choose natural — MuscleBlaze or Pintola.'},
+  {icon:'🍶',name:'Milk (Full Fat)',protein:'3.4g / 100ml',tags:[{l:'3.4g prot',c:'p'},{l:'4.7g carbs',c:'c'}],tip:'2 glasses/day = ~17g protein. Drink one glass post-workout mixed with whey if using.'},
+];
+
+const MEALS = [
+  {time:'6:30 AM\nPre-Workout',name:'Morning Fuel',desc:'2 bananas + black coffee (no sugar)\nor 1 multigrain toast + peanut butter\n🍌 Quick carbs for gym energy',kcal:250,protein:8},
+  {time:'8:30 AM\nPost-Workout',name:'Post-Workout Meal',desc:'4 whole eggs (scrambled/boiled) + 2 multigrain bread + 1 glass milk\nor Whey shake + banana\n⚡ MOST IMPORTANT — eat within 45 min',kcal:520,protein:38},
+  {time:'1:00 PM\nLunch',name:'Power Lunch',desc:'2 chapati + 1 katori rice + 150g grilled chicken/paneer + 1 katori dal + sabzi\n🍱 Balanced carbs + protein + fibre',kcal:700,protein:45},
+  {time:'4:30 PM\nSnack',name:'Afternoon Snack',desc:'200g Greek yogurt + handful roasted chana\nor 1 boiled egg + 1 fruit (apple/orange)\n🥣 Keeps protein topped up',kcal:280,protein:20},
+  {time:'8:00 PM\nDinner',name:'Lean Dinner',desc:'2 chapati + 100g paneer sabzi or 150g chicken curry (less oil) + salad\n🌙 Lighter carbs, higher protein',kcal:550,protein:35},
+  {time:'10:30 PM\nPre-Sleep',name:'Night Snack',desc:'1 glass warm haldi doodh\nor 50g low-fat paneer cubes\n😴 Casein protein — feeds muscles in sleep',kcal:150,protein:10},
+];
+
+const TIPS = [
+  {icon:'💤',title:'Sleep 7–8 hours',text:'Growth hormone (GH) is secreted during deep sleep. Skipping sleep = skipping gains. Sleep by 11:30 PM at latest.'},
+  {icon:'💧',title:'3–3.5 litres water/day',text:'Dehydration reduces strength by 10–15%. Carry a 1L bottle to gym. Especially important in Bangalore heat.'},
+  {icon:'📈',title:'Progressive overload',text:'Every 2 weeks — add 2.5–5 kg or 1–2 extra reps. This is the ONLY mechanism for muscle growth.'},
+  {icon:'📏',title:'Form before weight',text:'Ego lifting leads to injury. Use lighter weights with full range of motion. Learn form in first 4 weeks.'},
+  {icon:'🧘',title:'Warm up every session',text:'5 min treadmill walk + arm circles + leg swings before lifting. Cold muscles tear. This 5 min saves months.'},
+  {icon:'🍕',title:'80/20 diet rule',text:'Eat clean 80% of the time. The remaining 20% (a biryani, a pizza) won\'t kill progress. Consistency > perfection.'},
+  {icon:'📸',title:'Track progress monthly',text:'Take a progress photo every 4 weeks in the same light. Scale fluctuates. Photos + tape measure tell the real story.'},
+  {icon:'🚫',title:'Avoid beginner mistakes',text:'Don\'t train same muscle 2 days in a row. Don\'t bulk on junk food. Don\'t skip rest days. Don\'t compare to veterans.'},
+];
+
+const SUPPS = [
+  {name:'Creatine Monohydrate',dose:'5g / day',info:'Most researched supplement. Improves strength 5–15%. Take daily — doesn\'t need to be pre-workout.'},
+  {name:'Whey Protein',dose:'1 scoop post-gym',info:'Only if food protein falls short. MuscleBlaze Biozyme or AS-IT-IS Whey are reliable India brands.'},
+  {name:'Vitamin D3',dose:'1000–2000 IU / day',info:'Most Indians are deficient. Boosts testosterone, immunity, and bone strength. Critical for gym performance.'},
+  {name:'Omega-3 (Fish Oil)',dose:'1g / day',info:'Anti-inflammatory. Reduces joint soreness and speeds recovery. One fish oil capsule with dinner.'},
+];
+
+const PROTEIN_FOODS = [
+  {name:'4 eggs',g:24},{name:'Chicken 150g',g:46},{name:'Paneer 100g',g:18},
+  {name:'Dal 1 bowl',g:10},{name:'Greek Yogurt',g:17},{name:'Whey Scoop',g:24},
+  {name:'Milk 250ml',g:8},{name:'Tuna (can)',g:25}
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let currentDay = 0;
+let timerSec = 90, timerRunning = false, timerInterval = null, timerMax = 90;
+let proteinG = 0;
+let completedDays = new Set();
+let setsDone = {}; // key: dayIndex-exIndex-setIndex
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function renderWorkout() {
+  const d = DAYS[currentDay];
+  const el = document.getElementById('workout-content');
+  if (d.rest) {
+    el.innerHTML = `<div class="rest-panel">
+      <div class="rest-emoji">🛌</div>
+      <div class="rest-title">${d.name} — ${d.tag}</div>
+      <div class="rest-text" style="margin-bottom:20px">${d.restMsg}</div>
+      <div style="text-align:left;max-width:440px;margin:0 auto">
+        ${d.restTips.map(t=>`<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;color:var(--muted)"><span style="color:var(--green);flex-shrink:0">✓</span>${t}</div>`).join('')}
+      </div>
+    </div>`;
+  } else {
+    el.innerHTML = `
+      <div style="font-size:12px;color:var(--muted);margin-bottom:18px;font-family:'Space Mono',monospace;letter-spacing:.5px">🎯 FOCUS: ${d.focus}</div>
+      <div class="ex-wrap">${d.exercises.map((ex,i)=>renderExCard(ex,i)).join('')}</div>
+      <div class="cardio-block"><div><div class="cb-left-label">Cardio After</div><div class="cb-detail">${d.cardio}</div></div><div class="cb-icon">🏃</div></div>`;
+  }
+}
+
+function renderExCard(ex, i) {
+  const day = currentDay, ex_key = `${day}-${i}`;
+  const totalSets = parseInt(ex.sets);
+  const setsRow = Array.from({length:totalSets},(_,s)=>{
+    const k=`${day}-${i}-${s}`, done=setsDone[k];
+    return `<button class="set-btn${done?' done':''}" onclick="toggleSet(${day},${i},${s})" title="Set ${s+1}">
+      <span>${done?'✓':s+1}</span>
+      <span class="set-btn-label">${done?'Done':'Set'}</span>
+    </button>`;
+  }).join('');
+
+  return `<div class="ex-card" id="exc-${i}">
+    <div class="ex-top" onclick="toggleEx(${i})">
+      <div class="ex-svg-wrap">${ex.svg}</div>
+      <div class="ex-info">
+        <div class="ex-num">Exercise ${i+1}</div>
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-sets">${ex.sets} × ${ex.reps}</div>
+        <div class="ex-muscles">🎯 ${ex.muscles}</div>
+      </div>
+      <div class="ex-toggle" id="ext-${i}">▼</div>
+    </div>
+    <div class="ex-detail" id="exd-${i}">
+      <div class="ex-cues">
+        <div class="ex-cues-title">✅ Correct Form</div>
+        ${ex.cues.map(c=>`<div class="cue-item"><div class="cue-dot"></div><span>${c}</span></div>`).join('')}
+      </div>
+      <div class="ex-mistakes">
+        <div class="ex-mistakes-title">❌ Common Mistakes</div>
+        ${ex.mistakes.map(m=>`<div class="mistake-item"><div class="mistake-dot"></div><span>${m}</span></div>`).join('')}
+      </div>
+      <div class="ex-set-tracker">
+        <div class="set-tracker-title">Set Tracker — tap when done</div>
+        <div class="sets-row">${setsRow}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleEx(i) {
+  const d = document.getElementById(`exd-${i}`);
+  const t = document.getElementById(`ext-${i}`);
+  const c = document.getElementById(`exc-${i}`);
+  const open = d.classList.toggle('open');
+  t.classList.toggle('open', open);
+  c.classList.toggle('expanded', open);
+}
+
+function toggleSet(day,ex,set) {
+  const k=`${day}-${ex}-${set}`;
+  setsDone[k]=!setsDone[k];
+  renderWorkout();
+  checkDayDone(day);
+}
+
+function checkDayDone(day) {
+  const d = DAYS[day];
+  if (d.rest) return;
+  let allDone = d.exercises.every((ex,i)=>{
+    const total = parseInt(ex.sets);
+    return Array.from({length:total},(_,s)=>setsDone[`${day}-${i}-${s}`]).every(Boolean);
+  });
+  if (allDone) { completedDays.add(day); updateWeekUI(); }
+}
+
+function updateWeekUI() {
+  for(let i=0;i<7;i++){
+    const el=document.getElementById('wc'+i);
+    if(el) el.textContent = completedDays.has(i) ? '✓' : '○';
+    const wd = document.querySelectorAll('.wday')[i];
+    if(wd && completedDays.has(i)) wd.classList.add('done');
+  }
+}
+
+function selectDay(d) {
+  currentDay = d;
+  document.querySelectorAll('.day-tab').forEach((t,i)=>t.classList.toggle('active',i===d));
+  renderWorkout();
+}
+
+function goWorkout(d) {
+  nav('workout');
+  setTimeout(()=>selectDay(d),50);
+}
+
+// ── FOOD GRID ────────────────────────────────────────────────────────────────
+function renderFoods() {
+  document.getElementById('food-grid').innerHTML = FOODS.map(f=>`
+    <div class="food-card">
+      <div class="food-icon">${f.icon}</div>
+      <div class="food-name">${f.name}</div>
+      <div class="food-protein">${f.protein}</div>
+      <div class="food-tags">${f.tags.map(t=>`<span class="ftag ftag-${t.c}">${t.l}</span>`).join('')}</div>
+      <div class="food-tip">${f.tip}</div>
+    </div>`).join('');
+}
+
+// ── MEALS ────────────────────────────────────────────────────────────────────
+function renderMeals() {
+  document.getElementById('meal-list').innerHTML = MEALS.map(m=>`
+    <div class="meal-item">
+      <div class="meal-time">${m.time.replace('\n','<br>')}</div>
+      <div>
+        <div class="meal-name">${m.name}</div>
+        <div class="meal-desc">${m.desc.replace(/\n/g,'<br>')}</div>
+      </div>
+      <div>
+        <div class="meal-kcal">${m.kcal}</div>
+        <div class="meal-kcal-label">kcal · ${m.protein}g prot</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── TIPS ─────────────────────────────────────────────────────────────────────
+function renderTips() {
+  document.getElementById('tip-grid').innerHTML = TIPS.map(t=>`
+    <div class="tip-card"><div class="tip-icon">${t.icon}</div><div class="tip-title">${t.title}</div><div class="tip-text">${t.text}</div></div>`).join('');
+  document.getElementById('supp-grid').innerHTML = SUPPS.map(s=>`
+    <div class="supp-card"><div class="supp-name">${s.name}</div><div class="supp-dose">${s.dose}</div><div class="supp-info">${s.info}</div></div>`).join('');
+}
+
+// ── PROTEIN TRACKER ──────────────────────────────────────────────────────────
+function renderProteinTracker() {
+  document.getElementById('protein-btns').innerHTML = PROTEIN_FOODS.map((f,i)=>`
+    <button onclick="addProtein(${f.g})" style="padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--s2);border:1px solid var(--border);color:var(--muted);transition:all .2s" 
+    onmouseenter="this.style.borderColor='var(--accent)';this.style.color='var(--text)'"
+    onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+      + ${f.name}<br><span style="font-family:'Space Mono',monospace;color:var(--accent);font-size:11px">+${f.g}g</span>
+    </button>`).join('');
+}
+
+function addProtein(g) {
+  proteinG = Math.min(proteinG + g, 200);
+  updateProteinUI();
+}
+
+function updateProteinUI() {
+  const pct = Math.min((proteinG/130)*100,100);
+  const el = document.getElementById('protein-count');
+  const bar = document.getElementById('protein-bar');
+  const badge = document.getElementById('daily-protein-badge');
+  if(el) el.textContent = `${proteinG}g / 130g`;
+  if(bar) bar.style.width = pct+'%';
+  if(badge) badge.textContent = proteinG;
+  if(pct>=100 && bar) bar.style.background='var(--accent)';
+}
+
+// ── WARMUP CHECKLIST ─────────────────────────────────────────────────────────
+function renderWarmup() {
+  const items = [
+    '5 min treadmill walk — 4.5–5 km/h',
+    'Arm circles — 10 forward, 10 backward',
+    'Shoulder cross-body stretch — 20 sec each',
+    'Hip circles — 10 each direction',
+    'Leg swings — front/back and side/side',
+    'Light band pull-aparts or rotations (upper body days)',
+    'Bodyweight squats × 10 (leg day)',
+  ];
+  document.getElementById('warmup-list').innerHTML = items.map((item,i)=>{
+    const id='wm'+i;
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;cursor:pointer" onclick="toggleWarmup('${id}',this)" id="${id}">
+      <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0" class="wm-dot"></div>
+      <span style="font-size:13px">${item}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleWarmup(id, el) {
+  const dot = el.querySelector('.wm-dot');
+  const done = dot.innerHTML === '✓';
+  dot.innerHTML = done ? '' : '✓';
+  dot.style.background = done ? '' : 'var(--green)';
+  dot.style.borderColor = done ? 'var(--border)' : 'var(--green)';
+  dot.style.color = done ? '' : '#0c0c14';
+  el.style.borderColor = done ? 'var(--border)' : 'var(--green)';
+}
+
+// ── TIMER ─────────────────────────────────────────────────────────────────────
+function updateTimerDisplay() {
+  const m = Math.floor(timerSec/60), s = timerSec%60;
+  document.getElementById('timer-disp').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const pct = (timerSec/timerMax);
+  document.getElementById('timer-disp').style.color = pct < 0.25 ? 'var(--red)' : pct < 0.5 ? 'var(--accent)' : 'var(--green)';
+}
+
+function timerToggle() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-main-btn').textContent = 'Resume';
+    document.getElementById('timer-main-btn').className = 'timer-btn timer-start';
+    document.getElementById('timer-label').textContent = 'PAUSED';
+  } else {
+    timerRunning = true;
+    document.getElementById('timer-main-btn').textContent = 'Pause';
+    document.getElementById('timer-main-btn').className = 'timer-btn timer-pause';
+    document.getElementById('timer-label').textContent = 'RESTING...';
+    timerInterval = setInterval(()=>{
+      if (timerSec > 0) { timerSec--; updateTimerDisplay(); }
+      else {
+        clearInterval(timerInterval); timerRunning = false;
+        document.getElementById('timer-main-btn').textContent = 'Start';
+        document.getElementById('timer-main-btn').className = 'timer-btn timer-start';
+        document.getElementById('timer-label').textContent = '✓ REST DONE — GO!';
+        document.getElementById('timer-disp').style.color = 'var(--green)';
+      }
+    }, 1000);
+  }
+}
+
+function timerReset() {
+  clearInterval(timerInterval); timerRunning = false;
+  timerSec = timerMax;
+  document.getElementById('timer-main-btn').textContent = 'Start';
+  document.getElementById('timer-main-btn').className = 'timer-btn timer-start';
+  document.getElementById('timer-label').textContent = 'READY';
+  updateTimerDisplay();
+}
+
+function setPreset(sec, label) {
+  timerMax = sec; timerSec = sec;
+  clearInterval(timerInterval); timerRunning = false;
+  document.getElementById('timer-main-btn').textContent = 'Start';
+  document.getElementById('timer-main-btn').className = 'timer-btn timer-start';
+  document.getElementById('timer-label').textContent = label.toUpperCase();
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('sel'));
+  event.target.classList.add('sel');
+  updateTimerDisplay();
+}
+
+// ── NAV ───────────────────────────────────────────────────────────────────────
+const PAGE_TITLES = {
+  overview:['Dashboard','72 kg · 175 cm · BMI 23.5 · Goal: Lean Muscle'],
+  workout:['Workout Plan','Push / Pull / Legs · 5 days/week'],
+  timer:['Rest Timer','Track your recovery between sets'],
+  diet:['Diet & Protein','130g protein/day · 2350 kcal · India-friendly'],
+  meals:['Meal Plan','Full day eating guide · ~148g protein'],
+  tips:['Recovery & Tips','Lifestyle, supplements & injury prevention'],
+};
+
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const btns = document.querySelectorAll('.sb-btn');
+  const order=['overview','workout','timer','diet','meals','tips'];
+  btns[order.indexOf(page)+1]?.classList.add('active');
+  const [t,s] = PAGE_TITLES[page]||['',''];
+  document.getElementById('page-title').textContent = t;
+  document.getElementById('page-sub').textContent = s;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderWorkout();
+renderFoods();
+renderMeals();
+renderTips();
+renderProteinTracker();
+renderWarmup();
+updateTimerDisplay();
+updateProteinUI();
+
+// animate progress bars
+setTimeout(()=>{
+  document.querySelectorAll('.prog-fill').forEach(f=>{
+    const w = f.style.width; f.style.width='0';
+    setTimeout(()=>f.style.width=w, 100);
+  });
+}, 200);
+</script>
+</body>
+</html>

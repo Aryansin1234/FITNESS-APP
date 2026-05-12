@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Aryan's Fitness App — Workout & Protein Tracker</title>
+<meta name="description" content="Personal fitness tracker with workout plan, protein tracking, rest timer, and Indian diet guide.">
+<meta name="theme-color" content="#07070f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fitness">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div class="splash" id="splash">
+  <div class="splash-logo">A</div>
+  <div class="splash-text">Loading your workout...</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="install-banner">
+  <div class="install-banner-text">📲 Install this app for offline use</div>
+  <button class="install-banner-btn" onclick="installPWA()">Install</button>
+  <button class="install-banner-close" onclick="dismissInstall()">✕</button>
+</div>
+
+<div class="app">
+
+<!-- ── SIDEBAR (Desktop) ── -->
+<div class="sidebar">
+  <div class="sb-logo">A</div>
+  <button class="sb-btn active" onclick="nav('overview')" title="Overview">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('workout')" title="Workout">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('timer')" title="Rest Timer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 2h6"/><path d="M12 2v3"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('diet')" title="Diet & Protein">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('meals')" title="Meal Plan">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+  </button>
+  <button class="sb-btn" onclick="nav('tips')" title="Recovery & Tips">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+  </button>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main-area">
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div>
+    <div class="top-title" id="page-title">Dashboard</div>
+    <div class="top-sub" id="page-sub">72 kg · 175 cm · BMI 23.5 · Goal: Lean Muscle</div>
+  </div>
+  <div class="top-right">
+    <div class="badge">Protein <span id="daily-protein-badge">0</span>/130g</div>
+    <div class="badge">Day <span id="gym-day-count">4</span></div>
+  </div>
+</div>
+
+<!-- ════════════ OVERVIEW PAGE ════════════ -->
+<div class="page active" id="page-overview">
+
+  <!-- Hero Banner -->
+  <div class="hero-banner">
+    <div class="hero-greeting" id="hero-greeting">Good Morning, Aryan 💪</div>
+    <div class="hero-sub">Your personalized 6-day muscle group split is ready. Stay consistent, track your protein, and trust the process.</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-val">72kg</span><span class="hero-stat-label">Weight</span></div>
+      <div class="hero-stat"><span class="hero-stat-val">175cm</span><span class="hero-stat-label">Height</span></div>
+      <div class="hero-stat"><span class="hero-stat-val">23.5</span><span class="hero-stat-label">BMI</span></div>
+      <div class="hero-stat"><span class="hero-stat-val">2350</span><span class="hero-stat-label">kcal/day</span></div>
+      <div class="hero-stat"><span class="hero-stat-val">130g</span><span class="hero-stat-label">Protein</span></div>
+    </div>
+  </div>
+
+  <!-- Motivational Quote -->
+  <div class="quote-banner" id="quote-block"></div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="sc-label">Daily Protein</div><div class="sc-val sc-accent">130<span style="font-size:16px">g</span></div><div class="sc-sub">72kg × 1.8g/kg</div></div>
+    <div class="stat-card"><div class="sc-label">Daily Calories</div><div class="sc-val sc-blue">2350<span style="font-size:16px">kcal</span></div><div class="sc-sub">Lean recomp</div></div>
+    <div class="stat-card"><div class="sc-label">Gym Days/wk</div><div class="sc-val sc-green">6<span style="font-size:16px">days</span></div><div class="sc-sub">Full Body Split</div></div>
+    <div class="stat-card"><div class="sc-label">Cardio/wk</div><div class="sc-val sc-red">3×</div><div class="sc-sub">15–20 min</div></div>
+    <div class="stat-card"><div class="sc-label">BMR</div><div class="sc-val" style="color:var(--purple)">1760<span style="font-size:16px">kcal</span></div><div class="sc-sub">At rest</div></div>
+    <div class="stat-card"><div class="sc-label">TDEE</div><div class="sc-val sc-accent">2640<span style="font-size:16px">kcal</span></div><div class="sc-sub">With training</div></div>
+  </div>
+
+  <div class="sh">Body Stats</div>
+  <div class="prog-wrap"><div class="prog-top"><span class="prog-label">BMI — 23.5</span><span class="prog-val">Normal (18.5–24.9)</span></div><div class="prog-bar"><div class="prog-fill" style="width:72%;background:var(--green)"></div></div><div class="prog-note">You're in the healthy range. Ideal starting point for lean recomp.</div></div>
+  <div class="prog-wrap"><div class="prog-top"><span class="prog-label">TDEE Coverage</span><span class="prog-val">2350 / 2640 kcal</span></div><div class="prog-bar"><div class="prog-fill" style="width:89%;background:var(--blue)"></div></div><div class="prog-note">~290 kcal deficit — gentle recomp without muscle loss.</div></div>
+  <div class="prog-wrap"><div class="prog-top"><span class="prog-label">Protein Target</span><span class="prog-val">130g / day</span></div><div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--accent)"></div></div><div class="prog-note">Split across 5 meals. Hit this every day — non-negotiable for muscle.</div></div>
+
+  <div class="sh">Body Weight Tracker</div>
+  <div class="weight-tracker-card">
+    <div class="weight-input-row">
+      <input type="number" id="weight-input" class="weight-input-field" placeholder="Enter weight (kg)" step="0.1" min="30" max="200">
+      <button class="weight-log-btn" onclick="logWeight()">📊 Log Weight</button>
+    </div>
+    <div id="weight-chart"></div>
+  </div>
+
+  <div class="sh">This Week</div>
+  <div class="week-grid">
+    <div class="wday active" onclick="goWorkout(0)"><div class="wday-name">MON</div><div class="wday-tag push">Chest</div><div class="wday-check" id="wc0">○</div></div>
+    <div class="wday" onclick="goWorkout(1)"><div class="wday-name">TUE</div><div class="wday-tag pull">Back</div><div class="wday-check" id="wc1">○</div></div>
+    <div class="wday" onclick="goWorkout(2)"><div class="wday-name">WED</div><div class="wday-tag legs">Legs Q</div><div class="wday-check" id="wc2">○</div></div>
+    <div class="wday" onclick="goWorkout(3)"><div class="wday-name">THU</div><div class="wday-tag core">Shoulder</div><div class="wday-check" id="wc3">○</div></div>
+    <div class="wday" onclick="goWorkout(4)"><div class="wday-name">FRI</div><div class="wday-tag legs">Legs H</div><div class="wday-check" id="wc4">○</div></div>
+    <div class="wday" onclick="goWorkout(5)"><div class="wday-name">SAT</div><div class="wday-tag pull">Arms</div><div class="wday-check" id="wc5">○</div></div>
+    <div class="wday" onclick="goWorkout(6)"><div class="wday-name">SUN</div><div class="wday-tag rest">Rest</div><div class="wday-check" id="wc6">○</div></div>
+  </div>
+
+  <div class="sh">Strategy</div>
+  <div class="strat-grid">
+    <div class="strat-card"><div class="strat-icon">🎯</div><div class="strat-title">Lean Recomp</div><div class="strat-text">Build muscle while reducing fat at a ~290 kcal deficit. Clean, steady progress. No crash diets.</div></div>
+    <div class="strat-card"><div class="strat-icon">📐</div><div class="strat-title">Muscle Group Split</div><div class="strat-text">6 days training, 1 rest. Chest/Back/Legs(Q)/Shoulders/Legs(H)/Arms — every muscle trained with dedicated focus.</div></div>
+    <div class="strat-card"><div class="strat-icon">📈</div><div class="strat-title">Progressive Overload</div><div class="strat-text">Add 2.5–5 kg or 1–2 reps every 2 weeks. This is the only way muscles keep growing.</div></div>
+    <div class="strat-card"><div class="strat-icon">🌙</div><div class="strat-title">Sleep = Growth</div><div class="strat-text">Growth hormone peaks during deep sleep. 7–8 hrs is part of your training program.</div></div>
+  </div>
+
+  <div class="reset-row">
+    <button class="reset-btn" onclick="resetDay()">↻ Reset Today</button>
+    <button class="reset-btn" onclick="resetWeek()">↻ Reset Week</button>
+  </div>
+</div>
+
+<!-- ════════════ WORKOUT PAGE ════════════ -->
+<div class="page" id="page-workout">
+  <div class="workout-stopwatch">
+    <span style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">⏱ Workout Duration</span>
+    <span class="sw-time" id="sw-display">00:00</span>
+    <button class="sw-btn sw-start" id="sw-btn" onclick="toggleWorkoutStopwatch()">▶ Start</button>
+    <button class="sw-btn sw-reset" onclick="resetWorkoutStopwatch()">↻</button>
+  </div>
+  <div class="day-tabs" id="day-tabs">
+    <button class="day-tab active" onclick="selectDay(0)">Mon — Chest & Triceps</button>
+    <button class="day-tab" onclick="selectDay(1)">Tue — Back & Traps</button>
+    <button class="day-tab" onclick="selectDay(2)">Wed — Legs (Quads)</button>
+    <button class="day-tab" onclick="selectDay(3)">Thu — Shoulders & Abs</button>
+    <button class="day-tab" onclick="selectDay(4)">Fri — Legs (Hams)</button>
+    <button class="day-tab" onclick="selectDay(5)">Sat — Arms & Forearms</button>
+    <button class="day-tab rest-day" onclick="selectDay(6)">Sun — Rest</button>
+  </div>
+  <div id="workout-content"></div>
+</div>
+
+<!-- ════════════ TIMER PAGE ════════════ -->
+<div class="page" id="page-timer">
+  <div class="sh">Rest Timer</div>
+  <div class="timer-wrap">
+    <div class="timer-label" id="timer-label">READY</div>
+    <div class="timer-display" id="timer-disp">01:30</div>
+    <div class="timer-controls">
+      <button class="timer-btn timer-start" id="timer-main-btn" onclick="timerToggle()">Start</button>
+      <button class="timer-btn timer-reset" onclick="timerReset()">Reset</button>
+    </div>
+    <div class="timer-presets">
+      <button class="preset-btn sel" onclick="setPreset(45,'45s — Core')">45s</button>
+      <button class="preset-btn" onclick="setPreset(60,'60s — Isolation')">60s</button>
+      <button class="preset-btn" onclick="setPreset(90,'90s — Default')">90s</button>
+      <button class="preset-btn" onclick="setPreset(120,'2m — Compound')">2m</button>
+      <button class="preset-btn" onclick="setPreset(180,'3m — Heavy lift')">3m</button>
+    </div>
+  </div>
+
+  <div class="sh">Rest Guide</div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="sc-label">Compound Lifts</div><div class="sc-val sc-accent" style="font-size:24px">90s</div><div class="sc-sub">Press, squat, deadlift, rows</div></div>
+    <div class="stat-card"><div class="sc-label">Isolation Moves</div><div class="sc-val sc-blue" style="font-size:24px">60s</div><div class="sc-sub">Curls, raises, extensions</div></div>
+    <div class="stat-card"><div class="sc-label">Core Exercises</div><div class="sc-val sc-green" style="font-size:24px">45s</div><div class="sc-sub">Planks, crunches, twists</div></div>
+    <div class="stat-card"><div class="sc-label">Heavy Sets</div><div class="sc-val" style="color:var(--purple);font-size:24px">2–3m</div><div class="sc-sub">When weight is near max</div></div>
+  </div>
+
+  <div class="sh">Warm-Up Checklist</div>
+  <div id="warmup-list"></div>
+</div>
+
+<!-- ════════════ DIET PAGE ════════════ -->
+<div class="page" id="page-diet">
+  <div class="sh">Daily Macros</div>
+  <div class="hero-banner" style="margin-bottom:28px">
+    <div style="display:flex;gap:28px;align-items:center;flex-wrap:wrap">
+      <div style="position:relative;z-index:1">
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Daily Target</div>
+        <div style="font-size:54px;font-weight:800;line-height:1;color:var(--accent)">130<span style="font-size:20px;color:var(--muted)">g protein</span></div>
+        <div style="font-size:13px;color:var(--dim);margin-top:10px">72 kg × 1.8 g/kg = 129.6 ≈ 130g</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;flex:1;min-width:200px;position:relative;z-index:1">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);font-size:13px"><span>Protein (130g)</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">520 kcal</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);font-size:13px"><span>Carbs (260g)</span><span style="font-family:'Space Mono',monospace;color:var(--blue)">1040 kcal</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);font-size:13px"><span>Fats (88g)</span><span style="font-family:'Space Mono',monospace;color:var(--red)">792 kcal</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(245,200,66,.06);border:1px solid rgba(245,200,66,.15);border-radius:var(--r);font-size:13px;font-weight:700"><span>Total</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">2352 kcal</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh">Best Indian Protein Sources</div>
+  <div class="food-grid" id="food-grid"></div>
+
+  <div class="sh">Protein Tracker (Today)</div>
+  <div class="protein-tracker">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--muted)">Consumed today</div>
+      <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--green)" id="protein-count">0g / 130g</div>
+    </div>
+    <div class="prog-bar" style="height:10px;margin-bottom:18px"><div class="prog-fill" id="protein-bar" style="width:0%;background:var(--green)"></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" id="protein-btns"></div>
+  </div>
+
+  <div class="sh">Water Intake (Today)</div>
+  <div class="water-tracker">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--muted)">💧 Glasses consumed</div>
+      <div style="font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--blue)" id="water-count">0 / 8 glasses</div>
+    </div>
+    <div class="prog-bar" style="height:10px;margin-bottom:18px"><div class="prog-fill" id="water-bar" style="width:0%;background:var(--blue)"></div></div>
+    <div class="water-glasses-row" id="water-glasses"></div>
+    <button class="water-add-btn" onclick="addWater()">+ Add Glass (250ml)</button>
+  </div>
+</div>
+
+<!-- ════════════ MEALS PAGE ════════════ -->
+<div class="page" id="page-meals">
+  <div class="sh">Full Day Meal Plan — ~2350 kcal · 148g protein</div>
+  <div id="meal-list"></div>
+  <div style="background:rgba(61,232,160,.04);border:1px solid rgba(61,232,160,.12);border-radius:var(--r2);padding:20px 22px;margin-top:12px">
+    <div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Daily Protein Tally</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--accent)">Post-Workout: 38g</div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--blue)">Lunch: 45g</div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--green)">Snack: 20g</div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--purple)">Dinner: 35g</div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--muted)">Night: 10g</div>
+      <div style="background:rgba(61,232,160,.08);border:1px solid rgba(61,232,160,.2);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">Total: ~148g ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ TIPS PAGE ════════════ -->
+<div class="page" id="page-tips">
+  <div class="sh">Recovery & Lifestyle</div>
+  <div class="tip-grid" id="tip-grid"></div>
+  <div class="sh">Optional Supplements</div>
+  <div class="supp-grid" id="supp-grid"></div>
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> This is general fitness guidance for a healthy 23-year-old. Not a substitute for advice from a certified trainer, sports nutritionist, or medical professional. If you feel pain, dizziness, or unusual fatigue — stop and consult a doctor.
+  </div>
+</div>
+
+</div><!-- end main-area -->
+</div><!-- end app -->
+
+<!-- ── MOBILE BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bn-btn active" onclick="nav('overview')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="bn-btn" onclick="nav('workout')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>
+      <span>Workout</span>
+    </button>
+    <button class="bn-btn" onclick="nav('timer')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 2h6"/><path d="M12 2v3"/></svg>
+      <span>Timer</span>
+    </button>
+    <button class="bn-btn" onclick="nav('diet')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+      <span>Diet</span>
+    </button>
+    <button class="bn-btn" onclick="nav('meals')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+      <span>Meals</span>
+    </button>
+    <button class="bn-btn" onclick="nav('tips')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span>Tips</span>
+    </button>
+  </div>
+</nav>
+
+<script src="./data.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
