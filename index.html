@@ -195,17 +195,17 @@
 <div class="page" id="page-diet">
   <div class="sh">Daily Macros</div>
   <div class="hero-banner" style="margin-bottom:28px">
-    <div style="display:flex;gap:28px;align-items:center;flex-wrap:wrap">
-      <div style="position:relative;z-index:1">
+    <div class="diet-macros-wrap">
+      <div style="position:relative;z-index:1;min-width:0">
         <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Daily Target</div>
-        <div style="font-size:54px;font-weight:800;line-height:1;color:var(--accent)">130<span style="font-size:20px;color:var(--muted)">g protein</span></div>
-        <div style="font-size:13px;color:var(--dim);margin-top:10px">72 kg × 1.8 g/kg = 129.6 ≈ 130g</div>
+        <div class="diet-protein-big">130<span style="font-size:16px;color:var(--muted)">g protein</span></div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">72 kg × 1.8 g/kg = 129.6 ≈ 130g</div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:8px;flex:1;min-width:200px;position:relative;z-index:1">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);font-size:13px"><span>Protein (130g)</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">520 kcal</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);font-size:13px"><span>Carbs (260g)</span><span style="font-family:'Space Mono',monospace;color:var(--blue)">1040 kcal</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);font-size:13px"><span>Fats (88g)</span><span style="font-family:'Space Mono',monospace;color:var(--red)">792 kcal</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(245,200,66,.06);border:1px solid rgba(245,200,66,.15);border-radius:var(--r);font-size:13px;font-weight:700"><span>Total</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">2352 kcal</span></div>
+      <div class="diet-macro-rows">
+        <div class="diet-macro-row"><span>Protein (130g)</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">520 kcal</span></div>
+        <div class="diet-macro-row"><span>Carbs (260g)</span><span style="font-family:'Space Mono',monospace;color:var(--blue)">1040 kcal</span></div>
+        <div class="diet-macro-row"><span>Fats (88g)</span><span style="font-family:'Space Mono',monospace;color:var(--red)">792 kcal</span></div>
+        <div class="diet-macro-row diet-macro-total"><span>Total</span><span style="font-family:'Space Mono',monospace;color:var(--accent)">2352 kcal</span></div>
       </div>
     </div>
   </div>
@@ -239,15 +239,15 @@
 <div class="page" id="page-meals">
   <div class="sh">Full Day Meal Plan — ~2350 kcal · 148g protein</div>
   <div id="meal-list"></div>
-  <div style="background:rgba(61,232,160,.04);border:1px solid rgba(61,232,160,.12);border-radius:var(--r2);padding:20px 22px;margin-top:12px">
-    <div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px">Daily Protein Tally</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--accent)">Post-Workout: 38g</div>
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--blue)">Lunch: 45g</div>
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--green)">Snack: 20g</div>
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--purple)">Dinner: 35g</div>
-      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;color:var(--muted)">Night: 10g</div>
-      <div style="background:rgba(61,232,160,.08);border:1px solid rgba(61,232,160,.2);border-radius:var(--r);padding:8px 16px;font-size:12px;font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">Total: ~148g ✓</div>
+  <div class="protein-tally-card">
+    <div class="protein-tally-title">Daily Protein Tally</div>
+    <div class="protein-tally-chips">
+      <div class="ptally-chip" style="color:var(--accent)">Post-Workout: 38g</div>
+      <div class="ptally-chip" style="color:var(--blue)">Lunch: 45g</div>
+      <div class="ptally-chip" style="color:var(--green)">Snack: 20g</div>
+      <div class="ptally-chip" style="color:var(--purple)">Dinner: 35g</div>
+      <div class="ptally-chip" style="color:var(--muted)">Night: 10g</div>
+      <div class="ptally-chip ptally-total">Total: ~148g ✓</div>
     </div>
   </div>
 </div>
