@@ -473,7 +473,7 @@ function resetWeek() {
 // ── NAV ───────────────────────────────────────────────────────────────────────
 const PAGE_TITLES = {
   overview:['Dashboard','72 kg · 175 cm · BMI 23.5 · Goal: Lean Muscle'],
-  workout:['Workout Plan','Chest / Back / Legs / Shoulders / Arms · 6 days/week'],
+  workout:['Workout Plan','Chest / Back / Legs / Shoulders / Power / Arms · 6 days/week'],
   timer:['Rest Timer','Track your recovery between sets'],
   diet:['Diet & Protein','130g protein/day · 2350 kcal · India-friendly'],
   meals:['Meal Plan','Full day eating guide · ~148g protein'],
