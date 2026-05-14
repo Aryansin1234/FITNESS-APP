@@ -42,6 +42,11 @@ const DAYS = [
      svg:`<img src="./images/tricep_pushdown.png" alt="Tricep Rope Pushdown">`,
      cues:['Elbows locked tight to torso — key cue','Lean forward slightly at the hip','Spread rope ends apart at the bottom','Full extension — lock out elbows','Control the cable back up slowly'],
      mistakes:['Elbows flaring out to the sides','Using shoulder/body momentum','Not achieving full extension']},
+    /* — CHEST ISOLATION (restore flat flyes for inner chest) — */
+    {name:'Flat Dumbbell Flyes',sets:'3',reps:'12',muscles:'Mid/Inner Chest, Pec stretch',
+     svg:`<img src="./images/db_flyes.jpg" alt="Flat Dumbbell Flyes">`,
+     cues:['Flat bench — slight elbow bend throughout','Open arms wide for deep chest stretch','Squeeze pecs together at the top','Control descent — 3 seconds down','Feel the stretch at the bottom'],
+     mistakes:['Arms too straight (elbow stress)','Going too heavy','Not getting full stretch']},
     /* — BURNOUT FINISHER — */
     {name:'Push-Ups (Burnout Finisher)',sets:'2',reps:'To failure',muscles:'Chest, Triceps, Core',
      svg:`<img src="./images/push_ups.png" alt="Push-Ups (Finisher)">`,
@@ -197,54 +202,49 @@ const DAYS = [
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
-     FRIDAY — POWER & CONDITIONING
-     Sequence: Heaviest barbell lifts → Functional strength → Conditioning circuits → Core endurance
+     FRIDAY — BACK & BICEPS (2× frequency for both)
+     Sequence: Heavy compound pulls → Row variations → Bicep compound → Bicep isolation
+     Different angles from Tuesday for complete development
      ═══════════════════════════════════════════════════════════════ */
-  {name:'Friday',tag:'Power & Conditioning',tagClass:'power',
-   focus:'Deadlift · Explosive Power · Stamina · Endurance · Functional Strength',
-   cardio:'Built into the session — conditioning IS the workout',
+  {name:'Friday',tag:'Back & Biceps',tagClass:'pull',
+   focus:'Lats (width) · Mid Back (thickness) · Biceps (peak + width) — 2× per week',
+   cardio:'Rowing machine · 10 min · Light pace — great back warm-up',
    exercises:[
-    /* — THE BIG 3 BARBELL LIFTS (peak strength, do these fresh) — */
+    /* — HEAVY COMPOUND PULLS (freshest = heaviest) — */
     {name:'Conventional Deadlift',sets:'5',reps:'5',muscles:'Entire Posterior Chain, Quads, Core, Grip, Traps',
      svg:`<img src="./images/stiff_leg_deadlift.jpg" alt="Conventional Deadlift">`,
      cues:['Bar over mid-foot, shins touch bar','Hips hinge back — back FLAT, chest up','Drive through heels — push the floor away','Bar stays touching legs the entire pull','Lock out at top — shoulders back, hips through'],
      mistakes:['Rounding the back (major injury risk)','Jerking the bar off floor','Hips shooting up first','Bar drifting away from body']},
-    {name:'Barbell Bench Press',sets:'4',reps:'6–8',muscles:'Chest, Front Delts, Triceps — raw pushing power',
-     svg:`<img src="./images/bench_press.jpg" alt="Barbell Bench Press">`,
-     cues:['Grip 1.5× shoulder width','Arch upper back, shoulder blades pinched','Lower bar to lower chest — touch and press','Feet planted, drive through legs','Explosive press up — controlled down'],
-     mistakes:['Bouncing off chest','Flaring elbows 90°','Uneven pressing','Not using leg drive']},
-    {name:'Barbell Overhead Press',sets:'4',reps:'6–8',muscles:'All Deltoid Heads, Triceps, Core — overhead strength',
-     svg:`<img src="./images/seated_shoulder_press.png" alt="Barbell Overhead Press">`,
-     cues:['Standing — bar starts at collarbone','Press straight up — head moves BACK slightly','Lock out fully at the top','Core braced HARD — no back arch','Lower slowly to collarbone'],
-     mistakes:['Excessive back lean (turns into incline press)','Not locking out','Pressing bar forward instead of straight up']},
-    /* — WEIGHTED COMPOUND (strength builder) — */
-    {name:'Weighted Pull-Ups',sets:'4',reps:'6–8',muscles:'Lats, Biceps, Core, Grip — upper body power',
-     svg:`<img src="./images/pullups.jpg" alt="Weighted Pull-Ups">`,
-     cues:['Add weight via belt or DB between feet','Overhand grip, wider than shoulders','Pull chest to bar — not just chin','Full dead hang at bottom','If no weight, do slow 5-sec negatives'],
-     mistakes:['Kipping or swinging','Partial reps','Adding too much weight too soon']},
-    /* — FUNCTIONAL STRENGTH — */
-    {name:'Farmer\'s Walk (Heavy)',sets:'4',reps:'40 seconds',muscles:'Grip, Forearms, Traps, Core — functional strength',
-     svg:`<img src="./images/farmers_walk.jpg" alt="Farmer Walk">`,
-     cues:['Grab the HEAVIEST dumbbells you can hold','Walk slowly, chest tall, shoulders back','Crush the handles — max grip','Core engaged, don\'t lean','This builds real-world strength'],
-     mistakes:['Going too light','Hunching forward','Walking too fast']},
-    /* — CONDITIONING CIRCUIT (stamina + endurance) — */
-    {name:'Burpees',sets:'4',reps:'12',muscles:'Full Body — explosive power + cardio endurance',
-     svg:`<img src="./images/push_ups.png" alt="Burpees">`,
-     cues:['Squat down, hands on floor','Jump feet back to plank','Do a full push-up at the bottom','Jump feet back to hands','Explode UP — jump and clap overhead'],
-     mistakes:['Skipping the push-up','Not jumping at the top','Sloppy form when fatigued']},
-    {name:'Mountain Climbers',sets:'4',reps:'45 seconds',muscles:'Core, Hip Flexors, Cardio — stamina builder',
-     svg:`<img src="./images/mountain_climbers.jpg" alt="Mountain Climbers">`,
-     cues:['High plank — hands under shoulders','Drive knees to chest FAST','Keep hips level — don\'t pike up','Maintain pace for full 45 seconds','This builds cardio endurance rapidly'],
-     mistakes:['Hips rising too high','Slowing down mid-set','Losing plank form']},
-    /* — CORE ENDURANCE (finisher) — */
-    {name:'Plank Hold',sets:'3',reps:'60 seconds',muscles:'Entire Core, Shoulders, Lower Back — endurance',
-     svg:`<img src="./images/dead_bugs.jpg" alt="Plank Hold">`,
-     cues:['Forearms on floor, body straight as steel','Squeeze core, glutes, and quads','Don\'t let hips sag or pike up','Breathe steadily throughout','Build to 90 sec over time'],
-     mistakes:['Hips dropping','Head hanging down','Holding breath']},
-    {name:'Bicycle Crunches',sets:'3',reps:'20 (10 each side)',muscles:'Obliques, Upper & Lower Abs',
-     svg:`<img src="./images/bicycle_crunches.jpg" alt="Bicycle Crunches">`,
-     cues:['Hands behind head — don\'t pull neck','Opposite elbow to opposite knee','Fully extend the non-working leg','Rotate from TORSO, not just elbows','Controlled pace — 2 sec per rep'],
-     mistakes:['Pulling on the neck','Not rotating enough','Going too fast']}
+    {name:'T-Bar Row',sets:'4',reps:'8–10',muscles:'Mid Back thickness, Lats, Rhomboids',
+     svg:`<img src="./images/bent_over_db_row.jpg" alt="T-Bar Row">`,
+     cues:['Chest against pad (if machine) or bent over','Pull to chest — squeeze shoulder blades','Elbows drive BACK, not out','3 sec lower — feel the stretch','Heavy compound — go heavy here'],
+     mistakes:['Rounding lower back','Using momentum to jerk weight','Not squeezing at the top']},
+    {name:'Seated Cable Row (Close Grip)',sets:'4',reps:'10–12',muscles:'Mid Back, Lats, Rhomboids — thickness builder',
+     svg:`<img src="./images/seated_cable_row.png" alt="Seated Cable Row">`,
+     cues:['Sit tall, chest up, slight lean forward at start','Pull handle to lower chest — elbows past torso','Squeeze shoulder blades together for 2 seconds','Slow controlled release forward','Don\'t lean back excessively — torso stays upright'],
+     mistakes:['Leaning too far back (using momentum)','Pulling with arms instead of back','Shrugging shoulders up']},
+    /* — LAT ISOLATION (different angles from Tuesday) — */
+    {name:'Straight-Arm Lat Pulldown',sets:'3',reps:'12–15',muscles:'Lats isolation — no bicep involvement',
+     svg:`<img src="./images/lat_pulldown.png" alt="Straight-Arm Lat Pulldown">`,
+     cues:['Stand facing cable, arms extended up','Pull bar down to thighs in arc motion','Keep arms nearly straight — slight bend only','Squeeze lats hard at the bottom','Control the return — feel the stretch'],
+     mistakes:['Bending elbows too much (becomes pushdown)','Using momentum','Not feeling lats engage']},
+    {name:'Dumbbell Pullover',sets:'3',reps:'12',muscles:'Lats, Serratus, Chest stretch — expands ribcage',
+     svg:`<img src="./images/db_pullover.jpg" alt="Dumbbell Pullover">`,
+     cues:['Lie across bench — hips below bench level','Hold one DB overhead with both hands','Lower behind head — deep lat stretch','Pull back over chest using lats','Keep slight elbow bend throughout'],
+     mistakes:['Bending elbows too much','Not going deep enough for stretch','Using too much weight']},
+    /* — BICEPS (2× frequency — different exercises from Saturday) — */
+    {name:'Barbell Curl',sets:'4',reps:'8–10',muscles:'Biceps (both heads) — the mass builder',
+     svg:`<img src="./images/barbell_curl.jpg" alt="Barbell Curl">`,
+     cues:['Shoulder-width grip, elbows pinned to sides','Curl up — squeeze biceps HARD at top','Lower slowly — 3 seconds down','No swinging — if you sway, go lighter','Full extension at the bottom'],
+     mistakes:['Swinging torso for momentum','Elbows drifting forward','Not going to full extension']},
+    {name:'Incline Dumbbell Curl',sets:'3',reps:'10–12',muscles:'Biceps Long Head — builds the peak',
+     svg:`<img src="./images/db_bicep_curl.jpg" alt="Incline Dumbbell Curl">`,
+     cues:['Incline bench at 45° — arms hang straight down','Curl up without moving elbows forward','Supinate wrists (turn pinkies out) at the top','Slow 3-second negative — feel the stretch','The incline pre-stretches the long head'],
+     mistakes:['Elbows swinging forward','Sitting too upright (defeats the purpose)','Rushing the negative']},
+    {name:'Cable Hammer Curl (Rope)',sets:'3',reps:'12',muscles:'Brachialis, Brachioradialis — arm thickness',
+     svg:`<img src="./images/cable_hammer_curls.jpg" alt="Cable Hammer Curl">`,
+     cues:['Rope attachment on low cable','Neutral grip — palms facing each other','Curl up — keep elbows pinned','Squeeze at top, pull rope ends apart','Constant cable tension = better pump'],
+     mistakes:['Elbows moving forward','Using body momentum','Losing neutral grip']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
