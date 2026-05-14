@@ -1,3 +1,39 @@
+// ── THEME TOGGLE ─────────────────────────────────────────────────────────────
+function initTheme() {
+  const saved = localStorage.getItem('af_theme');
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.querySelector('meta[name="theme-color"]').content = '#f4f4f8';
+  }
+  updateThemeIcons();
+}
+
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    document.documentElement.removeAttribute('data-theme');
+    document.querySelector('meta[name="theme-color"]').content = '#07070f';
+    localStorage.setItem('af_theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.querySelector('meta[name="theme-color"]').content = '#f4f4f8';
+    localStorage.setItem('af_theme', 'light');
+  }
+  updateThemeIcons();
+  showToast(isLight ? '🌙 Dark mode' : '☀️ Light mode');
+}
+
+function updateThemeIcons() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const icon = isLight ? '☀️' : '🌙';
+  const sb = document.getElementById('sidebar-theme-btn');
+  const mb = document.getElementById('mobile-theme-btn');
+  if (sb) sb.textContent = icon;
+  if (mb) mb.querySelector('span').textContent = icon;
+}
+
+initTheme();
+
 // ── STORAGE HELPERS ──────────────────────────────────────────────────────────
 const STORAGE_KEYS = {
   setsDone: 'af_setsDone',

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aryan-fitness-v4';
+const CACHE_NAME = 'aryan-fitness-v5';
 const ASSETS = [
   './',
   './index.html',
