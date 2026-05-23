@@ -1,334 +1,324 @@
 const DAYS = [
   /* ═══════════════════════════════════════════════════════════════
      MONDAY — CHEST + TRICEPS (Heavy Push)
-     Sequence: Heavy compound presses → Isolation flyes → Compound tricep → Isolation tricep → Burnout
+     Evidence-based: 2 heavy compounds → 1 stretch-focused isolation → 1 peak-contraction isolation → Triceps (long head → lateral head)
+     Research: Schoenfeld 2021 — chest grows best with 12–20 sets/week split across 2 frequencies
      ═══════════════════════════════════════════════════════════════ */
   {name:'Monday',tag:'Chest & Triceps',tagClass:'push',
-   focus:'Chest (Upper + Lower + Inner) · Triceps (all 3 heads)',
-   cardio:'Treadmill · 10 min · Brisk walk 5.5–6 km/h · Incline 3%',
+   focus:'Chest (Upper + Mid + Stretch) · Triceps (Long + Lateral head)',
+   cardio:'Incline treadmill walk · 10 min · 6 km/h · 4% incline',
    exercises:[
-    /* — COMPOUND PRESSES (heaviest first, you're freshest) — */
-    {name:'Flat Dumbbell Press',sets:'4',reps:'8–10',muscles:'Mid Chest, Front Delts, Triceps',
+    /* — HEAVY COMPOUND #1: The progressive overload king — */
+    {name:'Flat Dumbbell Press',sets:'4',reps:'6–8',muscles:'Mid Chest, Front Delts, Triceps — PRIMARY mass builder',
      svg:`<img src="./images/flat_dumbbell_press.png" alt="Flat Dumbbell Press">`,
-     cues:['Elbows at 45° — not flared wide','Slight arch in upper back, shoulder blades pinched','Feet flat on floor, drive through heels','Lower to full chest stretch, then explode up','3 sec lower, 1 sec press up'],
-     mistakes:['Flaring elbows 90° (shoulder stress)','Bouncing off chest — no momentum','Half reps — full range of motion only','Letting wrists bend backward']},
-    {name:'Incline Dumbbell Press',sets:'4',reps:'8–10',muscles:'Upper Chest, Clavicular Head',
+     cues:['Retract scapulae HARD — pinch shoulder blades like you\'re cracking a walnut','Elbows at 45° angle — protects shoulder joint','Slight arch in UPPER back only (not lower)','Feet flat, drive through heels into floor','Full stretch at bottom → explosive press → squeeze at top','3 sec eccentric, 1 sec pause at bottom, explode up'],
+     mistakes:['Flaring elbows 90° (shoulder impingement)','Flat back — you NEED scapular retraction','Bouncing DBs off chest','Pressing too high (above eyes) — press to upper chest level','Letting wrists collapse backward']},
+    /* — HEAVY COMPOUND #2: Upper chest is genetically hard to grow — must overload it — */
+    {name:'Incline Dumbbell Press (30°)',sets:'4',reps:'8–10',muscles:'Upper Chest (Clavicular Head) — the "shelf" builder',
      svg:`<img src="./images/incline_dumbbell_press.png" alt="Incline Dumbbell Press">`,
-     cues:['Bench at 30–45° — not steeper','Squeeze upper chest hard at top','Elbows tucked 45°, not flared','Raise seat slightly to prevent sliding','Full stretch at the bottom'],
-     mistakes:['Bench angle above 60° (becomes shoulder press)','Not retracting shoulder blades','Going too heavy too soon']},
-    /* — CHEST ISOLATION (stretch + squeeze after compounds) — */
-    {name:'Incline Dumbbell Flyes',sets:'3',reps:'12',muscles:'Upper Chest, Pec stretch',
+     cues:['Bench at exactly 30° — research shows 30° activates upper chest MORE than 45°','Scapulae retracted and depressed','Slight seat incline to prevent sliding','Press toward ceiling — DBs converge slightly at top','Full deep stretch at bottom — feel upper pec stretch','Touch-and-go at bottom, squeeze hard at top'],
+     mistakes:['Bench above 45° (becomes anterior delt press)','Not retracting scapulae','Pressing DBs straight up instead of slight arc inward','Short-range reps — the STRETCH at bottom is where growth happens']},
+    /* — STRETCH-FOCUSED ISOLATION: Muscles grow most in lengthened position (Schoenfeld 2023) — */
+    {name:'Incline Dumbbell Flyes',sets:'3',reps:'10–12',muscles:'Upper + Inner Chest — maximal stretch stimulus',
      svg:`<img src="./images/incline_db_flyes.jpg" alt="Incline Dumbbell Flyes">`,
-     cues:['Incline bench at 30°','Slight bend in elbows — arc motion','Open arms wide for deep upper chest stretch','Squeeze pecs together at top','Control the descent — 3 seconds down'],
-     mistakes:['Arms too straight (elbow stress)','Bench too steep','Not getting full stretch at the bottom']},
-    {name:'Cable Crossover',sets:'3',reps:'12–15',muscles:'Inner Chest, Lower Chest definition',
-     svg:`<img src="./images/cable_crossover.jpg" alt="Cable Crossover">`,
-     cues:['Step forward, slight forward lean','Hands meet below chest level for lower chest','Squeeze and hold 1 second at the cross','Full stretch at back — feel chest open wide','Light weight — focus on the squeeze'],
-     mistakes:['Standing too upright','Using momentum instead of chest','Not crossing hands enough at the bottom']},
-    {name:'Pec Deck Machine',sets:'3',reps:'12–15',muscles:'Inner Chest, Chest squeeze isolation',
-     svg:`<img src="./images/pec_deck.jpg" alt="Pec Deck Machine">`,
-     cues:['Elbows at 90° on pads','Squeeze arms together — pecs do all work','Hold the squeeze for 1–2 seconds','Slow controlled opening — feel the stretch','Keep back flat against pad'],
-     mistakes:['Leaning forward off the pad','Using momentum to close arms','Not holding the squeeze']},
-    /* — TRICEPS: compound first, then isolation — */
-    {name:'Tricep Dips (Bench)',sets:'3',reps:'To failure',muscles:'Triceps, Lower Chest, Front Delts',
-     svg:`<img src="./images/tricep_dips.jpg" alt="Tricep Dips">`,
-     cues:['Hands on bench behind you, fingers forward','Lower until elbows at 90°','Push up through palms — squeeze triceps','Keep body close to bench','Legs straight for harder, bent for easier'],
-     mistakes:['Going too deep (shoulder stress)','Flaring elbows outward','Shrugging shoulders up']},
-    {name:'Overhead Tricep Extension',sets:'3',reps:'12',muscles:'Triceps Long Head (biggest head)',
-     svg:`<img src="./images/overhead_tricep_extension.jpg" alt="Overhead Tricep Extension">`,
-     cues:['Elbows pointing FORWARD — not flaring','Lower DB behind head until 90°','Full lockout extension at the top','Core tight — no lower back arch','Both hands grip one dumbbell securely'],
-     mistakes:['Elbows flaring wide','Partial range — missing the stretch','Back arching off the seat pad']},
-    {name:'Tricep Rope Pushdown',sets:'3',reps:'12',muscles:'Lateral + Medial Tricep heads',
+     cues:['30° incline — same as press','Slight bend in elbows (15–20°) — maintain throughout','Open arms WIDE — go as deep as comfortable for maximum stretch','The STRETCH at the bottom is the growth stimulus','Squeeze pecs together at top — don\'t clank DBs','4 second eccentric descent — TIME in the stretch = growth'],
+     mistakes:['Arms too straight (bicep tendon stress)','Not going deep enough — the stretch IS the exercise','Going too heavy (this is feel-based, not ego-based)','Bench too steep']},
+    /* — PEAK-CONTRACTION ISOLATION: Cable provides constant tension through full ROM — */
+    {name:'Cable Flyes (Mid or Low-to-High)',sets:'3',reps:'12–15',muscles:'Inner Chest squeeze + constant tension throughout ROM',
+     svg:`<img src="./images/cable_crossover.jpg" alt="Cable Flyes">`,
+     cues:['Cables at mid-height for overall chest, low for upper chest','Step forward into split stance for stability','Slight forward lean — chest drives the motion','Hands cross OVER each other at peak — supinate slightly','Hold the squeeze for 2 full seconds at peak contraction','Constant tension = no rest point = more metabolic stress'],
+     mistakes:['Standing too upright (turns into front delt)','Using momentum/body english','Not crossing hands at peak — you lose inner chest squeeze','Too heavy — cables are for FEEL, not ego']},
+    /* — TRICEPS: Long head first (largest head, crosses shoulder joint — needs overhead stretch) — */
+    {name:'Overhead Cable Tricep Extension',sets:'3',reps:'10–12',muscles:'Triceps LONG HEAD — the biggest head (60% of arm size)',
+     svg:`<img src="./images/overhead_tricep_extension.jpg" alt="Overhead Cable Tricep Extension">`,
+     cues:['Face AWAY from cable, rope behind head','Step forward into lunge for stability','Elbows point forward and UP — don\'t flare','Extend fully — lock out and squeeze','The stretch at the bottom is CRITICAL — long head crosses shoulder','Cable > dumbbell because tension stays constant at the stretch'],
+     mistakes:['Elbows flaring sideways (shifts to lateral head)','Not getting full stretch behind head','Arching lower back — brace core','Using too much weight — this is stretch-focused']},
+    /* — TRICEPS: Lateral head (the "horseshoe" shape visible from side) — */
+    {name:'Tricep Rope Pushdown',sets:'3',reps:'12–15',muscles:'Lateral + Medial heads — the "horseshoe"',
      svg:`<img src="./images/tricep_pushdown.png" alt="Tricep Rope Pushdown">`,
-     cues:['Elbows locked tight to torso — key cue','Lean forward slightly at the hip','Spread rope ends apart at the bottom','Full extension — lock out elbows','Control the cable back up slowly'],
-     mistakes:['Elbows flaring out to the sides','Using shoulder/body momentum','Not achieving full extension']},
-    /* — CHEST ISOLATION (restore flat flyes for inner chest) — */
-    {name:'Flat Dumbbell Flyes',sets:'3',reps:'12',muscles:'Mid/Inner Chest, Pec stretch',
-     svg:`<img src="./images/db_flyes.jpg" alt="Flat Dumbbell Flyes">`,
-     cues:['Flat bench — slight elbow bend throughout','Open arms wide for deep chest stretch','Squeeze pecs together at the top','Control descent — 3 seconds down','Feel the stretch at the bottom'],
-     mistakes:['Arms too straight (elbow stress)','Going too heavy','Not getting full stretch']},
-    /* — BURNOUT FINISHER — */
-    {name:'Push-Ups (Burnout Finisher)',sets:'2',reps:'To failure',muscles:'Chest, Triceps, Core',
-     svg:`<img src="./images/push_ups.png" alt="Push-Ups (Finisher)">`,
-     cues:['Body is a straight plank — head to heel','Hands slightly wider than shoulders','Chest must touch or graze the floor','Go until absolute failure — this finishes the chest'],
-     mistakes:['Hips sagging downward','Only going halfway down','Stopping before true failure']}
+     cues:['Elbows PINNED to ribs — this is non-negotiable','Lean forward slightly from hips','At the bottom: SPREAD rope ends apart and pronate (turn pinkies out)','Full lockout — squeeze the lateral head','Slow 3 sec return — don\'t let cable snap back','Light weight — feel > ego on this'],
+     mistakes:['Elbows drifting forward (turns into a press)','Not spreading rope at bottom','Body rocking for momentum','Partial reps — FULL extension every rep']},
+    /* — TRICEPS: Compound burnout — bench dips provide high stretch on long head under load — */
+    {name:'Weighted Dips (Chest/Tricep)',sets:'3',reps:'8–12',muscles:'Triceps, Lower Chest — heavy compound stretch',
+     svg:`<img src="./images/tricep_dips.jpg" alt="Dips">`,
+     cues:['Upright torso = more tricep; lean forward = more chest','Lower until upper arm is parallel to floor (90° elbow)','Drive up through palms — lock out at top','Add weight belt when bodyweight feels easy (>12 reps)','Shoulder blades down and back throughout'],
+     mistakes:['Going too deep past 90° (shoulder impingement)','Flaring elbows wide','Kipping or swinging','Forward lean too much if targeting triceps']},
+    /* — FINISHER: Metabolic stress via blood flow — */
+    {name:'Push-Ups (Mechanical Drop Set)',sets:'2',reps:'To absolute failure',muscles:'Chest, Triceps, Core — metabolic finisher',
+     svg:`<img src="./images/push_ups.png" alt="Push-Ups">`,
+     cues:['Start WIDE grip — failure → immediately switch to normal grip → failure → narrow grip → failure','That\'s ONE set — no rest between grip changes','Chest touches floor every rep — full ROM','This drives maximum blood flow and metabolic stress','The pump = cell swelling = growth signal'],
+     mistakes:['Hips sagging (weak core)','Stopping at moderate effort — push to TRUE failure','Partial reps — chest to floor is mandatory']}
   ]},
 
   /* ═══════════════════════════════════════════════════════════════
      TUESDAY — BACK + TRAPS (Heavy Pull)
-     Sequence: Vertical pulls → Horizontal rows → Isolation → Traps
+     Evidence-based: Vertical pull (width) → Horizontal row (thickness) → Stretch isolation → Traps
+     Research: Back responds to both high load + high volume. Train 2×/week (Tue + Fri)
      ═══════════════════════════════════════════════════════════════ */
   {name:'Tuesday',tag:'Back & Traps',tagClass:'pull',
    focus:'Lats (width) · Mid Back (thickness) · Traps · Rear Delts',
-   cardio:'Rowing machine · 10 min · Light pace — great back warm-up',
+   cardio:'Rowing machine · 8 min · Light pace — activates lats + opens shoulders',
    exercises:[
-    /* — VERTICAL PULLS (lat width — heaviest first) — */
-    {name:'Pull-Ups (Wide Grip)',sets:'4',reps:'6–10',muscles:'Lats, Teres Major, Biceps, Core',
+    /* — VERTICAL PULL #1: Nothing builds lat width like weighted pull-ups — */
+    {name:'Pull-Ups (Wide Grip)',sets:'4',reps:'6–10 (add weight when >10)',muscles:'Lats, Teres Major, Lower Traps, Biceps',
      svg:`<img src="./images/pullups.jpg" alt="Pull-Ups">`,
-     cues:['Grip wider than shoulders — overhand','Pull chest toward bar, not chin','Drive elbows DOWN and BACK','Full dead hang at bottom — no half reps','Control the descent — 3 seconds down'],
-     mistakes:['Kipping or swinging','Only pulling chin over (not chest)','Not going to full hang at bottom']},
-    {name:'Wide-Grip Lat Pulldown',sets:'4',reps:'10–12',muscles:'Lats (width), Teres Major, Biceps',
-     svg:`<img src="./images/lat_pulldown.png" alt="Wide-Grip Lat Pulldown">`,
-     cues:['Drive elbows DOWN toward hip pockets','Pull bar to upper chest — NOT chin','Lean back only 15° — not 45°','Arms fully extended at top (full stretch)','Squeeze lats hard at the bottom'],
-     mistakes:['Pulling bar behind the neck','Excessive backward lean','Shrugging shoulders up at the top']},
-    {name:'Close-Grip Lat Pulldown',sets:'3',reps:'12',muscles:'Lower Lats, Biceps, Rhomboids',
-     svg:`<img src="./images/close_grip_lat_pulldown.jpg" alt="Close-Grip Lat Pulldown">`,
-     cues:['Use V-bar or narrow handle','Pull to upper chest, lean back 15°','Squeeze lats at bottom — hold 1 sec','Full stretch at top — arms fully extended','Focus on lower lat squeeze'],
-     mistakes:['Pulling too far back','Not extending fully at top','Using too much bicep']},
-    /* — HORIZONTAL ROWS (mid-back thickness) — */
-    {name:'Bent Over Dumbbell Row',sets:'4',reps:'10 each side',muscles:'Lats, Rhomboids, Rear Delts, Traps',
-     svg:`<img src="./images/bent_over_db_row.jpg" alt="Bent Over Dumbbell Row">`,
-     cues:['Hinge at hips — back parallel to floor','Pull elbow toward hip, not ear','Retract shoulder blade at peak','Full stretch at bottom every rep','Keep spine neutral — no rounding'],
-     mistakes:['Rounding the back','Rotating the torso','Pulling too high toward shoulder']},
-    {name:'Seated Cable Row',sets:'4',reps:'10–12',muscles:'Mid Back, Rhomboids, Lower Traps',
+     cues:['Grip 1.5× shoulder width — overhand','Initiate by DEPRESSING scapulae (pull shoulders down first)','Drive elbows DOWN and BACK toward hip pockets','Pull CHEST to bar — not just chin over','Full dead hang at bottom — full scapular protraction','3 sec eccentric every rep — this is where growth happens','Add weight belt when you hit 10+ clean reps'],
+     mistakes:['Kipping or using momentum','Only getting chin over (partial ROM)','Not going to full dead hang (missing lat stretch)','Shrugging shoulders up at the top']},
+    /* — VERTICAL PULL #2: Heavier progressive overload than pull-ups — */
+    {name:'Lat Pulldown (Wide, Pronated)',sets:'4',reps:'10–12',muscles:'Lats (width), Teres Major — heavier overload possible',
+     svg:`<img src="./images/lat_pulldown.png" alt="Lat Pulldown">`,
+     cues:['Grip outside shoulders — pronated (overhand)','Lean back 15° MAX — no more','Drive elbows DOWN toward hip pockets — not back','Pull to upper chest, never behind neck','Arms FULLY extended at top — complete lat stretch','Squeeze lats at bottom — hold 1 sec','Think "elbows into back pockets"'],
+     mistakes:['Pulling behind neck (shoulder impingement)','Excessive backward lean (becomes a row)','Using biceps — think ELBOWS not HANDS','Not extending fully at top — missing the stretch']},
+    /* — HORIZONTAL ROW #1: Heavy compound for mid-back thickness — */
+    {name:'Barbell Bent-Over Row',sets:'4',reps:'6–8',muscles:'Lats, Rhomboids, Rear Delts, Erectors — #1 thickness builder',
+     svg:`<img src="./images/bent_over_db_row.jpg" alt="Barbell Row">`,
+     cues:['Hinge at hips — torso 45–60° to floor','Overhand or underhand grip (underhand = more lats)','Pull bar to lower chest/upper abdomen','RETRACT scapulae hard at the top — squeeze 1 sec','Lower fully — arms straight, lats stretched','Keep spine NEUTRAL — never round','This is your heaviest row — progressive overload priority'],
+     mistakes:['Rounding the lumbar spine','Torso coming too upright (becomes a shrug)','Not retracting scapulae at the top','Rowing to belly button (too low for lat engagement)']},
+    /* — HORIZONTAL ROW #2: Chest-supported = zero cheating, pure back isolation — */
+    {name:'Chest-Supported Dumbbell Row',sets:'3',reps:'10–12',muscles:'Mid Back, Rhomboids, Rear Delts — ZERO momentum possible',
+     svg:`<img src="./images/bent_over_db_row.jpg" alt="Chest-Supported Row">`,
+     cues:['Lie face-down on incline bench (30–45°)','Let DBs hang — full scapular protraction at bottom','Row DBs up — elbows drive BACK past torso','SQUEEZE shoulder blades together at top — hold 2 sec','Chest against pad = IMPOSSIBLE to cheat','3 sec eccentric — feel the stretch at bottom','This mid-back isolation is unmatched'],
+     mistakes:['Lifting chest off pad (defeats the purpose)','Rowing too high (traps take over)','Not getting full stretch at bottom','Shrugging shoulders up']},
+    /* — HORIZONTAL ROW #3: Cable for constant tension — */
+    {name:'Seated Cable Row (V-Grip)',sets:'3',reps:'10–12',muscles:'Mid Back, Rhomboids, Lower Traps — constant tension',
      svg:`<img src="./images/seated_cable_row.png" alt="Seated Cable Row">`,
-     cues:['Pull handle to belly button area','Sit upright — chest tall, no slouching','Pinch shoulder blades together at peak','Zero torso rocking back and forth','Full stretch forward between reps'],
-     mistakes:['Rocking the torso for momentum','Pulling too high (to chest)','Slouching forward on the return']},
-    /* — ISOLATION + ACCESSORY — */
-    {name:'Dumbbell Pullover',sets:'3',reps:'12',muscles:'Lats, Serratus, Chest stretch',
+     cues:['V-grip or close grip attachment','Sit tall, chest proud — no slouching','Pull to lower chest — elbows drive past torso','PINCH shoulder blades at peak — hold 2 sec','Full stretch forward between reps — let lats elongate','Zero torso rocking — strict movement'],
+     mistakes:['Rocking torso for momentum','Pulling to belly (too low)','Slouching — stay tall','Not getting full stretch between reps']},
+    /* — STRETCH-FOCUSED: Back grows most in lengthened position (Maeo 2022) — */
+    {name:'Dumbbell Pullover',sets:'3',reps:'12–15',muscles:'Lats (stretched position), Serratus — maximal lat stretch',
      svg:`<img src="./images/db_pullover.jpg" alt="Dumbbell Pullover">`,
-     cues:['Lie across bench — only shoulders on bench','Both hands hold one dumbbell overhead','Lower behind head — feel deep lat stretch','Pull back over chest using lats','Slight bend in elbows throughout'],
-     mistakes:['Dropping hips during the movement','Going too heavy','Bending elbows too much (becomes press)']},
-    {name:'Cable Face Pulls',sets:'3',reps:'15',muscles:'Rear Delts, Rotator Cuff, Mid Traps',
+     cues:['Lie across bench — only upper back supported, hips dropped','Both hands hold ONE dumbbell overhead','Lower behind head — go DEEP for maximum lat stretch','Pull back using LATS — not chest or arms','Slight elbow bend (20°) maintained throughout','The deep stretch IS the stimulus — go as deep as safe','Drop hips slightly for even greater stretch'],
+     mistakes:['Not going deep enough (missing growth stimulus)','Too heavy (losing control in stretched position)','Bending elbows too much (becomes skull crusher)','Hips too high — drop them for more stretch']},
+    /* — REAR DELTS + SHOULDER HEALTH: Critical for posture and injury prevention — */
+    {name:'Cable Face Pulls (with External Rotation)',sets:'4',reps:'15–20',muscles:'Rear Delts, External Rotators, Mid Traps — SHOULDER HEALTH',
      svg:`<img src="./images/cable_face_pulls.png" alt="Cable Face Pulls">`,
-     cues:['Cable at eye / forehead height','Elbows out — parallel to ground','Pull rope to FOREHEAD (not chin)','Separate hands apart at peak','Light weight — shoulder health exercise'],
-     mistakes:['Pulling to chin (traps take over)','Elbows dropping below shoulders','Too much weight = form breakdown']},
-    /* — TRAPS (heavy isolation, end of session) — */
-    {name:'Dumbbell Shrugs',sets:'4',reps:'15',muscles:'Upper Traps — builds the "yoke"',
+     cues:['Cable at face height — rope attachment','Pull toward FOREHEAD — not chin or chest','Elbows HIGH and OUT — above shoulder level','At peak: externally rotate (thumbs point BEHIND you)','This is THE exercise for shoulder longevity','Hold peak position 2 sec every rep','Light weight — this is NEVER a heavy exercise'],
+     mistakes:['Pulling to chin (becomes a row)','Elbows dropping below shoulders','Too heavy = traps and biceps dominate','Not externally rotating at the end']},
+    /* — TRAPS: Heavy loads — traps are built for heavy carrying — */
+    {name:'Dumbbell Shrugs (2-sec hold)',sets:'4',reps:'12–15',muscles:'Upper Traps — the "yoke" builder',
      svg:`<img src="./images/db_shrugs.jpg" alt="Dumbbell Shrugs">`,
-     cues:['Heavy dumbbells — traps respond to heavy loads','Shrug STRAIGHT UP — ears to shoulders','Hold squeeze at top for 2 seconds','Slow descent — don\'t just drop','NO head rolling or circular motion'],
-     mistakes:['Rolling shoulders (injury risk!)','Not holding the squeeze','Going too light — traps need heavy weight']}
+     cues:['HEAVY dumbbells — traps are designed for heavy loads','Shrug STRAIGHT UP — pull ears to shoulders','HOLD squeeze at top for 2 FULL seconds — this is key','Slow 3 sec descent — constant tension','Slight forward lean increases upper trap activation','Use straps if grip fails — don\'t let grip limit traps'],
+     mistakes:['Rolling shoulders in circles (cervical spine risk!)','Not holding the squeeze (makes it useless)','Going too light — traps need HEAVY progressive overload','Bending elbows (turns into a curl)']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
      WEDNESDAY — LEGS (Quads + Hamstrings + Calves)
-     Sequence: Heavy compounds → Compound accessories → Quad isolation → Ham isolation → Calves
+     Evidence-based: Heavy compound → Unilateral → Quad isolation → Hip-hinge → Ham isolation → Calves
+     Research: Squats + hip-hinge + isolation = complete leg development. 9 exercises max.
      ═══════════════════════════════════════════════════════════════ */
   {name:'Wednesday',tag:'Legs',tagClass:'legs',
-   focus:'Quads · Hamstrings · Calves · Core',
-   cardio:'5 min walk ONLY · Legs are getting destroyed today!',
+   focus:'Quads · Hamstrings · Glutes · Calves',
+   cardio:'5 min walk ONLY · Save all energy for legs',
    exercises:[
-    /* — HEAVY COMPOUNDS (king of exercises first) — */
-    {name:'Barbell Squat',sets:'4',reps:'8–10',muscles:'Quads, Hamstrings, Core',
+    /* — HEAVY COMPOUND #1: The king of ALL exercises — nothing builds legs like squats — */
+    {name:'Barbell Back Squat',sets:'4',reps:'6–8',muscles:'Quads, Glutes, Hamstrings, Core, Erectors — the KING',
      svg:`<img src="./images/barbell_squat.jpg" alt="Barbell Squat">`,
-     cues:['Bar on upper traps — not neck','Feet shoulder-width, toes 15–30° out','Break at hips and knees simultaneously','Go BELOW parallel — ATG if possible','Drive through heels, chest stays tall'],
-     mistakes:['Knees caving inward','Heels rising off floor','Leaning too far forward','Not hitting depth']},
-    {name:'Leg Press Machine',sets:'4',reps:'10–12',muscles:'Quads, Hamstrings',
-     svg:`<img src="./images/leg_press.png" alt="Leg Press Machine">`,
-     cues:['Feet shoulder-width, mid-platform','Lower sled to exactly 90° knee bend','NEVER fully lock knees at top','Back flat against pad throughout','Push through the entire foot'],
-     mistakes:['Locking knees out','Feet too high/low on platform','Lifting hips off the seat pad']},
-    {name:'Romanian Deadlift (DB)',sets:'4',reps:'8–10',muscles:'Hamstrings, Lower Back, Erectors',
+     cues:['Bar on upper traps (high bar) — not neck','Feet shoulder-width, toes pointed 15–30° out','Break at hips AND knees simultaneously','Go BELOW parallel — ATG (ass to grass) if mobility allows','Drive through MID-FOOT (not just heels) — whole foot pressure','Chest stays tall, eyes forward — never look down','Brace core HARD — take a big breath, hold it during rep','This is your #1 progressive overload exercise for legs'],
+     mistakes:['Knees caving inward (push them OUT over toes)','Heels rising off floor (ankle mobility issue — elevate heels)','Leaning too far forward (weak quads or tight ankles)','Not hitting depth — below parallel is NON-NEGOTIABLE','Butt wink at bottom (stop just above where spine rounds)']},
+    /* — HEAVY COMPOUND #2: Allows even heavier loads without spinal compression — */
+    {name:'Leg Press (High + Wide)',sets:'4',reps:'10–12',muscles:'Quads, Glutes, Hamstrings — HEAVY without spinal load',
+     svg:`<img src="./images/leg_press.png" alt="Leg Press">`,
+     cues:['Feet HIGH and WIDE on platform for more glute/hamstring','Lower sled until 90° knee bend — full ROM','Push through WHOLE FOOT — not just toes','Back stays FLAT against pad — never lift off','NEVER lock knees at top — stop just short','Go heavy here — no spinal compression means more plates','3 sec eccentric, explode up'],
+     mistakes:['Locking knees out (serious injury risk — hyperextension)','Feet too low (excessive knee stress)','Hips lifting off pad (lower back rounds)','Partial reps — 90° knee bend minimum']},
+    /* — HIP HINGE: Best hamstring + glute builder that exists — */
+    {name:'Romanian Deadlift (Barbell)',sets:'4',reps:'8–10',muscles:'Hamstrings, Glutes, Erectors — #1 hamstring builder',
      svg:`<img src="./images/romanian_deadlift.png" alt="Romanian Deadlift">`,
-     cues:['HINGE at hips — soft knee, not a squat','Keep DBs touching/near legs','BACK FLAT — never round the spine','Stop when you feel hamstring stretch','Squeeze hard coming back up'],
-     mistakes:['Rounding the lower back','Bending knees too much','DBs drifting away from legs']},
-    /* — COMPOUND ACCESSORY (still multi-joint, but lighter) — */
-    {name:'Hack Squat Machine',sets:'4',reps:'10–12',muscles:'Quads (outer sweep), Hamstrings — heavy quad builder',
-     svg:`<img src="./images/goblet_squat.png" alt="Hack Squat Machine">`,
-     cues:['Feet shoulder-width, low on platform for quad focus','Back flat against pad throughout','Lower until thighs go PAST parallel','Drive through heels — explosive up','Deeper = more quad activation'],
-     mistakes:['Feet too high (shifts to hamstrings)','Not going deep enough','Locking knees at the top']},
-    {name:'Bulgarian Split Squat',sets:'3',reps:'10 each leg',muscles:'Quads, Glutes, Balance, Core — unilateral strength',
+     cues:['HINGE at hips — push butt BACK like closing a car door with your butt','Soft knee bend (15–20°) — this is NOT a squat','Bar stays TOUCHING legs the entire way down','BACK IS FLAT — neutral spine always — never round','Lower until you feel deep hamstring stretch','Squeeze GLUTES hard coming up — hips drive forward','The stretch at the bottom = where hamstrings GROW'],
+     mistakes:['Rounding the lower back (this causes disc issues)','Bending knees too much (becomes a squat)','Bar drifting away from legs','Not feeling hamstrings (means you\'re squatting it)','Going too heavy too fast — feel > weight here']},
+    /* — UNILATERAL: Fixes imbalances + more quad activation per leg — */
+    {name:'Bulgarian Split Squat',sets:'3',reps:'8–10 each leg',muscles:'Quads, Glutes, Adductors — unilateral king',
      svg:`<img src="./images/db_lunges.jpg" alt="Bulgarian Split Squat">`,
-     cues:['Rear foot elevated on bench behind you','Front shin stays vertical — knee tracks toes','Lower until front thigh is parallel','Drive up through front heel ONLY','Hold DBs at sides for added load'],
-     mistakes:['Front knee drifting way past toes','Leaning forward — stay upright','Standing too close to bench']},
-    {name:'Walking Dumbbell Lunges',sets:'3',reps:'12 each leg',muscles:'Quads, Hamstrings, Balance, Core',
-     svg:`<img src="./images/walking_lunges.jpg" alt="Walking Dumbbell Lunges">`,
-     cues:['Long stride — knee stays behind toes','Back knee nearly touches the floor','Torso stays upright throughout','Push off front heel to step forward','Keep DBs at sides, core tight'],
-     mistakes:['Short steps','Knee going past toes','Leaning forward too much']},
-    /* — QUAD ISOLATION — */
-    {name:'Leg Extensions',sets:'4',reps:'12–15',muscles:'Quads (teardrop / VMO isolation)',
+     cues:['Rear foot elevated on bench — laces down','Front foot 2–3 feet ahead of bench','Front shin stays VERTICAL — knee tracks over toes','Lower until front thigh is below parallel','Drive up through front heel ONLY — feel quad and glute','Hold DBs at sides or goblet position','This fixes left/right imbalances like nothing else'],
+     mistakes:['Standing too close to bench (knee goes way past toes)','Leaning forward (stay upright)','Back foot pushing off (front leg does ALL the work)','Not going deep enough — below parallel for full quad stretch']},
+    /* — QUAD ISOLATION: Lengthened-focused leg extension for quad growth — */
+    {name:'Leg Extension (Slow Eccentric)',sets:'4',reps:'12–15',muscles:'Quads (VMO teardrop + Rectus Femoris) — pure isolation',
      svg:`<img src="./images/leg_extensions.jpg" alt="Leg Extensions">`,
-     cues:['Full extension at top — squeeze quad HARD','Slow 3-second descent — constant tension','Pad sits on lower shin, not ankles','Hold peak contraction for 1 second','This carves quad definition'],
-     mistakes:['Swinging/using momentum','Not fully extending','Going too heavy — this is isolation']},
-    /* — HAMSTRING ISOLATION — */
-    {name:'Lying Leg Curl Machine',sets:'4',reps:'10–12',muscles:'Hamstrings (biceps femoris, semimembranosus)',
+     cues:['Pad sits on LOWER shin, not ankles','Full extension at top — SQUEEZE quad HARD for 2 sec','4 second eccentric descent — this is key for growth','Don\'t let weight stack touch at bottom — constant tension','Point toes slightly inward for more VMO (inner quad)','Moderate weight — this is FEEL-based, not ego-based','The slow eccentric is where muscle damage happens'],
+     mistakes:['Swinging/using momentum (completely defeats purpose)','Not fully extending at top','Going too heavy — this is isolation, not compound','Letting weight slam down at bottom']},
+    /* — HAMSTRING ISOLATION: Lying curl is the best for biceps femoris — */
+    {name:'Lying Leg Curl',sets:'4',reps:'10–12',muscles:'Hamstrings (biceps femoris focus) — best ham isolation',
      svg:`<img src="./images/lying_leg_curls.jpg" alt="Lying Leg Curl">`,
-     cues:['Hips stay flat on pad','Knee aligned with machine pivot','Curl heel all the way toward body','Hold contraction 1 second at top','3-second slow descent'],
-     mistakes:['Hips rising off the pad','Not full range of motion','Dropping weight too fast']},
-    {name:'Seated Leg Curl',sets:'3',reps:'12',muscles:'Hamstrings (semitendinosus focus) — different angle from lying',
+     cues:['Hips stay FLAT on pad — don\'t let them rise','Knee joint aligned with machine pivot point','Curl heel ALL the way to glutes — full contraction','Hold peak contraction 1–2 seconds','3 second eccentric — fight the weight down','Dorsiflex feet (toes toward shins) for more ham activation'],
+     mistakes:['Hips rising off pad (means too heavy)','Partial range of motion at top','Dropping weight down instead of controlling it','Pointing toes (reduces hamstring activation)']},
+    /* — SEATED CURL: Different angle = different hamstring activation — */
+    {name:'Seated Leg Curl',sets:'3',reps:'10–12',muscles:'Hamstrings (semitendinosus) — stretch-focused angle',
      svg:`<img src="./images/seated_leg_curl.jpg" alt="Seated Leg Curl">`,
-     cues:['Adjust pad to sit just above ankle','Curl heels UNDER the seat','Hold squeeze for 2 seconds at peak','Slow 3-second release back up','Hits hamstrings from a different stretch angle'],
-     mistakes:['Partial range of motion','Using momentum','Not holding the contraction']},
-    {name:'Stiff-Leg Deadlift (Barbell)',sets:'3',reps:'10',muscles:'Hamstrings, Lower Back, Glutes — deep stretch',
-     svg:`<img src="./images/stiff_leg_deadlift.jpg" alt="Stiff-Leg Deadlift">`,
-     cues:['Legs almost straight — very slight knee bend','Hinge at hips — push butt BACK','Bar stays touching legs the entire way','Lower until you feel max hamstring stretch','Squeeze glutes and hams to come back up'],
-     mistakes:['Rounding the back','Bending knees too much (becomes RDL)','Going too heavy — stretch is the goal']},
-    /* — CALVES (always last — small muscle, high reps) — */
-    {name:'Standing Calf Raises',sets:'4',reps:'15–20',muscles:'Gastrocnemius (upper calf)',
+     cues:['Starting position: legs extended = hamstrings STRETCHED','This pre-stretch makes it superior for growth (lengthened training)','Curl heels under seat — full contraction','Hold squeeze 2 sec at peak','Slow 3 sec return — feel the stretch as legs extend','Lighter than lying curl — focus on the stretch stimulus'],
+     mistakes:['Partial ROM — full extension AND full contraction','Using momentum','Not holding the squeeze','Seat position wrong — align knee with pivot']},
+    /* — CALVES: Gastrocnemius (straight leg) — */
+    {name:'Standing Calf Raises (Full ROM)',sets:'4',reps:'12–15',muscles:'Gastrocnemius (upper calf) — the main visible calf muscle',
      svg:`<img src="./images/standing_calf_raises.jpg" alt="Standing Calf Raises">`,
-     cues:['Full range — lower heel BELOW step','Rise ALL the way up on balls of feet','2-second hold at the very top','Slow 3-second descent — no bouncing','Calves grow with TIME under tension'],
-     mistakes:['Partial range of motion','Bouncing at the bottom','Too fast — calves need slow reps']},
-    {name:'Seated Calf Raise',sets:'4',reps:'15–20',muscles:'Soleus (lower calf — adds width)',
+     cues:['Full ROM is EVERYTHING for calves — go all the way DOWN and UP','Lower heel BELOW the step — deep stretch for 2 sec','Rise ALL the way up on balls of feet — peak contraction 2 sec','Every rep: 2 sec stretch + 2 sec squeeze = time under tension','Calves grow from TIME UNDER TENSION, not from fast bouncing','Go moderately heavy — calves can handle load','Straight legs = gastrocnemius (the big diamond)'],
+     mistakes:['Bouncing at the bottom (zero stimulus)','Partial range — FULL stretch to FULL contraction','Going too fast — calves need SLOW reps','Not holding the stretch at the bottom']},
+    /* — CALVES: Soleus (bent leg) — builds lower calf width — */
+    {name:'Seated Calf Raise',sets:'4',reps:'15–20',muscles:'Soleus (lower/inner calf) — adds WIDTH that shows from the side',
      svg:`<img src="./images/seated_calf_raise.jpg" alt="Seated Calf Raise">`,
-     cues:['Knees under pad, balls of feet on edge','Full stretch DOWN — feel deep stretch','Press up all the way — peak contraction','Hold 2 seconds at top, 3 seconds down','Soleus grows with bent-knee work'],
-     mistakes:['Bouncing reps','Partial range of motion','Rushing through reps']}
+     cues:['Knees bent = soleus takes over from gastrocnemius','Full stretch DOWN — feel deep pull in lower calf','Press up all the way — peak contraction squeeze','2 sec hold at top, 3 sec stretch at bottom','Higher reps (15–20) because soleus is slow-twitch dominant','The soleus makes your calf look THICK from the side view'],
+     mistakes:['Bouncing through reps (the #1 calf growth killer)','Partial range of motion','Rushing — soleus needs slow, controlled TUT','Not going heavy enough — progressive overload still matters']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
      THURSDAY — SHOULDERS + ABS
-     Sequence: Heavy presses → Side/rear isolation → Abs (hardest → easiest)
+     Evidence-based: Heavy press → SIDE DELT priority (the width builder) → Rear delt → Abs
+     Research: Side delts are KEY for wide shoulders. Front delts already get worked from all pressing.
+     Front raises are REMOVED — anterior delts get 15+ sets/week from chest + shoulder pressing already.
      ═══════════════════════════════════════════════════════════════ */
   {name:'Thursday',tag:'Shoulders & Abs',tagClass:'push',
-   focus:'Front · Side · Rear Delts (3D shoulders) · Abs',
-   cardio:'Cycling · 10 min · Light resistance · Active recovery',
+   focus:'Side Delts (WIDTH) · Rear Delts (3D) · Overhead Press · Abs',
+   cardio:'Cycling · 8 min · Light resistance · Active recovery',
    exercises:[
-    /* — HEAVY COMPOUND PRESSES (freshest = heaviest) — */
-    {name:'Seated DB Shoulder Press',sets:'4',reps:'8–10',muscles:'All 3 Deltoid heads, Triceps',
+    /* — HEAVY COMPOUND PRESS: The #1 overhead strength builder — */
+    {name:'Seated Dumbbell Shoulder Press',sets:'4',reps:'6–10',muscles:'All 3 Deltoid heads, Triceps — primary overhead mass builder',
      svg:`<img src="./images/seated_shoulder_press.png" alt="Seated DB Shoulder Press">`,
-     cues:['Back flat against bench rest','Start DBs at ear level, palms forward','Don\'t lock elbows at top','Exhale forcefully on the press','No arching lower back off the pad'],
-     mistakes:['Back arching away from pad','Pressing DBs apart instead of up','Going behind the head']},
-    {name:'Arnold Press',sets:'3',reps:'10',muscles:'All 3 Deltoid Heads (rotation = complete)',
-     svg:`<img src="./images/arnold_press.jpg" alt="Arnold Press">`,
-     cues:['Start: palms FACING YOU','Rotate outward as arms extend','Fully reverse rotation on descent','Core braced — no back arch','Controlled pace — rotation is the point'],
-     mistakes:['Going too fast','Arching lower back','Incomplete rotation range']},
-    /* — SIDE DELT ISOLATION (the width builders) — */
-    {name:'Dumbbell Lateral Raises',sets:'4',reps:'15',muscles:'Side Deltoids — builds shoulder width',
+     cues:['Back flat against pad — no arching','Start DBs at ear level, palms forward','Press UP and slightly IN — DBs converge at top','Don\'t lock elbows at very top — constant tension','3 sec eccentric (lower slowly) — don\'t drop','Control the weight — no momentum','This is your main progressive overload exercise for shoulders'],
+     mistakes:['Back arching off pad (lower back injury risk)','Pressing DBs apart (lateral) instead of up','Going behind the head (shoulder impingement)','Using momentum/bounce at bottom','Too heavy = form breakdown and injury']},
+    /* — SIDE DELT #1: The single most important exercise for wide shoulders — */
+    {name:'Dumbbell Lateral Raises (Slow Eccentric)',sets:'4',reps:'12–15',muscles:'Side (Lateral) Deltoids — THE width builder. Priority exercise.',
      svg:`<img src="./images/lateral_raises.png" alt="Dumbbell Lateral Raises">`,
-     cues:['Raise ONLY to shoulder height','Slight elbow bend (10–15°) always','Pinky slightly higher than thumb','ZERO swinging — pure shoulder','Slow 3-second descent every rep'],
-     mistakes:['Raising arms above shoulder height','Using momentum / body swing','Too heavy = trapezius takes over']},
-    {name:'Cable Lateral Raise',sets:'3',reps:'12 each arm',muscles:'Side Delts — constant tension',
+     cues:['Raise to shoulder height ONLY — not above','Lead with ELBOWS, not hands (imagine pouring water from a jug)','Slight elbow bend (15°) maintained throughout','Lean forward 10° — takes traps out of it','4 sec eccentric EVERY rep — slow descent is where growth happens','Pinky HIGHER than thumb at the top (internal rotation)','LIGHT weight — if you swing, it\'s too heavy. Side delts are SMALL.'],
+     mistakes:['Raising above shoulder height (traps take over)','Using momentum/body swing (defeats the purpose)','Too heavy — #1 mistake. Side delts respond to TIME UNDER TENSION, not load','Shrugging up (traps stealing from delts)','Standing too upright (lean forward slightly)']},
+    /* — SIDE DELT #2: Cable provides tension in STRETCHED position (bottom) where DBs have zero tension — */
+    {name:'Cable Lateral Raise (Behind Body)',sets:'3',reps:'12–15 each arm',muscles:'Side Delts — constant tension including at stretch',
      svg:`<img src="./images/cable_lateral_raise.jpg" alt="Cable Lateral Raise">`,
-     cues:['Cable set at lowest position','Stand sideways to machine','Raise arm to shoulder height','Constant tension throughout the range','Control the descent — don\'t let cable snap'],
-     mistakes:['Leaning away too much','Raising above shoulder height','Using body momentum']},
-    /* — FRONT + REAR DELT (complete 3D look) — */
-    {name:'Dumbbell Front Raises',sets:'2',reps:'12',muscles:'Anterior (Front) Deltoids',
-     svg:`<img src="./images/db_front_raises.jpg" alt="Dumbbell Front Raises">`,
-     cues:['Raise to shoulder height max','Thumbs-up grip for shoulder comfort','Zero torso lean backward','Slow 3-second descent','Light weight — don\'t go heavy'],
-     mistakes:['Raising above shoulder height','Swinging torso backward','Too heavy']},
-    {name:'Rear Delt Fly (Machine or DB)',sets:'3',reps:'15',muscles:'Rear Deltoids, Rhomboids',
+     cues:['Cable at lowest position — stand sideways','Cable passes BEHIND your body (not in front) — this increases stretch','Raise arm to shoulder height — no higher','Constant cable tension = stimulus even at bottom (unlike DBs)','Slow 3 sec eccentric — fight the cable down','This fills the gap where dumbbells are weakest (bottom of ROM)','Lean slightly away from cable for even more stretch'],
+     mistakes:['Leaning away too much (body english)','Raising above shoulder height (traps)','Cable in FRONT of body (less stretch)','Using body momentum']},
+    /* — REAR DELT: Critical for 3D look and shoulder health — */
+    {name:'Reverse Pec Deck (Rear Delt Fly)',sets:'4',reps:'15–20',muscles:'Rear Deltoids, Rhomboids — the 3D shoulder look',
      svg:`<img src="./images/rear_delt_fly.jpg" alt="Rear Delt Fly">`,
-     cues:['Arms out to sides — slight elbow bend','Lead with elbows, not hands','Squeeze rear delts at peak','Control back slowly — 3 seconds','Light weight — precision work'],
-     mistakes:['Using traps to shrug up','Arms fully straight','Going too heavy']},
-    /* — ABS: hardest → easiest for max engagement — */
-    {name:'Hanging Leg Raises',sets:'3',reps:'12',muscles:'Lower Abs, Hip Flexors, Core',
+     cues:['Sit facing the machine pad','Hands at shoulder height — neutral or pronated grip','Drive elbows BACK — lead with elbows, not hands','SQUEEZE rear delts at peak — hold 2 seconds','Slow 3 sec return — constant tension','Light weight — rear delts are SMALL, they need precision','This creates the "3D" roundness when viewed from the side'],
+     mistakes:['Using traps to shrug up','Going too heavy (traps and rhomboids take over)','Arms fully straight (should have slight bend)','Not holding the squeeze at peak']},
+    /* — SIDE DELT #3: Machine laterals for the final metabolic pump — */
+    {name:'Machine Lateral Raise (or DB Partial Raises)',sets:'3',reps:'15–20 (partials OK)',muscles:'Side Delts — metabolic stress finisher for WIDTH',
+     svg:`<img src="./images/lateral_raises.png" alt="Machine Lateral Raise">`,
+     cues:['If no machine: use lighter DBs and do partial reps (bottom to 45°)','Partials in the stretched position are extremely effective','Burn = metabolic stress = growth signal','Keep tension constant — don\'t rest at bottom','This is a BURNOUT — push to failure + 5 more','Total side delt volume today: 10 sets — optimal per research'],
+     mistakes:['Going too heavy (defeats the metabolic purpose)','Resting at the bottom between reps','Stopping at mild burn — push THROUGH the burn','Shrugging traps up']},
+    /* — ABS: Evidence-based order — loaded movements before bodyweight — */
+    {name:'Hanging Leg Raises (Straight Leg)',sets:'3',reps:'10–15',muscles:'Lower Abs, Hip Flexors, Core — hardest ab exercise',
      svg:`<img src="./images/hanging_leg_raises.jpg" alt="Hanging Leg Raises">`,
-     cues:['Hang from pull-up bar — dead hang','Raise STRAIGHT legs to 90° or higher','Control the descent — 3 seconds','Engage core BEFORE lifting legs','No swinging — pause between reps'],
-     mistakes:['Using momentum to swing legs','Bending knees too much','Not controlling the negative']},
-    {name:'Ab Roller',sets:'3',reps:'10',muscles:'Entire Core, Serratus, Lats',
+     cues:['Dead hang from pull-up bar — full extension','Raise STRAIGHT legs to 90° or HIGHER (toes to bar if possible)','POSTERIOR PELVIC TILT at top — curl pelvis up','Control descent — 3 sec negative, zero swinging','Engage core BEFORE lifting legs (draw navel in)','The pelvic tilt at top is what makes this an AB exercise, not hip flexor'],
+     mistakes:['Using momentum/swinging','Bending knees too much (makes it too easy)','Not curling pelvis (just doing hip flexion)','Dropping legs fast (zero eccentric stimulus)']},
+    {name:'Ab Wheel Rollout',sets:'3',reps:'8–12',muscles:'Entire Core, Serratus, Lats — anti-extension king',
      svg:`<img src="./images/ab_roller.jpg" alt="Ab Roller">`,
-     cues:['Start on knees, hands on roller','Roll out slowly — arms extending','Go as far as you can control','Pull back using abs — NOT hip flexors','Keep lower back from sagging'],
-     mistakes:['Going too far and collapsing','Using hip flexors to pull back','Lower back arching excessively']},
-    {name:'Cable Crunches',sets:'3',reps:'15',muscles:'Upper Abs, Rectus Abdominis',
+     cues:['Start on knees, hands on roller','TUCK pelvis (posterior tilt) — squeeze glutes','Roll out slowly — arms extending, spine stays NEUTRAL','Go only as far as you can WITHOUT lower back sagging','Pull back using ABS — think "crunch" on the return','Breathe out hard on the way back','Progress: knees → toes when strong enough'],
+     mistakes:['Lower back sagging/arching (spine compression)','Going too far out (losing control)','Using hip flexors to pull back','Holding breath']},
+    {name:'Cable Crunches',sets:'3',reps:'12–15',muscles:'Upper Abs (Rectus Abdominis) — the "six-pack" muscle',
      svg:`<img src="./images/cable_crunches.jpg" alt="Cable Crunches">`,
-     cues:['Kneel facing cable machine','Hold rope behind head — elbows in','Crunch DOWN — elbows to knees','Squeeze abs hard at the bottom','Rise slowly — maintain tension'],
-     mistakes:['Pulling with arms instead of abs','Sitting back on heels','Not rounding spine enough']},
-    {name:'Decline Crunches',sets:'3',reps:'15',muscles:'Upper Abs, Rectus Abdominis',
-     svg:`<img src="./images/decline_crunches.jpg" alt="Decline Crunches">`,
-     cues:['Feet locked on decline bench','Arms crossed over chest or behind head','Crunch up using ABS only','Don\'t come all the way up (hip flexors)','Slow controlled descent'],
-     mistakes:['Using momentum to sit up','Coming up too high','Pulling on neck with hands']}
+     cues:['Kneel facing cable — rope behind head','Crunch by CURLING spine — round your back','Elbows drive TOWARD knees','Squeeze abs HARD at bottom — hold 1 sec','Rise slowly — maintain constant cable tension','The crunch comes from SPINAL FLEXION, not hip flexion','Think: ribs toward pelvis'],
+     mistakes:['Pulling with arms (arms just hold the rope)','Sitting back on heels (hip flexion, not spinal)','Not rounding spine enough (missing the contraction)','Too heavy = loss of mind-muscle connection']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
-     FRIDAY — BACK & BICEPS (2× frequency for both)
-     Sequence: Heavy compound pulls → Row variations → Bicep compound → Bicep isolation
-     Different angles from Tuesday for complete development
+     FRIDAY — BACK & BICEPS (2× frequency for maximum growth)
+     Evidence-based: Heavy compound → Lat isolation → Stretch focus → Bicep compound → Bicep isolation
+     Research: 2× weekly frequency is optimal for muscle growth (Schoenfeld 2016)
+     Different angles/exercises from Tuesday for complete development
      ═══════════════════════════════════════════════════════════════ */
   {name:'Friday',tag:'Back & Biceps',tagClass:'pull',
    focus:'Lats (width) · Mid Back (thickness) · Biceps (peak + width) — 2× per week',
-   cardio:'Rowing machine · 10 min · Light pace — great back warm-up',
+   cardio:'Rowing machine · 8 min · Light pace — activates pulling muscles',
    exercises:[
-    /* — HEAVY COMPOUND PULLS (freshest = heaviest) — */
-    {name:'Conventional Deadlift',sets:'5',reps:'5',muscles:'Entire Posterior Chain, Quads, Core, Grip, Traps',
+    /* — HEAVY COMPOUND #1: The ultimate posterior chain builder — */
+    {name:'Conventional Deadlift',sets:'4',reps:'5 (heavy)',muscles:'Entire Posterior Chain — Erectors, Glutes, Hamstrings, Traps, Lats, Core',
      svg:`<img src="./images/stiff_leg_deadlift.jpg" alt="Conventional Deadlift">`,
-     cues:['Bar over mid-foot, shins touch bar','Hips hinge back — back FLAT, chest up','Drive through heels — push the floor away','Bar stays touching legs the entire pull','Lock out at top — shoulders back, hips through'],
-     mistakes:['Rounding the back (major injury risk)','Jerking the bar off floor','Hips shooting up first','Bar drifting away from body']},
-    {name:'T-Bar Row',sets:'4',reps:'8–10',muscles:'Mid Back thickness, Lats, Rhomboids',
+     cues:['Bar over MID-FOOT — shins 1 inch from bar','Hip hinge back — grab bar, then drop hips until shins touch bar','Back FLAT — chest up, lats engaged (protect the bar)','Drive through WHOLE foot — push the floor away','Bar stays TOUCHING legs the entire pull — scrape shins','Lock out at top — shoulders back, hips through, squeeze glutes','Reset every rep from dead stop — no bouncing','This builds raw strength like nothing else'],
+     mistakes:['Rounding the back (MAJOR disc injury risk)','Jerking the bar (pull slack out first, then drive)','Hips shooting up before shoulders (means too heavy)','Bar drifting away from body (use lats to keep it close)','Bouncing reps off floor (reset each rep)']},
+    /* — ROW VARIATION: Different from Tuesday (T-bar for thickness) — */
+    {name:'T-Bar Row (Landmine or Machine)',sets:'4',reps:'8–10',muscles:'Mid Back thickness, Lats, Rhomboids — heavy rowing',
      svg:`<img src="./images/bent_over_db_row.jpg" alt="T-Bar Row">`,
-     cues:['Chest against pad (if machine) or bent over','Pull to chest — squeeze shoulder blades','Elbows drive BACK, not out','3 sec lower — feel the stretch','Heavy compound — go heavy here'],
-     mistakes:['Rounding lower back','Using momentum to jerk weight','Not squeezing at the top']},
-    {name:'Seated Cable Row (Close Grip)',sets:'4',reps:'10–12',muscles:'Mid Back, Lats, Rhomboids — thickness builder',
-     svg:`<img src="./images/seated_cable_row.png" alt="Seated Cable Row">`,
-     cues:['Sit tall, chest up, slight lean forward at start','Pull handle to lower chest — elbows past torso','Squeeze shoulder blades together for 2 seconds','Slow controlled release forward','Don\'t lean back excessively — torso stays upright'],
-     mistakes:['Leaning too far back (using momentum)','Pulling with arms instead of back','Shrugging shoulders up']},
-    /* — LAT ISOLATION (different angles from Tuesday) — */
-    {name:'Straight-Arm Lat Pulldown',sets:'3',reps:'12–15',muscles:'Lats isolation — no bicep involvement',
+     cues:['Chest against pad (machine) or bent 45° (landmine)','Close/neutral grip — targets thickness more','Pull to lower chest/upper abdomen','SQUEEZE shoulder blades together HARD at top — hold 2 sec','3 sec eccentric — feel the full lat stretch at bottom','Go heavy — this is a mass builder','Different grip angle from Tuesday rows targets different fibers'],
+     mistakes:['Rounding lower back (if free-standing)','Using momentum to jerk weight up','Not squeezing at the top (missing the contraction)','Too much upright lean (becomes a shrug)']},
+    /* — LAT ISOLATION: No bicep involvement — pure lat work — */
+    {name:'Straight-Arm Lat Pulldown',sets:'3',reps:'12–15',muscles:'Lats ISOLATION — zero bicep involvement. Pure lat.',
      svg:`<img src="./images/lat_pulldown.png" alt="Straight-Arm Lat Pulldown">`,
-     cues:['Stand facing cable, arms extended up','Pull bar down to thighs in arc motion','Keep arms nearly straight — slight bend only','Squeeze lats hard at the bottom','Control the return — feel the stretch'],
-     mistakes:['Bending elbows too much (becomes pushdown)','Using momentum','Not feeling lats engage']},
-    {name:'Dumbbell Pullover',sets:'3',reps:'12',muscles:'Lats, Serratus, Chest stretch — expands ribcage',
+     cues:['Stand facing cable — rope or straight bar, high pulley','Arms nearly straight (slight 10° bend only)','Pull bar down to thighs in wide ARC motion','Use LATS — think "push elbows into pockets" without bending','Squeeze lats HARD at bottom — hold 1 sec','Slow controlled return — feel lat stretch at top','This pre-exhausts lats without fatiguing biceps'],
+     mistakes:['Bending elbows too much (becomes a pushdown/row)','Using momentum/body rocking','Not feeling lats — means you\'re using arms','Going too heavy']},
+    /* — STRETCH-FOCUSED: Loaded lat stretch drives maximum hypertrophy — */
+    {name:'Dumbbell Pullover (Deep Stretch)',sets:'3',reps:'12',muscles:'Lats in deepest stretch, Serratus, Long head tricep',
      svg:`<img src="./images/db_pullover.jpg" alt="Dumbbell Pullover">`,
-     cues:['Lie across bench — hips below bench level','Hold one DB overhead with both hands','Lower behind head — deep lat stretch','Pull back over chest using lats','Keep slight elbow bend throughout'],
-     mistakes:['Bending elbows too much','Not going deep enough for stretch','Using too much weight']},
-    /* — BICEPS (2× frequency — different exercises from Saturday) — */
-    {name:'Barbell Curl',sets:'4',reps:'8–10',muscles:'Biceps (both heads) — the mass builder',
+     cues:['Lie across bench — only upper back on bench','HIPS DROPPED below bench level — this increases stretch','Both hands hold ONE dumbbell overhead','Lower behind head — go as DEEP as mobility allows','The stretch at the bottom = where lats grow MOST','Pull back using LATS (not chest/arms)','Moderate weight — feel > load'],
+     mistakes:['Hips too high (reduces lat stretch)','Not going deep enough (missing the key stimulus)','Using too heavy weight (losing stretch quality)','Bending elbows excessively (becomes tricep work)']},
+    /* — BICEP #1: Heavy compound curl — the mass builder — */
+    {name:'Barbell Curl (Strict)',sets:'4',reps:'6–8 (heavier than Saturday)',muscles:'Biceps (both heads) — PRIMARY bicep mass builder',
      svg:`<img src="./images/barbell_curl.jpg" alt="Barbell Curl">`,
-     cues:['Shoulder-width grip, elbows pinned to sides','Curl up — squeeze biceps HARD at top','Lower slowly — 3 seconds down','No swinging — if you sway, go lighter','Full extension at the bottom'],
-     mistakes:['Swinging torso for momentum','Elbows drifting forward','Not going to full extension']},
-    {name:'Incline Dumbbell Curl',sets:'3',reps:'10–12',muscles:'Biceps Long Head — builds the peak',
+     cues:['Shoulder-width grip — EZ bar or straight','Elbows PINNED to sides — absolutely zero movement','Curl up — squeeze biceps HARD at top — hold 1 sec','3 second eccentric EVERY rep — slow descent builds size','Full extension at bottom — NO partial reps','If you swing, the weight is TOO HEAVY. Lighten it.','Strict form > heavy weight for biceps'],
+     mistakes:['Swinging torso for momentum (defeats purpose)','Elbows drifting forward (front delts take over)','Partial reps — not fully extending at bottom','Going too heavy (ego > stimulus)']},
+    /* — BICEP #2: Incline position = long head stretched = peak builder — */
+    {name:'Incline Dumbbell Curl (45°)',sets:'3',reps:'10–12',muscles:'Biceps LONG HEAD — the peak builder (stretched position)',
      svg:`<img src="./images/db_bicep_curl.jpg" alt="Incline Dumbbell Curl">`,
-     cues:['Incline bench at 45° — arms hang straight down','Curl up without moving elbows forward','Supinate wrists (turn pinkies out) at the top','Slow 3-second negative — feel the stretch','The incline pre-stretches the long head'],
-     mistakes:['Elbows swinging forward','Sitting too upright (defeats the purpose)','Rushing the negative']},
-    {name:'Cable Hammer Curl (Rope)',sets:'3',reps:'12',muscles:'Brachialis, Brachioradialis — arm thickness',
+     cues:['Incline bench at 45° — arms hang straight DOWN behind body','This position PRE-STRETCHES the long head (peak of bicep)','Curl up without elbows moving forward at all','Supinate (turn pinkies out) at the top for peak squeeze','4 sec eccentric — feel the stretch as arms extend','The long head in stretch = peak growth stimulus','Lighter weight than standing — this is about the STRETCH'],
+     mistakes:['Elbows swinging forward (eliminates the stretch benefit)','Sitting too upright (defeats the purpose of incline)','Rushing the negative (missing growth stimulus)','Using momentum to curl up']},
+    /* — BICEP #3: Hammer for brachialis — builds arm THICKNESS — */
+    {name:'Cable Hammer Curl (Rope)',sets:'3',reps:'12–15',muscles:'Brachialis + Brachioradialis — arm THICKNESS and forearm tie-in',
      svg:`<img src="./images/cable_hammer_curls.jpg" alt="Cable Hammer Curl">`,
-     cues:['Rope attachment on low cable','Neutral grip — palms facing each other','Curl up — keep elbows pinned','Squeeze at top, pull rope ends apart','Constant cable tension = better pump'],
-     mistakes:['Elbows moving forward','Using body momentum','Losing neutral grip']}
+     cues:['Rope attachment on LOW cable','Neutral grip — palms face each other throughout','Elbows pinned — don\'t let them drift','Squeeze hard at top — pull rope ends apart','Cable provides constant tension (better than DB hammers)','The brachialis pushes the bicep UP — makes arms look bigger','This also builds the forearm-to-bicep tie-in'],
+     mistakes:['Elbows moving forward (removes brachialis focus)','Supinating wrists (this is NEUTRAL grip only)','Using body momentum','Losing the neutral grip position']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
      SATURDAY — ARMS (Biceps + Triceps + FOREARMS)
-     Sequence: Compound bi → Compound tri → Isolation bi → Isolation tri → Forearms → Core
-     Alternating bi/tri keeps blood flowing and improves pump
+     Evidence-based: Alternate bi/tri supersets for blood flow → Forearm finisher
+     Research: Arms grow from VOLUME + VARIETY of angles. 2× frequency with Friday.
+     Supersets (bi then tri) increase blood flow and pump = growth signal.
      ═══════════════════════════════════════════════════════════════ */
   {name:'Saturday',tag:'Arms & Forearms',tagClass:'core',
-   focus:'Biceps (peak + width) · Triceps · FOREARMS (veins!) · Abs',
-   cardio:'No cardio — today is pure arm pump day! Blood flow = veins!',
+   focus:'Biceps (peak + width) · Triceps (all 3 heads) · Forearms (vascularity)',
+   cardio:'No cardio — pure arm pump day. Blood flow = veins = growth!',
    exercises:[
-    /* — COMPOUND MOVES FIRST (heaviest lifts while fresh) — */
-    {name:'Close-Grip Bench Press',sets:'3',reps:'10',muscles:'Triceps (all heads), Inner Chest',
+    /* — HEAVY TRICEP COMPOUND: Heaviest tricep movement — do it first while fresh — */
+    {name:'Close-Grip Bench Press',sets:'4',reps:'8–10',muscles:'Triceps (all 3 heads) — the heaviest tricep compound',
      svg:`<img src="./images/close_grip_bench.jpg" alt="Close-Grip Bench Press">`,
-     cues:['Hands shoulder-width or slightly narrower','Elbows tucked close to body','Lower bar to lower chest','Press up — lock out at top','Feel triceps doing the work'],
-     mistakes:['Grip too narrow (wrist strain)','Flaring elbows out','Bouncing off chest']},
-    {name:'Barbell Curl (EZ or Straight)',sets:'3',reps:'10',muscles:'Biceps Brachii — the peak builder',
-     svg:`<img src="./images/barbell_curl.jpg" alt="Barbell Curl">`,
-     cues:['Shoulder-width grip on bar','Elbows pinned to torso — don\'t move','Full extension at bottom, FULL curl at top','Squeeze the bicep peak HARD — hold 1 sec','Slow 3-second negative — builds veins'],
-     mistakes:['Swinging body to lift','Elbows drifting forward','Partial reps — not fully extending']},
-    /* — TRICEP ISOLATION — */
-    {name:'EZ-Bar Skull Crushers',sets:'3',reps:'10–12',muscles:'Triceps (all 3 heads)',
-     svg:`<img src="./images/skullcrushers.jpg" alt="EZ-Bar Skull Crushers">`,
-     cues:['Lie on flat bench — arms vertical','Lower bar toward forehead','Elbows stay pointing at ceiling','Extend arms fully — squeeze triceps','Slow controlled descent'],
-     mistakes:['Elbows flaring outward','Lowering to chin instead of forehead','Arms drifting backward']},
-    {name:'Tricep Rope Pushdown',sets:'3',reps:'12–15',muscles:'Lateral + Medial Tricep heads',
-     svg:`<img src="./images/tricep_pushdown.png" alt="Tricep Rope Pushdown">`,
-     cues:['Elbows locked tight to torso','Lean forward slightly','SPREAD rope ends apart at bottom','Full extension — lock out completely','Control cable back up slowly'],
-     mistakes:['Elbows flaring out','Using shoulder/body momentum','Not spreading rope at bottom']},
-    /* — BICEP ISOLATION (peak + width builders) — */
-    {name:'Alternate Dumbbell Curl',sets:'3',reps:'10 each arm',muscles:'Biceps — unilateral focus + supination',
-     svg:`<img src="./images/alternate_db_curl.jpg" alt="Alternate Dumbbell Curl">`,
-     cues:['Start palms facing thighs (neutral)','Supinate (rotate palm up) as you curl','Full squeeze at top — pinky rotated in','Alternate arms — one at a time','Control the negative — don\'t drop'],
-     mistakes:['No supination (missing peak contraction)','Both arms at same time','Swinging body']},
-    {name:'Hammer Curls',sets:'3',reps:'12 each arm',muscles:'Brachialis, Brachioradialis — arm WIDTH',
-     svg:`<img src="./images/hammer_curls.png" alt="Hammer Curls">`,
-     cues:['Palms face each other — no rotation','Elbow fixed to side','This builds ARM WIDTH and FOREARM top','Slow controlled descent — 3 seconds','Brachioradialis = the vein muscle'],
-     mistakes:['Rotating wrist','Swinging the upper arm','Going too fast']},
-    {name:'Preacher Curls',sets:'3',reps:'10',muscles:'Biceps short head — peak isolation',
+     cues:['Hands SHOULDER-WIDTH (not closer — wrist strain)','Elbows tucked tight to ribcage — this shifts load to triceps','Lower bar to lower chest — touch and press','Lock out HARD at top — full tricep contraction','Think "press and squeeze triceps" — not just push','Go heavy here — triceps respond to progressive overload on compounds'],
+     mistakes:['Grip too narrow (wrist strain + instability)','Flaring elbows out (becomes regular bench)','Bouncing off chest (lose tension)','Not locking out at top (missing contraction)']},
+    /* — HEAVY BICEP COMPOUND: The EZ bar strict curl — bicep mass builder — */
+    {name:'EZ-Bar Curl (Strict)',sets:'4',reps:'8–10',muscles:'Biceps (both heads) — the mass builder. EZ bar = wrist comfort.',
+     svg:`<img src="./images/barbell_curl.jpg" alt="EZ-Bar Curl">`,
+     cues:['EZ bar — inner angled grip (shoulder width)','Back against wall or post for ZERO cheating','Elbows pinned to torso — don\'t let them move forward','Full curl to peak → squeeze HARD 1 sec → 3 sec negative','Full extension at bottom — no partial reps','Wall support = impossible to cheat = maximum bicep stimulus','Heavier than Friday since this is your focus day'],
+     mistakes:['Swinging body (wall eliminates this)','Elbows drifting forward (front delts steal the work)','Partial reps at bottom (missing stretch)','Going too heavy (form > weight for biceps)']},
+    /* — TRICEP: Long head in stretch (crosses shoulder joint) — */
+    {name:'Overhead EZ-Bar Extension (Skull Crusher variation)',sets:'3',reps:'10–12',muscles:'Triceps (long head emphasis) — stretch at the bottom is key',
+     svg:`<img src="./images/skullcrushers.jpg" alt="Overhead Extension">`,
+     cues:['Lie on flat bench — EZ bar overhead','Lower bar BEHIND head (not to forehead) — get full long head stretch','Elbows point at ceiling — they don\'t move','The key: lower BEHIND head for maximum long head stretch','Extend fully — lock out and squeeze triceps HARD','This hits the long head harder than standard skull crushers','3 sec eccentric into the stretch position'],
+     mistakes:['Lowering to forehead only (less long head stretch)','Elbows flaring outward','Not getting full stretch behind head','Using momentum to press up']},
+    /* — BICEP: Preacher for short head (peak) — supported = zero cheating — */
+    {name:'Preacher Curl (EZ or DB)',sets:'3',reps:'10–12',muscles:'Biceps SHORT HEAD — builds the PEAK shape',
      svg:`<img src="./images/preacher_curls.jpg" alt="Preacher Curls">`,
-     cues:['Armpits rest on top of pad','Arms fully extended at bottom — big stretch','Curl up to 90° — don\'t go past','Squeeze peak hard at top','Slow 3-second descent'],
-     mistakes:['Not extending fully at bottom','Going past 90° (loses tension)','Lifting elbows off pad']},
-    {name:'Spider Curls',sets:'3',reps:'12',muscles:'Biceps long head — constant tension',
+     cues:['Armpits rest on TOP of the pad — fully supported','Arms FULLY extended at bottom — deep bicep stretch','Curl up to about 120° — NOT to shoulder (tension drops)','The pad eliminates ALL cheating — pure bicep work','Hold squeeze 1 sec at top, 3 sec negative','This targets the short head (inner bicep) for PEAK shape','Don\'t go too heavy — the stretch at bottom is risky if ego lifting'],
+     mistakes:['Not extending fully at bottom (missing stretch)','Curling past 120° (loses tension on bicep)','Lifting elbows off pad (cheating)','Too heavy (bicep tear risk in stretched position)']},
+    /* — TRICEP: Rope pushdown — lateral head (the "horseshoe") — */
+    {name:'Tricep Rope Pushdown (Lean Forward)',sets:'3',reps:'12–15',muscles:'Tricep LATERAL HEAD — the "horseshoe" visible from behind',
+     svg:`<img src="./images/tricep_pushdown.png" alt="Tricep Rope Pushdown">`,
+     cues:['Lean forward 30° from hips — this increases lateral head activation','Elbows PINNED to ribs — non-negotiable','At bottom: SPREAD rope ends apart + PRONATE (pinkies out)','Full lockout every rep — squeeze the horseshoe','3 sec eccentric — fight the cable back up','Leaning forward is the KEY CUE that most people miss','Moderate weight — feel the lateral head burn'],
+     mistakes:['Standing upright (less lateral head, more long head)','Elbows drifting forward','Not spreading rope at bottom','Body rocking for momentum']},
+    /* — BICEP: Spider curls — constant tension, zero momentum possible — */
+    {name:'Spider Curls (Incline Bench)',sets:'3',reps:'12–15',muscles:'Biceps — constant tension throughout entire ROM. Impossible to cheat.',
      svg:`<img src="./images/spider_curls.jpg" alt="Spider Curls">`,
-     cues:['Lie chest-down on incline bench','Arms hang straight down','Curl up — elbows don\'t move','Gravity pulls down the entire time','Peak squeeze at top — incredible pump'],
-     mistakes:['Moving elbows forward','Using momentum','Bench angle too flat']},
-    {name:'Concentration Curls',sets:'3',reps:'10 each arm',muscles:'Biceps short head — the PEAK',
-     svg:`<img src="./images/concentration_curls.jpg" alt="Concentration Curls">`,
-     cues:['Sit on bench, elbow braced on thigh','Curl with ZERO body movement','Squeeze peak so hard it cramps','Full extension — let arm hang straight','This builds the bicep peak shape'],
-     mistakes:['Using body momentum','Not bracing elbow','Partial reps at the top']},
-    /* — FOREARMS (always last — small muscles, high reps) — */
-    {name:'Reverse Curls (EZ Bar)',sets:'3',reps:'12–15',muscles:'Brachioradialis, Forearm Extensors — VEIN builder',
+     cues:['Lie CHEST-DOWN on incline bench (45–60°)','Arms hang STRAIGHT down — perpendicular to floor','Curl up — gravity works against you the ENTIRE time','At peak: squeeze so hard your bicep cramps','The unique angle = no dead spot in the movement','This is the best "pump" exercise for biceps','3 sec eccentric every rep — max time under tension'],
+     mistakes:['Moving elbows (they stay locked in space)','Using momentum (impossible if done right)','Bench too flat (reduces the gravity advantage)','Going too heavy (this is precision work)']},
+    /* — TRICEP: Kickbacks — underrated for lateral head peak contraction — */
+    {name:'Cable Tricep Kickback',sets:'3',reps:'12–15 each arm',muscles:'Triceps (lateral + medial head) — peak contraction at lockout',
+     svg:`<img src="./images/tricep_pushdown.png" alt="Cable Kickback">`,
+     cues:['Cable at low position — single handle','Hinge forward 90° — upper arm parallel to floor','Extend arm FULLY behind you — lock out completely','The peak contraction at full extension is the MONEY','Hold lockout 1–2 seconds — squeeze hard','Cable > dumbbell because tension stays at peak','This carves detail into the tricep'],
+     mistakes:['Upper arm dropping (must stay parallel to floor)','Not locking out fully (missing the peak contraction)','Swinging the weight','Standing too upright']},
+    /* — BICEP: Hammer curls — brachialis for arm WIDTH — */
+    {name:'Cross-Body Hammer Curl',sets:'3',reps:'10–12 each arm',muscles:'Brachialis + Brachioradialis — arm WIDTH builder',
+     svg:`<img src="./images/hammer_curls.png" alt="Hammer Curls">`,
+     cues:['Neutral grip (palms face in) — curl ACROSS body toward opposite shoulder','This cross-body angle hits brachialis MORE than standard hammer','The brachialis sits UNDER the bicep — when it grows, it pushes bicep UP','Slow controlled movement — no swinging','This builds the forearm-to-bicep tie-in (the "vein highway")','Light-moderate weight — feel the brachialis working'],
+     mistakes:['Going straight up instead of across body','Swinging the upper arm','Rotating the wrist (must stay neutral)','Using momentum']},
+    /* — FOREARMS: Reverse curls — the #1 forearm vein exercise — */
+    {name:'Reverse Curls (EZ Bar)',sets:'3',reps:'15–20',muscles:'Brachioradialis + Forearm Extensors — THE vein builder',
      svg:`<img src="./images/reverse_curls.jpg" alt="Reverse Curls">`,
-     cues:['Overhand grip (palms face DOWN)','Elbows pinned to sides — strict','THE #1 forearm vein exercise','Slow descent — milk every rep','Light weight — forearms respond to high reps'],
-     mistakes:['Going too heavy (wrist strain)','Using body swing','Elbows moving forward']},
-    {name:'Wrist Curls (Up + Down)',sets:'3',reps:'20 each direction',muscles:'Forearm Flexors + Extensors — SIZE',
-     svg:`<img src="./images/wrist_curls.jpg" alt="Wrist Curls">`,
-     cues:['Forearms on thighs, wrists over knees','Palms UP: curl wrist up — flexors','Palms DOWN: curl wrist up — extensors','High reps (20) — forearms need volume','Let bar roll to fingertips for extra range'],
-     mistakes:['Moving the forearm (only WRIST)','Too heavy — wrist injury risk','Rushing reps']},
-    {name:'Farmer\'s Walk',sets:'3',reps:'40 seconds',muscles:'Forearms, Grip, Traps, Core — vascularity',
+     cues:['Overhand grip (palms face DOWN) on EZ bar','Elbows pinned to sides — strict form','Curl up — feel the top of your forearm working','This is THE #1 exercise for forearm veins and size','Slow 3 sec eccentric — maximize time under tension','Light weight + high reps — forearms are endurance muscles','The vein that runs along the top of your forearm grows from this'],
+     mistakes:['Going too heavy (wrist strain and poor form)','Using body swing','Elbows moving forward','Wrist bending backward']},
+    /* — FOREARMS: Farmer's walk — grip, traps, core, veins — */
+    {name:'Farmer\'s Walk (Heavy)',sets:'3',reps:'40–60 seconds',muscles:'Forearms, Grip Strength, Traps, Core — vascularity builder',
      svg:`<img src="./images/farmers_walk.jpg" alt="Farmer Walk">`,
-     cues:['Grab HEAVY dumbbells — heaviest you can hold','Walk slowly, chest tall, shoulders back','Crush the handles — squeeze hard','Builds insane grip + forearm veins','Core tight, don\'t lean to either side'],
-     mistakes:['Going too light','Hunching shoulders','Walking too fast']},
-    /* — CORE FINISHER — */
-    {name:'Dead Bugs + Side Plank (Superset)',sets:'3',reps:'10 each + 30 sec each side',muscles:'Deep Core, Obliques, Transverse Abdominis',
-     svg:`<img src="./images/dead_bugs.jpg" alt="Dead Bugs">`,
-     cues:['Dead Bug: lower back FLAT on floor','Extend opposite arm and leg','Side Plank: hips HIGH — straight line','No rest between — superset them','Breathe normally throughout'],
-     mistakes:['Lower back arching during dead bugs','Hips sagging during side plank','Rushing through the set']}
+     cues:['Grab the HEAVIEST dumbbells you can hold for 40+ seconds','Walk slowly with perfect posture — chest tall, shoulders back','CRUSH the handles — grip as hard as possible','This builds freaky grip strength + forearm vascularity','Core stays tight — don\'t lean to either side','When you can\'t hold anymore, that\'s the set','Also builds traps passively (heavy load on shoulders)'],
+     mistakes:['Going too light (this should be HEAVY)','Hunching shoulders forward','Walking too fast (not the point)','Letting grip relax — CRUSH the handles']},
+    /* — FOREARMS: Wrist work — direct forearm size — */
+    {name:'Behind-Back Wrist Curls (Barbell)',sets:'3',reps:'20–25',muscles:'Forearm Flexors — direct SIZE builder',
+     svg:`<img src="./images/wrist_curls.jpg" alt="Wrist Curls">`,
+     cues:['Stand — barbell held behind your back','Let bar roll to fingertips, then curl wrist UP','This behind-back angle = more range of motion than seated','High reps (20+) — forearm flexors are slow-twitch dominant','Squeeze at top, full stretch at bottom','The "roll to fingertips" technique adds finger flexor work too','Burns like fire — that\'s the growth stimulus'],
+     mistakes:['Moving the forearm (only the WRIST curls)','Too heavy (wrist injury risk)','Rushing through reps (slow = growth)','Stopping when it burns (push through it)']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
