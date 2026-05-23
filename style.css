@@ -157,7 +157,9 @@ button{cursor:pointer;border:none;font-family:inherit}
 .ex-info{padding:16px 18px;display:flex;flex-direction:column;justify-content:center;gap:4px}
 .ex-num{font-size:10px;font-family:'Space Mono',monospace;color:var(--dim);margin-bottom:2px;font-weight:600;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
 .ex-num-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;background:var(--gradient-accent);color:#0c0c14;font-size:10px;font-weight:800;font-family:'Space Mono',monospace}
-.ex-name{font-size:17px;font-weight:800;margin-bottom:4px;line-height:1.3}
+.ex-name{font-size:17px;font-weight:800;margin-bottom:4px;line-height:1.3;display:flex;align-items:center;gap:8px}
+.copy-ex-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer;transition:all var(--tr);flex-shrink:0}
+.copy-ex-btn:hover{background:rgba(245,200,66,.12);border-color:rgba(245,200,66,.3);transform:scale(1.1)}
 .ex-sets{font-size:14px;font-family:'Space Mono',monospace;color:var(--accent);margin-bottom:6px;font-weight:700;display:flex;align-items:center;gap:8px}
 .ex-sets::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent)}
 .ex-muscles{font-size:13px;color:var(--blue);font-weight:500;display:flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(92,196,255,.05);border-radius:8px;width:fit-content}

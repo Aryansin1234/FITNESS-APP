@@ -254,7 +254,7 @@ function renderExCard(ex, i) {
       <div class="ex-svg-wrap">${ex.svg}</div>
       <div class="ex-info">
         <div class="ex-num"><span class="ex-num-badge">${i+1}</span> ${allDone ? '<span style="color:var(--green)">✓ Complete</span>' : `${doneSetsCount}/${totalSets} sets`}</div>
-        <div class="ex-name">${ex.name}</div>
+        <div class="ex-name">${ex.name} <button class="copy-ex-btn" onclick="event.stopPropagation();copyExName('${ex.name.replace(/'/g,"\\'")}')" title="Copy name to search on YouTube">📋</button></div>
         <div class="ex-sets">${ex.sets} × ${ex.reps}</div>
         <div class="ex-muscles">${ex.muscles}</div>
       </div>
@@ -275,6 +275,12 @@ function renderExCard(ex, i) {
       </div>
     </div>
   </div>`;
+}
+
+function copyExName(name) {
+  navigator.clipboard.writeText(name + ' correct form').then(() => {
+    showToast('Copied: ' + name);
+  });
 }
 
 function toggleEx(i) {
