@@ -141,6 +141,7 @@ button{cursor:pointer;border:none;font-family:inherit}
 .day-tab.today:not(.active){border-color:rgba(61,232,160,.35);color:var(--green);background:rgba(61,232,160,.06)}
 .day-tab.today::after{content:'TODAY';position:absolute;top:-8px;right:8px;font-size:8px;font-weight:800;letter-spacing:1px;background:var(--gradient-green);color:#0c0c14;padding:2px 6px;border-radius:6px}
 .day-tab.rest-day{background:rgba(255,255,255,.02)}
+.day-tab.rest-day.active{background:var(--gradient-accent);color:#0c0c14;border-color:transparent;box-shadow:0 4px 20px rgba(245,200,66,.2)}
 .day-tab.done{border-color:var(--green);color:var(--green)}
 
 /* ── EXERCISE CARDS ── */
