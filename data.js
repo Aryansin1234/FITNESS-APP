@@ -4,8 +4,8 @@ const DAYS = [
      Evidence-based: 2 heavy compounds → 1 stretch-focused isolation → 1 peak-contraction isolation → Triceps (long head → lateral head)
      Research: Schoenfeld 2021 — chest grows best with 12–20 sets/week split across 2 frequencies
      ═══════════════════════════════════════════════════════════════ */
-  {name:'Monday',tag:'Chest & Triceps',tagClass:'push',
-   focus:'Chest (Upper + Mid + Stretch) · Triceps (Long + Lateral head)',
+  {name:'Monday',tag:'Chest & Triceps + Forearms',tagClass:'push',
+   focus:'Chest (Upper + Mid + Stretch) · Triceps (Long + Lateral head) · Forearms',
    cardio:'Incline treadmill walk · 10 min · 6 km/h · 4% incline',
    exercises:[
     /* — HEAVY COMPOUND #1: The progressive overload king — */
@@ -47,16 +47,21 @@ const DAYS = [
     {name:'Push-Ups (Mechanical Drop Set)',sets:'2',reps:'To absolute failure',muscles:'Chest, Triceps, Core — metabolic finisher',
      svg:`<img src="./images/push_ups.png" alt="Push-Ups">`,
      cues:['Start WIDE grip — failure → immediately switch to normal grip → failure → narrow grip → failure','That\'s ONE set — no rest between grip changes','Chest touches floor every rep — full ROM','This drives maximum blood flow and metabolic stress','The pump = cell swelling = growth signal'],
-     mistakes:['Hips sagging (weak core)','Stopping at moderate effort — push to TRUE failure','Partial reps — chest to floor is mandatory']}
+     mistakes:['Hips sagging (weak core)','Stopping at moderate effort — push to TRUE failure','Partial reps — chest to floor is mandatory']},
+    /* — FOREARMS (Daily): Wrist curls for flexor size — */
+    {name:'Wrist Curls (Dumbbell)',sets:'3',reps:'20–25',muscles:'Forearm Flexors — daily forearm training for size & vascularity',
+     svg:`<img src="./images/wrist_curls.jpg" alt="Wrist Curls">`,
+     cues:['Sit on bench — forearms resting on thighs, wrists hanging off knees','Let DB roll to fingertips → curl wrist up → squeeze at top','High reps (20+) — forearm flexors are slow-twitch dominant','The burn = growth. Push through it.','2 sec squeeze at top, slow release','Do both arms simultaneously or alternate'],
+     mistakes:['Moving the forearm (only the WRIST curls)','Too heavy (wrist injury risk)','Rushing reps — slow = growth','Stopping when it burns (push through)']}
   ]},
 
   /* ═══════════════════════════════════════════════════════════════
-     TUESDAY — BACK + TRAPS (Heavy Pull)
-     Evidence-based: Vertical pull (width) → Horizontal row (thickness) → Stretch isolation → Traps
-     Research: Back responds to both high load + high volume. Train 2×/week (Tue + Fri)
+     TUESDAY — BACK + TRAPS + BICEPS (Heavy Pull + Biceps Session 1)
+     Evidence-based: Vertical pull (width) → Horizontal row (thickness) → Stretch isolation → Traps → Biceps
+     Research: Back responds to both high load + high volume. Biceps 2×/week (Tue + Sat) with 72hr rest.
      ═══════════════════════════════════════════════════════════════ */
-  {name:'Tuesday',tag:'Back & Traps',tagClass:'pull',
-   focus:'Lats (width) · Mid Back (thickness) · Traps · Rear Delts',
+  {name:'Tuesday',tag:'Back, Traps & Biceps',tagClass:'pull',
+   focus:'Lats (width) · Mid Back (thickness) · Traps · Rear Delts · Biceps · Forearms',
    cardio:'Rowing machine · 8 min · Light pace — activates lats + opens shoulders',
    exercises:[
     /* — VERTICAL PULL #1: Nothing builds lat width like weighted pull-ups — */
@@ -98,7 +103,27 @@ const DAYS = [
     {name:'Dumbbell Shrugs (2-sec hold)',sets:'4',reps:'12–15',muscles:'Upper Traps — the "yoke" builder',
      svg:`<img src="./images/db_shrugs.jpg" alt="Dumbbell Shrugs">`,
      cues:['HEAVY dumbbells — traps are designed for heavy loads','Shrug STRAIGHT UP — pull ears to shoulders','HOLD squeeze at top for 2 FULL seconds — this is key','Slow 3 sec descent — constant tension','Slight forward lean increases upper trap activation','Use straps if grip fails — don\'t let grip limit traps'],
-     mistakes:['Rolling shoulders in circles (cervical spine risk!)','Not holding the squeeze (makes it useless)','Going too light — traps need HEAVY progressive overload','Bending elbows (turns into a curl)']}
+     mistakes:['Rolling shoulders in circles (cervical spine risk!)','Not holding the squeeze (makes it useless)','Going too light — traps need HEAVY progressive overload','Bending elbows (turns into a curl)']},
+    /* — BICEP #1: Heavy compound curl — the mass builder (Biceps 1st session of the week) — */
+    {name:'Barbell Curl (Strict)',sets:'4',reps:'6–8',muscles:'Biceps (both heads) — PRIMARY bicep mass builder',
+     svg:`<img src="./images/barbell_curl.jpg" alt="Barbell Curl">`,
+     cues:['Shoulder-width grip — EZ bar or straight','Elbows PINNED to sides — absolutely zero movement','Curl up — squeeze biceps HARD at top — hold 1 sec','3 second eccentric EVERY rep — slow descent builds size','Full extension at bottom — NO partial reps','If you swing, the weight is TOO HEAVY. Lighten it.','Strict form > heavy weight for biceps'],
+     mistakes:['Swinging torso for momentum (defeats purpose)','Elbows drifting forward (front delts take over)','Partial reps — not fully extending at bottom','Going too heavy (ego > stimulus)']},
+    /* — BICEP #2: Incline position = long head stretched = peak builder — */
+    {name:'Incline Dumbbell Curl (45°)',sets:'3',reps:'10–12',muscles:'Biceps LONG HEAD — the peak builder (stretched position)',
+     svg:`<img src="./images/db_bicep_curl.jpg" alt="Incline Dumbbell Curl">`,
+     cues:['Incline bench at 45° — arms hang straight DOWN behind body','This position PRE-STRETCHES the long head (peak of bicep)','Curl up without elbows moving forward at all','Supinate (turn pinkies out) at the top for peak squeeze','4 sec eccentric — feel the stretch as arms extend','The long head in stretch = peak growth stimulus','Lighter weight than standing — this is about the STRETCH'],
+     mistakes:['Elbows swinging forward (eliminates the stretch benefit)','Sitting too upright (defeats the purpose of incline)','Rushing the negative (missing growth stimulus)','Using momentum to curl up']},
+    /* — BICEP #3: Hammer for brachialis — builds arm THICKNESS — */
+    {name:'Cable Hammer Curl (Rope)',sets:'3',reps:'12–15',muscles:'Brachialis + Brachioradialis — arm THICKNESS and forearm tie-in',
+     svg:`<img src="./images/cable_hammer_curls.jpg" alt="Cable Hammer Curl">`,
+     cues:['Rope attachment on LOW cable','Neutral grip — palms face each other throughout','Elbows pinned — don\'t let them drift','Squeeze hard at top — pull rope ends apart','Cable provides constant tension (better than DB hammers)','The brachialis pushes the bicep UP — makes arms look bigger','This also builds the forearm-to-bicep tie-in'],
+     mistakes:['Elbows moving forward (removes brachialis focus)','Supinating wrists (this is NEUTRAL grip only)','Using body momentum','Losing the neutral grip position']},
+    /* — FOREARMS (Daily): Dead hangs for grip endurance after all the pulling — */
+    {name:'Dead Hang (Overhand Grip)',sets:'3',reps:'30–60 seconds',muscles:'Forearm Flexors, Grip Endurance — builds crushing grip + forearm veins',
+     svg:`<img src="./images/pullups.jpg" alt="Dead Hang">`,
+     cues:['Hang from pull-up bar with overhand grip — full bodyweight','Squeeze the bar as HARD as possible — active grip','Shoulders down and back (don\'t shrug)','Hold until grip completely fails — that\'s your set','This also decompresses the spine after heavy shrugs','Progress: add weight via dip belt when 60 sec is easy'],
+     mistakes:['Relaxing the grip (actively CRUSH the bar)','Shrugging shoulders up to ears','Swinging body','Giving up before true grip failure']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
@@ -106,8 +131,8 @@ const DAYS = [
      Evidence-based: Heavy compound → Unilateral → Quad isolation → Hip-hinge → Ham isolation → Calves
      Research: Squats + hip-hinge + isolation = complete leg development. 9 exercises max.
      ═══════════════════════════════════════════════════════════════ */
-  {name:'Wednesday',tag:'Legs',tagClass:'legs',
-   focus:'Quads · Hamstrings · Glutes · Calves',
+  {name:'Wednesday',tag:'Legs + Forearms',tagClass:'legs',
+   focus:'Quads · Hamstrings · Glutes · Calves · Forearms',
    cardio:'5 min walk ONLY · Save all energy for legs',
    exercises:[
     /* — HEAVY COMPOUND #1: The king of ALL exercises — nothing builds legs like squats — */
@@ -154,7 +179,12 @@ const DAYS = [
     {name:'Seated Calf Raise',sets:'4',reps:'15–20',muscles:'Soleus (lower/inner calf) — adds WIDTH that shows from the side',
      svg:`<img src="./images/seated_calf_raise.jpg" alt="Seated Calf Raise">`,
      cues:['Knees bent = soleus takes over from gastrocnemius','Full stretch DOWN — feel deep pull in lower calf','Press up all the way — peak contraction squeeze','2 sec hold at top, 3 sec stretch at bottom','Higher reps (15–20) because soleus is slow-twitch dominant','The soleus makes your calf look THICK from the side view'],
-     mistakes:['Bouncing through reps (the #1 calf growth killer)','Partial range of motion','Rushing — soleus needs slow, controlled TUT','Not going heavy enough — progressive overload still matters']}
+     mistakes:['Bouncing through reps (the #1 calf growth killer)','Partial range of motion','Rushing — soleus needs slow, controlled TUT','Not going heavy enough — progressive overload still matters']},
+    /* — FOREARMS (Daily): Plate pinch for thumb & grip strength — */
+    {name:'Plate Pinch Hold',sets:'3',reps:'30–45 seconds',muscles:'Forearm Extensors, Thumb Strength, Grip — builds pinch grip & forearm density',
+     svg:`<img src="./images/farmers_walk.jpg" alt="Plate Pinch">`,
+     cues:['Pinch 2 plates together (smooth sides OUT) with fingers + thumb','Hold at your side — arm straight','Squeeze as hard as possible — don\'t let plates slip','Builds the extensors and thumb muscles most exercises miss','Progress: add more plates or switch to heavier ones','The forearm pump from this is INSANE'],
+     mistakes:['Using ridged/easy-grip plates (smooth sides out for challenge)','Gripping too close to edge','Not going to true failure','Resting plates on thigh']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
@@ -163,8 +193,8 @@ const DAYS = [
      Research: Side delts are KEY for wide shoulders. Front delts already get worked from all pressing.
      Front raises are REMOVED — anterior delts get 15+ sets/week from chest + shoulder pressing already.
      ═══════════════════════════════════════════════════════════════ */
-  {name:'Thursday',tag:'Shoulders & Abs',tagClass:'push',
-   focus:'Side Delts (WIDTH) · Rear Delts (3D) · Overhead Press · Abs',
+  {name:'Thursday',tag:'Shoulders & Abs + Forearms',tagClass:'push',
+   focus:'Side Delts (WIDTH) · Rear Delts (3D) · Overhead Press · Abs · Forearms',
    cardio:'Cycling · 8 min · Light resistance · Active recovery',
    exercises:[
     /* — HEAVY COMPOUND PRESS: The #1 overhead strength builder — */
@@ -204,17 +234,22 @@ const DAYS = [
     {name:'Cable Crunches',sets:'3',reps:'12–15',muscles:'Upper Abs (Rectus Abdominis) — the "six-pack" muscle',
      svg:`<img src="./images/cable_crunches.jpg" alt="Cable Crunches">`,
      cues:['Kneel facing cable — rope behind head','Crunch by CURLING spine — round your back','Elbows drive TOWARD knees','Squeeze abs HARD at bottom — hold 1 sec','Rise slowly — maintain constant cable tension','The crunch comes from SPINAL FLEXION, not hip flexion','Think: ribs toward pelvis'],
-     mistakes:['Pulling with arms (arms just hold the rope)','Sitting back on heels (hip flexion, not spinal)','Not rounding spine enough (missing the contraction)','Too heavy = loss of mind-muscle connection']}
+     mistakes:['Pulling with arms (arms just hold the rope)','Sitting back on heels (hip flexion, not spinal)','Not rounding spine enough (missing the contraction)','Too heavy = loss of mind-muscle connection']},
+    /* — FOREARMS (Daily): Reverse wrist curls for extensor development — */
+    {name:'Reverse Wrist Curls (Dumbbell)',sets:'3',reps:'15–20',muscles:'Forearm Extensors — builds the TOP of forearm for balanced development',
+     svg:`<img src="./images/reverse_curls.jpg" alt="Reverse Wrist Curls">`,
+     cues:['Forearms on thighs — palms face DOWN (overhand)','Curl wrist UP against gravity — squeeze extensors at top','These are harder than regular wrist curls — use lighter weight','Builds the top of the forearm (brachioradialis area)','Prevents wrist imbalances and tendinitis','Slow controlled reps — 2 sec up, 2 sec down'],
+     mistakes:['Going too heavy (extensor muscles are smaller)','Moving the forearm (isolate the wrist only)','Rushing through reps','Skipping these — extensors prevent injury']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
-     FRIDAY — BACK & BICEPS (2× frequency for maximum growth)
-     Evidence-based: Heavy compound → Lat isolation → Stretch focus → Bicep compound → Bicep isolation
-     Research: 2× weekly frequency is optimal for muscle growth (Schoenfeld 2016)
+     FRIDAY — BACK (Heavy Pull Day 2)
+     Evidence-based: Heavy compound → Lat isolation → Stretch focus → Forearms
+     Research: Back trained 2×/week (Tue + Fri). Biceps moved to Tue + Sat for optimal 72hr rest.
      Different angles/exercises from Tuesday for complete development
      ═══════════════════════════════════════════════════════════════ */
-  {name:'Friday',tag:'Back & Biceps',tagClass:'pull',
-   focus:'Lats (width) · Mid Back (thickness) · Biceps (peak + width) — 2× per week',
+  {name:'Friday',tag:'Back (Heavy) + Forearms',tagClass:'pull',
+   focus:'Lats (width) · Mid Back (thickness) · Posterior Chain · Forearms',
    cardio:'Rowing machine · 8 min · Light pace — activates pulling muscles',
    exercises:[
     /* — HEAVY COMPOUND #1: The ultimate posterior chain builder — */
@@ -237,32 +272,30 @@ const DAYS = [
      svg:`<img src="./images/db_pullover.jpg" alt="Dumbbell Pullover">`,
      cues:['Lie across bench — only upper back on bench','HIPS DROPPED below bench level — this increases stretch','Both hands hold ONE dumbbell overhead','Lower behind head — go as DEEP as mobility allows','The stretch at the bottom = where lats grow MOST','Pull back using LATS (not chest/arms)','Moderate weight — feel > load'],
      mistakes:['Hips too high (reduces lat stretch)','Not going deep enough (missing the key stimulus)','Using too heavy weight (losing stretch quality)','Bending elbows excessively (becomes tricep work)']},
-    /* — BICEP #1: Heavy compound curl — the mass builder — */
-    {name:'Barbell Curl (Strict)',sets:'4',reps:'6–8 (heavier than Saturday)',muscles:'Biceps (both heads) — PRIMARY bicep mass builder',
-     svg:`<img src="./images/barbell_curl.jpg" alt="Barbell Curl">`,
-     cues:['Shoulder-width grip — EZ bar or straight','Elbows PINNED to sides — absolutely zero movement','Curl up — squeeze biceps HARD at top — hold 1 sec','3 second eccentric EVERY rep — slow descent builds size','Full extension at bottom — NO partial reps','If you swing, the weight is TOO HEAVY. Lighten it.','Strict form > heavy weight for biceps'],
-     mistakes:['Swinging torso for momentum (defeats purpose)','Elbows drifting forward (front delts take over)','Partial reps — not fully extending at bottom','Going too heavy (ego > stimulus)']},
-    /* — BICEP #2: Incline position = long head stretched = peak builder — */
-    {name:'Incline Dumbbell Curl (45°)',sets:'3',reps:'10–12',muscles:'Biceps LONG HEAD — the peak builder (stretched position)',
-     svg:`<img src="./images/db_bicep_curl.jpg" alt="Incline Dumbbell Curl">`,
-     cues:['Incline bench at 45° — arms hang straight DOWN behind body','This position PRE-STRETCHES the long head (peak of bicep)','Curl up without elbows moving forward at all','Supinate (turn pinkies out) at the top for peak squeeze','4 sec eccentric — feel the stretch as arms extend','The long head in stretch = peak growth stimulus','Lighter weight than standing — this is about the STRETCH'],
-     mistakes:['Elbows swinging forward (eliminates the stretch benefit)','Sitting too upright (defeats the purpose of incline)','Rushing the negative (missing growth stimulus)','Using momentum to curl up']},
-    /* — BICEP #3: Hammer for brachialis — builds arm THICKNESS — */
-    {name:'Cable Hammer Curl (Rope)',sets:'3',reps:'12–15',muscles:'Brachialis + Brachioradialis — arm THICKNESS and forearm tie-in',
-     svg:`<img src="./images/cable_hammer_curls.jpg" alt="Cable Hammer Curl">`,
-     cues:['Rope attachment on LOW cable','Neutral grip — palms face each other throughout','Elbows pinned — don\'t let them drift','Squeeze hard at top — pull rope ends apart','Cable provides constant tension (better than DB hammers)','The brachialis pushes the bicep UP — makes arms look bigger','This also builds the forearm-to-bicep tie-in'],
-     mistakes:['Elbows moving forward (removes brachialis focus)','Supinating wrists (this is NEUTRAL grip only)','Using body momentum','Losing the neutral grip position']}
+    /* — FOREARMS (Daily): Towel grip hangs for thick forearms — */
+    {name:'Towel Hang (or Thick Bar Hold)',sets:'3',reps:'20–40 seconds',muscles:'Forearm Flexors, Grip Strength — thick grip = bigger forearms',
+     svg:`<img src="./images/pullups.jpg" alt="Towel Hang">`,
+     cues:['Drape a towel over pull-up bar — grip the towel ends','Hang with full bodyweight — thick grip forces forearms to work 2× harder','Squeeze the towel HARD — don\'t let it slip','This builds grip strength that transfers to all pulling exercises','If no towel: use Fat Gripz or wrap a towel around dumbbells','Hold until complete grip failure'],
+     mistakes:['Using a thin towel (use a thick gym towel)','Not squeezing hard enough','Giving up too early — push to failure','Swinging or kipping']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
-     SATURDAY — ARMS (Biceps + Triceps + FOREARMS)
-     Evidence-based: Alternate bi/tri supersets for blood flow → Forearm finisher
-     Research: Arms grow from VOLUME + VARIETY of angles. 2× frequency with Friday.
-     Supersets (bi then tri) increase blood flow and pump = growth signal.
+     SATURDAY — FULL REST
+     Recovery day: muscles repair and grow. Eat protein, sleep well.
      ═══════════════════════════════════════════════════════════════ */
-  {name:'Saturday',tag:'Arms & Forearms',tagClass:'core',
-   focus:'Biceps (peak + width) · Triceps (all 3 heads) · Forearms (vascularity)',
-   cardio:'No cardio — pure arm pump day. Blood flow = veins = growth!',
+  {name:'Saturday',tag:'Full Rest',tagClass:'rest',rest:true,
+   restMsg:'Your body has completed 5 intense training days. Today your muscles repair micro-tears and come back BIGGER and STRONGER. Rest is when growth ACTUALLY happens — don\'t skip it. Tomorrow you\'ll crush a 2-hour arm session fully recovered.',
+   restTips:['Sleep 8+ hours — GH peaks during deep sleep','Keep eating protein (130g+) even on rest days','Light 20-min walk promotes blood flow and recovery','Hydrate well — 3L water minimum','Foam roll and stretch any sore areas','Cold shower → improved recovery and vascularity','Meal prep for the week if needed']},
+
+  /* ═══════════════════════════════════════════════════════════════
+     SUNDAY — ARMS & FOREARMS (2-Hour Session — Biceps 2nd session of the week)
+     Evidence-based: Alternate bi/tri supersets for blood flow → Forearm finisher
+     Research: Arms grow from VOLUME + VARIETY of angles. 2× bicep frequency (Tue + Sun).
+     2 hours allows higher volume with full rest between sets for maximum strength.
+     ═══════════════════════════════════════════════════════════════ */
+  {name:'Sunday',tag:'Arms & Forearms (2hr)',tagClass:'core',
+   focus:'Biceps (peak + width) · Triceps (all 3 heads) · Forearms · 2-HOUR SESSION',
+   cardio:'5 min light cycling — get blood flowing to arms before destroying them',
    exercises:[
     /* — HEAVY TRICEP COMPOUND: Heaviest tricep movement — do it first while fresh — */
     {name:'Close-Grip Bench Press',sets:'4',reps:'8–10',muscles:'Triceps (all 3 heads) — the heaviest tricep compound',
@@ -272,20 +305,20 @@ const DAYS = [
     /* — HEAVY BICEP COMPOUND: The EZ bar strict curl — bicep mass builder — */
     {name:'EZ-Bar Curl (Strict)',sets:'4',reps:'8–10',muscles:'Biceps (both heads) — the mass builder. EZ bar = wrist comfort.',
      svg:`<img src="./images/barbell_curl.jpg" alt="EZ-Bar Curl">`,
-     cues:['EZ bar — inner angled grip (shoulder width)','Back against wall or post for ZERO cheating','Elbows pinned to torso — don\'t let them move forward','Full curl to peak → squeeze HARD 1 sec → 3 sec negative','Full extension at bottom — no partial reps','Wall support = impossible to cheat = maximum bicep stimulus','Heavier than Friday since this is your focus day'],
+     cues:['EZ bar — inner angled grip (shoulder width)','Back against wall or post for ZERO cheating','Elbows pinned to torso — don\'t let them move forward','Full curl to peak → squeeze HARD 1 sec → 3 sec negative','Full extension at bottom — no partial reps','Wall support = impossible to cheat = maximum bicep stimulus','Go heavier than Tuesday — you\'re fully rested from yesterday'],
      mistakes:['Swinging body (wall eliminates this)','Elbows drifting forward (front delts steal the work)','Partial reps at bottom (missing stretch)','Going too heavy (form > weight for biceps)']},
     /* — TRICEP: Long head in stretch (crosses shoulder joint) — */
-    {name:'Overhead EZ-Bar Extension (Skull Crusher variation)',sets:'3',reps:'10–12',muscles:'Triceps (long head emphasis) — stretch at the bottom is key',
+    {name:'Overhead EZ-Bar Extension (Skull Crusher variation)',sets:'4',reps:'10–12',muscles:'Triceps (long head emphasis) — stretch at the bottom is key',
      svg:`<img src="./images/skullcrushers.jpg" alt="Overhead Extension">`,
      cues:['Lie on flat bench — EZ bar overhead','Lower bar BEHIND head (not to forehead) — get full long head stretch','Elbows point at ceiling — they don\'t move','The key: lower BEHIND head for maximum long head stretch','Extend fully — lock out and squeeze triceps HARD','This hits the long head harder than standard skull crushers','3 sec eccentric into the stretch position'],
      mistakes:['Lowering to forehead only (less long head stretch)','Elbows flaring outward','Not getting full stretch behind head','Using momentum to press up']},
     /* — BICEP: Preacher for short head (peak) — supported = zero cheating — */
-    {name:'Preacher Curl (EZ or DB)',sets:'3',reps:'10–12',muscles:'Biceps SHORT HEAD — builds the PEAK shape',
+    {name:'Preacher Curl (EZ or DB)',sets:'4',reps:'10–12',muscles:'Biceps SHORT HEAD — builds the PEAK shape',
      svg:`<img src="./images/preacher_curls.jpg" alt="Preacher Curls">`,
      cues:['Armpits rest on TOP of the pad — fully supported','Arms FULLY extended at bottom — deep bicep stretch','Curl up to about 120° — NOT to shoulder (tension drops)','The pad eliminates ALL cheating — pure bicep work','Hold squeeze 1 sec at top, 3 sec negative','This targets the short head (inner bicep) for PEAK shape','Don\'t go too heavy — the stretch at bottom is risky if ego lifting'],
      mistakes:['Not extending fully at bottom (missing stretch)','Curling past 120° (loses tension on bicep)','Lifting elbows off pad (cheating)','Too heavy (bicep tear risk in stretched position)']},
     /* — TRICEP: Rope pushdown — lateral head (the "horseshoe") — */
-    {name:'Tricep Rope Pushdown (Lean Forward)',sets:'3',reps:'12–15',muscles:'Tricep LATERAL HEAD — the "horseshoe" visible from behind',
+    {name:'Tricep Rope Pushdown (Lean Forward)',sets:'4',reps:'12–15',muscles:'Tricep LATERAL HEAD — the "horseshoe" visible from behind',
      svg:`<img src="./images/tricep_pushdown.png" alt="Tricep Rope Pushdown">`,
      cues:['Lean forward 30° from hips — this increases lateral head activation','Elbows PINNED to ribs — non-negotiable','At bottom: SPREAD rope ends apart + PRONATE (pinkies out)','Full lockout every rep — squeeze the horseshoe','3 sec eccentric — fight the cable back up','Leaning forward is the KEY CUE that most people miss','Moderate weight — feel the lateral head burn'],
      mistakes:['Standing upright (less lateral head, more long head)','Elbows drifting forward','Not spreading rope at bottom','Body rocking for momentum']},
@@ -294,16 +327,31 @@ const DAYS = [
      svg:`<img src="./images/spider_curls.jpg" alt="Spider Curls">`,
      cues:['Lie CHEST-DOWN on incline bench (45–60°)','Arms hang STRAIGHT down — perpendicular to floor','Curl up — gravity works against you the ENTIRE time','At peak: squeeze so hard your bicep cramps','The unique angle = no dead spot in the movement','This is the best "pump" exercise for biceps','3 sec eccentric every rep — max time under tension'],
      mistakes:['Moving elbows (they stay locked in space)','Using momentum (impossible if done right)','Bench too flat (reduces the gravity advantage)','Going too heavy (this is precision work)']},
+    /* — TRICEP: Dips — heavy compound stretch on long head — */
+    {name:'Weighted Dips (Upright — Tricep Focus)',sets:'4',reps:'8–12',muscles:'Triceps (all heads), Lower Chest — heavy compound with deep stretch',
+     svg:`<img src="./images/tricep_dips.jpg" alt="Dips">`,
+     cues:['UPRIGHT torso = more tricep focus','Lower until upper arm is parallel to floor (90° elbow)','Drive up through palms — lock out HARD at top','Add weight belt when bodyweight >12 reps easily','Shoulder blades down and back throughout','2 hours means you can add this extra compound — take full rest between sets'],
+     mistakes:['Going too deep past 90° (shoulder impingement)','Leaning too far forward (shifts to chest)','Kipping or swinging','Flaring elbows too wide']},
+    /* — BICEP: Concentration curl — peak contraction king — */
+    {name:'Concentration Curl (Seated)',sets:'3',reps:'10–12 each arm',muscles:'Biceps PEAK — highest EMG activation of any curl (Boeckh-Behrens study)',
+     svg:`<img src="./images/db_bicep_curl.jpg" alt="Concentration Curl">`,
+     cues:['Sit on bench — elbow braced against inner thigh','This isolation eliminates ALL momentum — pure bicep','Curl up slowly — SQUEEZE at top for 2 full seconds','Supinate hard at the top — turn pinky OUT','4 sec negative EVERY rep — this builds the peak','Research shows this has the HIGHEST bicep EMG of any curl','The mind-muscle connection here is unmatched'],
+     mistakes:['Swinging the dumbbell (elbow stays planted on thigh)','Not squeezing at the top','Rushing the negative (the eccentric IS the growth)','Using too heavy weight (precision > load)']},
     /* — TRICEP: Kickbacks — underrated for lateral head peak contraction — */
     {name:'Cable Tricep Kickback',sets:'3',reps:'12–15 each arm',muscles:'Triceps (lateral + medial head) — peak contraction at lockout',
      svg:`<img src="./images/tricep_pushdown.png" alt="Cable Kickback">`,
      cues:['Cable at low position — single handle','Hinge forward 90° — upper arm parallel to floor','Extend arm FULLY behind you — lock out completely','The peak contraction at full extension is the MONEY','Hold lockout 1–2 seconds — squeeze hard','Cable > dumbbell because tension stays at peak','This carves detail into the tricep'],
      mistakes:['Upper arm dropping (must stay parallel to floor)','Not locking out fully (missing the peak contraction)','Swinging the weight','Standing too upright']},
-    /* — BICEP: Hammer curls — brachialis for arm WIDTH — */
+    /* — BICEP: Cross-body hammer — brachialis for arm WIDTH — */
     {name:'Cross-Body Hammer Curl',sets:'3',reps:'10–12 each arm',muscles:'Brachialis + Brachioradialis — arm WIDTH builder',
      svg:`<img src="./images/hammer_curls.png" alt="Hammer Curls">`,
      cues:['Neutral grip (palms face in) — curl ACROSS body toward opposite shoulder','This cross-body angle hits brachialis MORE than standard hammer','The brachialis sits UNDER the bicep — when it grows, it pushes bicep UP','Slow controlled movement — no swinging','This builds the forearm-to-bicep tie-in (the "vein highway")','Light-moderate weight — feel the brachialis working'],
      mistakes:['Going straight up instead of across body','Swinging the upper arm','Rotating the wrist (must stay neutral)','Using momentum']},
+    /* — TRICEP: Overhead single-arm extension — medial head finisher — */
+    {name:'Single-Arm Overhead DB Extension',sets:'3',reps:'12–15 each arm',muscles:'Triceps (long + medial head) — unilateral for balanced arms',
+     svg:`<img src="./images/overhead_tricep_extension.jpg" alt="Overhead DB Extension">`,
+     cues:['One DB overhead — single arm','Lower behind head — full long head stretch','Elbow points at ceiling — don\'t let it flare','Extend fully — squeeze at top','This fixes left/right tricep imbalances','Lighter weight — focus on the stretch and squeeze','With 2 hours you can afford this extra isolation work'],
+     mistakes:['Elbow flaring outward','Not getting full stretch behind head','Arching lower back','Using too much weight']},
     /* — FOREARMS: Reverse curls — the #1 forearm vein exercise — */
     {name:'Reverse Curls (EZ Bar)',sets:'3',reps:'15–20',muscles:'Brachioradialis + Forearm Extensors — THE vein builder',
      svg:`<img src="./images/reverse_curls.jpg" alt="Reverse Curls">`,
@@ -318,15 +366,13 @@ const DAYS = [
     {name:'Behind-Back Wrist Curls (Barbell)',sets:'3',reps:'20–25',muscles:'Forearm Flexors — direct SIZE builder',
      svg:`<img src="./images/wrist_curls.jpg" alt="Wrist Curls">`,
      cues:['Stand — barbell held behind your back','Let bar roll to fingertips, then curl wrist UP','This behind-back angle = more range of motion than seated','High reps (20+) — forearm flexors are slow-twitch dominant','Squeeze at top, full stretch at bottom','The "roll to fingertips" technique adds finger flexor work too','Burns like fire — that\'s the growth stimulus'],
-     mistakes:['Moving the forearm (only the WRIST curls)','Too heavy (wrist injury risk)','Rushing through reps (slow = growth)','Stopping when it burns (push through it)']}
-   ]},
-
-  /* ═══════════════════════════════════════════════════════════════
-     SUNDAY — FULL REST
-     ═══════════════════════════════════════════════════════════════ */
-  {name:'Sunday',tag:'Full Rest',tagClass:'rest',rest:true,
-   restMsg:'Your body has completed 6 intense training days hitting EVERY major muscle: Chest, Back, Shoulders, Quads, Hamstrings, Calves, Biceps, Triceps, Forearms, Traps, Abs, Obliques, Core — plus a raw Power & Conditioning day for strength, stamina, and endurance. The micro-tears repair today and muscles come back BIGGER and STRONGER. Enjoy the recovery — you earned it.',
-   restTips:['Sleep 8+ hours — GH peaks during deep sleep','Keep eating protein (130g+) even on rest days','Light 20-min walk is perfectly fine — promotes blood flow','Reflect: did you hit all 6 training days this week?','Hydrate well — 3L water minimum','Foam roll and stretch any sore areas','Cold shower → improved recovery and vascularity']}
+     mistakes:['Moving the forearm (only the WRIST curls)','Too heavy (wrist injury risk)','Rushing through reps (slow = growth)','Stopping when it burns (push through it)']},
+    /* — FOREARMS: Wrist roller for the ultimate forearm pump finisher — */
+    {name:'Wrist Roller (or Towel Wringing)',sets:'3',reps:'2–3 rolls up + down',muscles:'ALL forearm muscles — the ultimate forearm pump finisher',
+     svg:`<img src="./images/wrist_curls.jpg" alt="Wrist Roller">`,
+     cues:['Arms extended in front — roll weight UP by rotating wrists','Then reverse — roll it DOWN slowly','This hits EVERY forearm muscle simultaneously','If no wrist roller: wring a thick wet towel for same effect','The pump from this is unmatched — veins will pop','Perfect finisher for a 2-hour arm session'],
+     mistakes:['Arms dropping (keep them parallel to floor)','Rolling too fast (slow = more tension)','Using too much weight (form first)','Not doing both directions (up AND down)']}
+   ]}
 ];
 
 
