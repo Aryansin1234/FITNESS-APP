@@ -79,11 +79,11 @@ const DAYS = [
      svg:`<img src="./images/bent_over_db_row.jpg" alt="Barbell Row">`,
      cues:['Hinge at hips — torso 45–60° to floor','Overhand or underhand grip (underhand = more lats)','Pull bar to lower chest/upper abdomen','RETRACT scapulae hard at the top — squeeze 1 sec','Lower fully — arms straight, lats stretched','Keep spine NEUTRAL — never round','This is your heaviest row — progressive overload priority'],
      mistakes:['Rounding the lumbar spine','Torso coming too upright (becomes a shrug)','Not retracting scapulae at the top','Rowing to belly button (too low for lat engagement)']},
-    /* — HORIZONTAL ROW #2: Chest-supported = zero cheating, pure back isolation — */
-    {name:'Chest-Supported Dumbbell Row',sets:'3',reps:'10–12',muscles:'Mid Back, Rhomboids, Rear Delts — ZERO momentum possible',
-     svg:`<img src="./images/bent_over_db_row.jpg" alt="Chest-Supported Row">`,
-     cues:['Lie face-down on incline bench (30–45°)','Let DBs hang — full scapular protraction at bottom','Row DBs up — elbows drive BACK past torso','SQUEEZE shoulder blades together at top — hold 2 sec','Chest against pad = IMPOSSIBLE to cheat','3 sec eccentric — feel the stretch at bottom','This mid-back isolation is unmatched'],
-     mistakes:['Lifting chest off pad (defeats the purpose)','Rowing too high (traps take over)','Not getting full stretch at bottom','Shrugging shoulders up']},
+    /* — HORIZONTAL ROW #2: Unilateral — deepest lat stretch possible + fixes left/right imbalances — */
+    {name:'Single-Arm Dumbbell Row',sets:'4',reps:'8–10 each side',muscles:'Lats (deepest stretch), Rhomboids, Rear Delts — unilateral king for back thickness',
+     svg:`<img src="./images/one_arm_row.png" alt="Single-Arm DB Row">`,
+     cues:['Brace one hand and same-side knee on flat bench — opposite side works','Let the dumbbell hang at FULL arm extension — complete lat stretch at bottom','Pull DB toward HIP (not shoulder) — elbow drives past torso','Slight torso rotation at peak for extra range of motion — squeeze lat hard','3 sec eccentric — arm fully extends at bottom — feel the deep stretch','Unilateral setup allows HEAVIER weight per side than bilateral rows','Exposes and fixes left-right strength imbalances that barbell rows mask'],
+     mistakes:['Rowing toward shoulder (too high — becomes rear delt, not lat)','Not fully extending at bottom (missing the stretch stimulus)','Rotating excessively (use the lat — controlled, not momentum)','Pulling with the hand — think ELBOW driving toward hip']},
     /* — HORIZONTAL ROW #3: Cable for constant tension — */
     {name:'Seated Cable Row (V-Grip)',sets:'3',reps:'10–12',muscles:'Mid Back, Rhomboids, Lower Traps — constant tension',
      svg:`<img src="./images/seated_cable_row.png" alt="Seated Cable Row">`,
@@ -119,11 +119,11 @@ const DAYS = [
      svg:`<img src="./images/cable_hammer_curls.jpg" alt="Cable Hammer Curl">`,
      cues:['Rope attachment on LOW cable','Neutral grip — palms face each other throughout','Elbows pinned — don\'t let them drift','Squeeze hard at top — pull rope ends apart','Cable provides constant tension (better than DB hammers)','The brachialis pushes the bicep UP — makes arms look bigger','This also builds the forearm-to-bicep tie-in'],
      mistakes:['Elbows moving forward (removes brachialis focus)','Supinating wrists (this is NEUTRAL grip only)','Using body momentum','Losing the neutral grip position']},
-    /* — FOREARMS (Daily): Dead hangs for grip endurance after all the pulling — */
-    {name:'Dead Hang (Overhand Grip)',sets:'3',reps:'30–60 seconds',muscles:'Forearm Flexors, Grip Endurance — builds crushing grip + forearm veins',
-     svg:`<img src="./images/pullups.jpg" alt="Dead Hang">`,
-     cues:['Hang from pull-up bar with overhand grip — full bodyweight','Squeeze the bar as HARD as possible — active grip','Shoulders down and back (don\'t shrug)','Hold until grip completely fails — that\'s your set','This also decompresses the spine after heavy shrugs','Progress: add weight via dip belt when 60 sec is easy'],
-     mistakes:['Relaxing the grip (actively CRUSH the bar)','Shrugging shoulders up to ears','Swinging body','Giving up before true grip failure']}
+    /* — FOREARMS (Daily): Zottman curls — trains BOTH forearm flexors AND extensors in one movement — */
+    {name:'Zottman Curl (Dumbbell)',sets:'3',reps:'10–12',muscles:'Forearm Flexors (concentric) + Forearm Extensors/Brachioradialis (eccentric) — the most complete forearm exercise',
+     svg:`<img src="./images/db_bicep_curl.jpg" alt="Zottman Curl">`,
+     cues:['Start with supinated grip (palms UP) — curl DBs up like a standard bicep curl','At the TOP: rotate wrists so palms face DOWN (pronate) — both hands simultaneously','Lower the weight SLOWLY (3–4 sec) with palms facing down — this is the KEY stimulus','At the BOTTOM: flip back to palms up before the next rep','The PRONATED DESCENT loads forearm extensors and brachioradialis under maximum tension','The SUPINATED CURL adds forearm flexor and bicep activation going up','No other single exercise builds BOTH sides of the forearm equally in one set'],
+     mistakes:['Rushing the rotation at the top — fully pronate BEFORE lowering','Going too heavy — the wrist rotation compromises form immediately','Not fully rotating to palms-down before lowering (missing the extensor overload)','Fast eccentric — the SLOW palms-down lowering IS the forearm growth stimulus']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
@@ -235,6 +235,21 @@ const DAYS = [
      svg:`<img src="./images/cable_crunches.jpg" alt="Cable Crunches">`,
      cues:['Kneel facing cable — rope behind head','Crunch by CURLING spine — round your back','Elbows drive TOWARD knees','Squeeze abs HARD at bottom — hold 1 sec','Rise slowly — maintain constant cable tension','The crunch comes from SPINAL FLEXION, not hip flexion','Think: ribs toward pelvis'],
      mistakes:['Pulling with arms (arms just hold the rope)','Sitting back on heels (hip flexion, not spinal)','Not rounding spine enough (missing the contraction)','Too heavy = loss of mind-muscle connection']},
+    /* — ABS: Bicycle crunches — highest oblique + rectus EMG of all tested ab exercises (ACE research) — */
+    {name:'Bicycle Crunches',sets:'3',reps:'20–25 each side (slow)',muscles:'Obliques + Rectus Abdominis — the #1 ranked ab exercise by EMG, trains rotation and flexion together',
+     svg:`<img src="./images/bicycle_crunches.jpg" alt="Bicycle Crunches">`,
+     cues:['Lie flat — lower back PRESSED into the floor (no arch)','Hands lightly behind head — elbows wide, NEVER pulling the neck','Bring right knee to chest while FULLY rotating left elbow toward it','Fully extend the left leg — keep it hovering above the floor','2 sec hold at PEAK rotation each rep — squeeze the oblique hard','SLOW deliberate reps — rotation quality beats speed every single time','Think: opposite elbow to knee — the full twist is the oblique stimulus'],
+     mistakes:['Going too fast (momentum replaces muscle — the #1 mistake)','Pulling on neck with hands (elbows stay wide)','Half-twists — a partial rotation works the rectus, not the obliques','Letting the extended leg rest on the floor (lower abs immediately disengage)']},
+    /* — ABS: Weighted decline crunch — progressive overload for the six-pack muscle — */
+    {name:'Weighted Decline Crunch',sets:'3',reps:'12–15',muscles:'Rectus Abdominis (upper region) — loaded crunch for visible six-pack development',
+     svg:`<img src="./images/decline_crunches.jpg" alt="Weighted Decline Crunch">`,
+     cues:['Lock feet in decline bench — hold a weight plate (5–15 kg) on your chest','Curl spine UP — RIBS toward pelvis (spinal flexion, NOT hip flexion)','SQUEEZE abs HARD at the top — hold 1–2 seconds every rep','3 sec eccentric — lower under full control, feel the abs lengthen','Decline angle = abs work through a LONGER ROM than flat crunches','The weight = progressive overload = abs grow bigger like any other muscle','Start with bodyweight, add 5 kg plate when 15 reps feels easy'],
+     mistakes:['Sitting all the way up to 90° (hip flexors take over at that point)','Rushing the eccentric (missing the time under tension)','Using momentum to swing up','Never adding weight — bodyweight crunches stop building muscle early on']},
+    /* — ABS: Side plank with hip dip — lateral core + oblique strength in a different plane — */
+    {name:'Side Plank with Hip Dip',sets:'3',reps:'30–45 sec hold + 10 hip dips each side',muscles:'Obliques (lateral), Transverse Abdominis, Glute Med — lateral stability and waist definition',
+     svg:`<img src="./images/side_plank.jpg" alt="Side Plank">`,
+     cues:['Forearm side plank — elbow directly under shoulder, body in a straight diagonal','Hips level — do NOT let them sag (this defeats the entire exercise)','AFTER the isometric hold: perform 10 slow hip dips — lower hip toward floor then raise back up','The hip dip adds DYNAMIC oblique loading on top of the isometric hold','Actively squeeze the top-side oblique throughout — don\'t just passively hang','Stack feet for maximum difficulty; stagger (one in front) for easier version','This trains the obliques in a completely different plane from all other ab work'],
+     mistakes:['Hips sagging — the most common mistake (resets and defeats the stimulus)','Elbow too far from shoulder (unstable base, shoulders suffer)','Rushing hip dips — only slow and controlled produces oblique contraction','Skipping this — lateral core prevents lower back injury and creates waist definition']},
     /* — FOREARMS (Daily): Reverse wrist curls for extensor development — */
     {name:'Reverse Wrist Curls (Dumbbell)',sets:'3',reps:'15–20',muscles:'Forearm Extensors — builds the TOP of forearm for balanced development',
      svg:`<img src="./images/reverse_curls.jpg" alt="Reverse Wrist Curls">`,
@@ -243,13 +258,13 @@ const DAYS = [
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
-     FRIDAY — BACK (Heavy Pull Day 2)
-     Evidence-based: Heavy compound → Lat isolation → Stretch focus → Forearms
-     Research: Back trained 2×/week (Tue + Fri). Biceps moved to Tue + Sat for optimal 72hr rest.
-     Different angles/exercises from Tuesday for complete development
+     FRIDAY — BACK (Heavy Pull Day 2 + Lower Back + Rear Delts)
+     Evidence-based: Heavy compound → Mid-back thickness → Lat isolation → Stretch → Lower Back → Rear Delts → Forearms
+     Research: Back trained 2×/week (Tue + Fri). Different exercises each day for complete development.
+     Lower back (hyperextensions) + rear delts (face pulls) added — the two most neglected posterior muscles.
      ═══════════════════════════════════════════════════════════════ */
-  {name:'Friday',tag:'Back (Heavy) + Forearms',tagClass:'pull',
-   focus:'Lats (width) · Mid Back (thickness) · Posterior Chain · Forearms',
+  {name:'Friday',tag:'Back (Heavy) + Lower Back + Forearms',tagClass:'pull',
+   focus:'Lats (width) · Mid Back (thickness) · Lower Back (Erectors) · Rear Delts · Forearms',
    cardio:'Rowing machine · 8 min · Light pace — activates pulling muscles',
    exercises:[
     /* — HEAVY COMPOUND #1: The ultimate posterior chain builder — */
@@ -272,11 +287,21 @@ const DAYS = [
      svg:`<img src="./images/db_pullover.jpg" alt="Dumbbell Pullover">`,
      cues:['Lie across bench — only upper back on bench','HIPS DROPPED below bench level — this increases stretch','Both hands hold ONE dumbbell overhead','Lower behind head — go as DEEP as mobility allows','The stretch at the bottom = where lats grow MOST','Pull back using LATS (not chest/arms)','Moderate weight — feel > load'],
      mistakes:['Hips too high (reduces lat stretch)','Not going deep enough (missing the key stimulus)','Using too heavy weight (losing stretch quality)','Bending elbows excessively (becomes tricep work)']},
-    /* — FOREARMS (Daily): Towel grip hangs for thick forearms — */
-    {name:'Towel Hang (or Thick Bar Hold)',sets:'3',reps:'20–40 seconds',muscles:'Forearm Flexors, Grip Strength — thick grip = bigger forearms',
-     svg:`<img src="./images/pullups.jpg" alt="Towel Hang">`,
-     cues:['Drape a towel over pull-up bar — grip the towel ends','Hang with full bodyweight — thick grip forces forearms to work 2× harder','Squeeze the towel HARD — don\'t let it slip','This builds grip strength that transfers to all pulling exercises','If no towel: use Fat Gripz or wrap a towel around dumbbells','Hold until complete grip failure'],
-     mistakes:['Using a thin towel (use a thick gym towel)','Not squeezing hard enough','Giving up too early — push to failure','Swinging or kipping']}
+    /* — LOWER BACK: Most skipped muscle group — direct erector training for injury prevention + mass — */
+    {name:'Back Extensions (Hyperextensions)',sets:'3',reps:'12–15 (bodyweight → hold plate for progression)',muscles:'Erector Spinae, Glutes, Hamstrings — lower back mass builder that deadlifts alone cannot replace',
+     svg:`<img src="./images/romanian_deadlift.png" alt="Back Extensions">`,
+     cues:['Lock feet in back extension machine — hip crease at the TOP edge of the pad','Arms crossed over chest or hold a weight plate (5–25 kg) at chest for overload','Lower torso toward floor — feel a deep stretch in lower back and hamstrings','Drive hips INTO pad and EXTEND — raise torso just past parallel (horizontal)','Squeeze glutes and lower back HARD at the top — 1 sec hold every rep','Do NOT hyperextend past neutral (this compresses the lumbar spine)','Progress: add 5 kg every 2 weeks when 15 reps feels easy'],
+     mistakes:['Going past horizontal at the top (hyperextension = lumbar compression)','Rounding lower back on the concentric — control is everything','Going too fast — slow deliberate reps only on this movement','Neglecting progressive overload — add weight when 15 reps becomes easy']},
+    /* — REAR DELTS: 2× per week is optimal for shoulder health and 3D deltoid look — */
+    {name:'Cable Face Pulls (External Rotation)',sets:'3',reps:'15–20',muscles:'Rear Deltoids, External Rotators, Mid Traps — the most important exercise for shoulder longevity',
+     svg:`<img src="./images/cable_face_pulls.png" alt="Cable Face Pulls">`,
+     cues:['Cable at face height — rope attachment','Pull toward FOREHEAD — not chin, not chest','Elbows HIGH and OUT — above shoulder level at the peak','At peak contraction: externally rotate — thumbs point BEHIND you','This single movement counteracts all the internal rotation from pressing days','Hold peak position 2 full seconds every rep — feel rear delts fire','NEVER ego lift here — this is precision and health, not strength'],
+     mistakes:['Pulling to chin (becomes a row — wrong muscle entirely)','Elbows dropping below shoulder level (loses rear delt focus)','Too heavy — traps and biceps dominate and the rotators get nothing','Not externally rotating at peak (missing the rotator cuff benefit)']},
+    /* — FOREARMS (Daily): Reverse barbell curl — builds brachioradialis + top-of-forearm thickness — */
+    {name:'Reverse Barbell Curl',sets:'3',reps:'15–20',muscles:'Brachioradialis (forearm "shelf"), Forearm Extensors — builds the TOP of the forearm for balanced size',
+     svg:`<img src="./images/standing_reverse_curl.jpg" alt="Reverse Barbell Curl">`,
+     cues:['Overhand grip (palms face DOWN) on barbell or EZ bar','Elbows PINNED to sides — strict form, zero body swing','Curl up to 90° — feel the brachioradialis and forearm extensors firing','3 sec eccentric — lower slowly to full arm extension','The brachioradialis builds the visible muscular "shelf" on top of the forearm','Pairs perfectly with today\'s pulling work — trains the forearm side bicep curls neglect','Use 30–40% lighter weight than regular curls — extensors are smaller muscles'],
+     mistakes:['Swinging body for momentum (defeats the isolation purpose)','Elbows drifting forward during the curl','Wrists bending backward (keep wrists neutral throughout)','Rushing the eccentric — slow lowering is where extensor growth happens']}
    ]},
 
   /* ═══════════════════════════════════════════════════════════════
