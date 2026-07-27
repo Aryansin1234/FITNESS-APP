@@ -124,13 +124,7 @@ function playBeep() {
 }
 
 // ── STATE ────────────────────────────────────────────────────────────────────
-// Auto-detect today's day (0=Mon, 1=Tue, ..., 6=Sun)
-function getTodayIndex() {
-  const jsDay = new Date().getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
-  // Convert to our schedule: 0=Mon, 1=Tue, ..., 5=Sat, 6=Sun
-  return jsDay === 0 ? 6 : jsDay - 1;
-}
-let currentDay = getTodayIndex();
+let currentDay = 0;
 let timerSec = 90, timerRunning = false, timerInterval = null, timerMax = 90;
 let proteinG = 0;
 let completedDays = new Set();
@@ -206,11 +200,7 @@ function renderWorkout() {
     });
     const pct = totalSets > 0 ? Math.round((doneSets / totalSets) * 100) : 0;
 
-    const isToday = currentDay === getTodayIndex();
-    const todayBanner = isToday ? `<div class="today-workout-banner"><span class="today-badge-icon">⚡</span> Today's Workout — ${d.name} · ${d.tag}</div>` : '';
-
     el.innerHTML = `
-      ${todayBanner}
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap">
         <div style="font-size:13px;color:var(--muted);font-family:'Space Mono',monospace;letter-spacing:.5px;font-weight:600;display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);width:fit-content">🎯 FOCUS: ${d.focus}</div>
         <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);flex:1;min-width:200px">
@@ -249,18 +239,32 @@ function renderExCard(ex, i) {
     </div>`;
   }).join('');
 
+  // Build tempo and rest badges if available
+  const tempoBadge = ex.tempo ? `<span class="ex-tempo-badge" title="Tempo: Eccentric-Pause-Concentric-Top">⏱ ${ex.tempo}</span>` : '';
+  const restBadge = ex.rest ? `<span class="ex-rest-badge" title="Rest between sets">⏳ ${ex.rest}</span>` : '';
+  const badgesRow = (tempoBadge || restBadge) ? `<div class="ex-badges">${tempoBadge}${restBadge}</div>` : '';
+
+  // Build breathing section if available
+  const breathingSection = ex.breathing ? `
+      <div class="ex-breathing">
+        <div class="ex-breathing-title">🫁 Breathing Guide</div>
+        <div class="ex-breathing-text">${ex.breathing}</div>
+      </div>` : '';
+
   return `<div class="ex-card${allDone?' expanded':''}" id="exc-${i}" style="${allDone?'border-color:rgba(61,232,160,.2);box-shadow:0 0 20px rgba(61,232,160,.06)':''}">
     <div class="ex-top" onclick="toggleEx(${i})">
       <div class="ex-svg-wrap">${ex.svg}</div>
       <div class="ex-info">
-        <div class="ex-num"><span class="ex-num-badge">${i+1}</span> ${allDone ? '<span style="color:var(--green)">✓ Complete</span>' : `${doneSetsCount}/${totalSets} sets`}</div>
-        <div class="ex-name">${ex.name} <button class="copy-ex-btn" onclick="event.stopPropagation();copyExName('${ex.name.replace(/'/g,"\\'")}')" title="Copy name to search on YouTube">📋</button></div>
+        <div class="ex-num">Exercise ${i+1} ${allDone ? '· <span style="color:var(--green)">✓ Complete</span>' : `· ${doneSetsCount}/${totalSets} sets`}</div>
+        <div class="ex-name">${ex.name}</div>
         <div class="ex-sets">${ex.sets} × ${ex.reps}</div>
+        ${badgesRow}
         <div class="ex-muscles">${ex.muscles}</div>
       </div>
       <div class="ex-toggle" id="ext-${i}">▼</div>
     </div>
     <div class="ex-detail" id="exd-${i}">
+      ${breathingSection}
       <div class="ex-cues">
         <div class="ex-cues-title">✅ Correct Form</div>
         ${ex.cues.map(c=>`<div class="cue-item"><div class="cue-dot"></div><span>${c}</span></div>`).join('')}
@@ -275,12 +279,6 @@ function renderExCard(ex, i) {
       </div>
     </div>
   </div>`;
-}
-
-function copyExName(name) {
-  navigator.clipboard.writeText(name + ' correct form').then(() => {
-    showToast('Copied: ' + name);
-  });
 }
 
 function toggleEx(i) {
@@ -317,7 +315,6 @@ function checkDayDone(day) {
 }
 
 function updateWeekUI() {
-  const todayIdx = getTodayIndex();
   for(let i=0;i<7;i++){
     const el=document.getElementById('wc'+i);
     if(el) el.textContent = completedDays.has(i) ? '✓' : '○';
@@ -325,9 +322,6 @@ function updateWeekUI() {
     if(wd){
       if(completedDays.has(i)) wd.classList.add('done');
       else wd.classList.remove('done');
-      // Highlight today's day in the week grid
-      wd.classList.toggle('today', i === todayIdx);
-      wd.classList.toggle('active', i === todayIdx);
     }
   }
   // Update gym day count
@@ -335,21 +329,9 @@ function updateWeekUI() {
   if (count) count.textContent = completedDays.size;
 }
 
-// Highlight today in the day tabs
-function highlightToday() {
-  const todayIdx = getTodayIndex();
-  document.querySelectorAll('.day-tab').forEach((t, i) => {
-    t.classList.toggle('today', i === todayIdx);
-  });
-}
-
 function selectDay(d) {
   currentDay = d;
-  document.querySelectorAll('.day-tab').forEach((t,i)=>{
-    t.classList.toggle('active',i===d);
-    // Mark today's tab with a special class
-    t.classList.toggle('today', i === getTodayIndex());
-  });
+  document.querySelectorAll('.day-tab').forEach((t,i)=>t.classList.toggle('active',i===d));
   renderWorkout();
 }
 
@@ -541,7 +523,7 @@ function resetWeek() {
 // ── NAV ───────────────────────────────────────────────────────────────────────
 const PAGE_TITLES = {
   overview:['Dashboard','72 kg · 175 cm · BMI 23.5 · Goal: Lean Muscle'],
-  workout:['Workout Plan','Chest / Back / Legs / Shoulders / Back & Bi / Arms · 6 days/week'],
+  workout:['Workout Plan','Push / Pull / Legs · 2× per week · Breathing & Tempo guided'],
   timer:['Rest Timer','Track your recovery between sets'],
   diet:['Diet & Protein','130g protein/day · 2350 kcal · India-friendly'],
   meals:['Meal Plan','Full day eating guide · ~148g protein'],
@@ -752,11 +734,7 @@ function renderQuote() {
 // ── INIT ──────────────────────────────────────────────────────────────────────
 loadState();
 updateGreeting();
-
-// Select today's day tab on load
-const todayIdx = getTodayIndex();
-selectDay(todayIdx);
-
+renderWorkout();
 renderFoods();
 renderMeals();
 renderTips();
@@ -769,7 +747,6 @@ updateWaterUI();
 renderWeightChart();
 renderQuote();
 updateStopwatchDisplay();
-highlightToday();
 
 // animate progress bars on load
 setTimeout(()=>{
