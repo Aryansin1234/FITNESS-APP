@@ -3,7 +3,7 @@ function initTheme() {
   const saved = localStorage.getItem('af_theme');
   if (saved === 'light') {
     document.documentElement.setAttribute('data-theme', 'light');
-    document.querySelector('meta[name="theme-color"]').content = '#f4f4f8';
+    document.querySelector('meta[name="theme-color"]').content = '#fdf7fa';
   }
   updateThemeIcons();
 }
@@ -12,24 +12,26 @@ function toggleTheme() {
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
   if (isLight) {
     document.documentElement.removeAttribute('data-theme');
-    document.querySelector('meta[name="theme-color"]').content = '#07070f';
+    document.querySelector('meta[name="theme-color"]').content = '#0d0810';
     localStorage.setItem('af_theme', 'dark');
   } else {
     document.documentElement.setAttribute('data-theme', 'light');
-    document.querySelector('meta[name="theme-color"]').content = '#f4f4f8';
+    document.querySelector('meta[name="theme-color"]').content = '#fdf7fa';
     localStorage.setItem('af_theme', 'light');
   }
   updateThemeIcons();
-  showToast(isLight ? '🌙 Dark mode' : '☀️ Light mode');
+  showToast(isLight ? 'Dark mode' : 'Light mode');
 }
 
 function updateThemeIcons() {
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-  const icon = isLight ? '☀️' : '🌙';
+  const moonSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+  const sunSvg  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+  const icon = isLight ? sunSvg : moonSvg;
   const sb = document.getElementById('sidebar-theme-btn');
   const mb = document.getElementById('mobile-theme-btn');
-  if (sb) sb.textContent = icon;
-  if (mb) mb.querySelector('span').textContent = icon;
+  if (sb) sb.innerHTML = icon;
+  if (mb) mb.querySelector('.theme-icon-wrap').innerHTML = icon;
 }
 
 initTheme();
@@ -40,12 +42,11 @@ const STORAGE_KEYS = {
   completedDays: 'af_completedDays',
   proteinG: 'af_proteinG',
   proteinDate: 'af_proteinDate',
-  warmup: 'af_warmup',
   waterGlasses: 'af_waterGlasses',
   waterDate: 'af_waterDate',
   weightLog: 'af_weightLog',
   workoutLog: 'af_workoutLog',
-  workoutStartTime: 'af_workoutStartTime'
+  currentPhase: 'af_currentPhase',
 };
 
 function saveState() {
@@ -58,6 +59,7 @@ function saveState() {
     localStorage.setItem(STORAGE_KEYS.waterDate, new Date().toDateString());
     localStorage.setItem(STORAGE_KEYS.weightLog, JSON.stringify(weightLog));
     localStorage.setItem(STORAGE_KEYS.workoutLog, JSON.stringify(workoutLog));
+    localStorage.setItem(STORAGE_KEYS.currentPhase, currentPhase);
   } catch(e) { console.warn('Storage save failed', e); }
 }
 
@@ -70,19 +72,20 @@ function loadState() {
     const savedDate = localStorage.getItem(STORAGE_KEYS.proteinDate);
     if (savedDate === new Date().toDateString()) {
       proteinG = parseInt(localStorage.getItem(STORAGE_KEYS.proteinG)) || 0;
-    } else {
-      proteinG = 0;
-    }
+    } else { proteinG = 0; }
     const waterDate = localStorage.getItem(STORAGE_KEYS.waterDate);
     if (waterDate === new Date().toDateString()) {
       waterGlasses = parseInt(localStorage.getItem(STORAGE_KEYS.waterGlasses)) || 0;
-    } else {
-      waterGlasses = 0;
-    }
+    } else { waterGlasses = 0; }
     const wl = localStorage.getItem(STORAGE_KEYS.weightLog);
     if (wl) weightLog = JSON.parse(wl);
     const wkl = localStorage.getItem(STORAGE_KEYS.workoutLog);
     if (wkl) workoutLog = JSON.parse(wkl);
+    const sp = localStorage.getItem(STORAGE_KEYS.currentPhase);
+    if (sp !== null) {
+      currentPhase = parseInt(sp);
+      DAYS = ALL_PHASES_DAYS[currentPhase];
+    }
   } catch(e) { console.warn('Storage load failed', e); }
 }
 
@@ -91,7 +94,7 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  setTimeout(() => t.classList.remove('show'), 2200);
 }
 
 // ── WEB AUDIO BEEP ──────────────────────────────────────────────────────────
@@ -101,24 +104,18 @@ function playBeep() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.frequency.value = 880;
-    osc.type = 'sine';
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.frequency.value = 880; osc.type = 'sine';
     gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
-    osc.start(audioCtx.currentTime);
-    osc.stop(audioCtx.currentTime + 0.8);
+    osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.8);
     setTimeout(() => {
-      const o2 = audioCtx.createOscillator();
-      const g2 = audioCtx.createGain();
+      const o2 = audioCtx.createOscillator(), g2 = audioCtx.createGain();
       o2.connect(g2); g2.connect(audioCtx.destination);
-      o2.frequency.value = 1100;
-      o2.type = 'sine';
+      o2.frequency.value = 1100; o2.type = 'sine';
       g2.gain.setValueAtTime(0.3, audioCtx.currentTime);
       g2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
-      o2.start(audioCtx.currentTime);
-      o2.stop(audioCtx.currentTime + 0.6);
+      o2.start(audioCtx.currentTime); o2.stop(audioCtx.currentTime + 0.6);
     }, 300);
   } catch(e) {}
 }
@@ -136,16 +133,16 @@ let workoutStopwatch = null, workoutElapsed = 0, workoutStopwatchRunning = false
 
 // ── MOTIVATIONAL QUOTES ──────────────────────────────────────────────────────
 const QUOTES = [
-  {text:"The only bad workout is the one that didn't happen.", author:"Unknown"},
-  {text:"Your body can stand almost anything. It's your mind that you have to convince.", author:"Unknown"},
-  {text:"The pain you feel today will be the strength you feel tomorrow.", author:"Arnold Schwarzenegger"},
-  {text:"Success isn't always about greatness. It's about consistency.", author:"Dwayne Johnson"},
-  {text:"Don't count the days, make the days count.", author:"Muhammad Ali"},
-  {text:"The resistance that you fight physically in the gym and the resistance that you fight in life can only build a strong character.", author:"Arnold Schwarzenegger"},
-  {text:"Discipline is doing what you hate to do, but doing it like you love it.", author:"Mike Tyson"},
-  {text:"The last three or four reps is what makes the muscle grow.", author:"Arnold Schwarzenegger"},
+  {text:"Every step you take in the gym is a step toward the strongest version of yourself.", author:"Unknown"},
+  {text:"You don't have to be great to start, but you have to start to be great.", author:"Zig Ziglar"},
   {text:"Take care of your body. It's the only place you have to live.", author:"Jim Rohn"},
-  {text:"No pain, no gain. Shut up and train.", author:"Unknown"},
+  {text:"The body achieves what the mind believes.", author:"Unknown"},
+  {text:"Small daily improvements over time lead to stunning results.", author:"Robin Sharma"},
+  {text:"Strength doesn't come from what you can do. It comes from overcoming things you once thought you couldn't.", author:"Rikki Rogers"},
+  {text:"Don't count the days, make the days count.", author:"Muhammad Ali"},
+  {text:"Believe in yourself and all that you are.", author:"Christian D. Larson"},
+  {text:"Success isn't always about greatness. It's about consistency.", author:"Dwayne Johnson"},
+  {text:"The secret of getting ahead is getting started.", author:"Mark Twain"},
 ];
 
 // ── GREETING ─────────────────────────────────────────────────────────────────
@@ -156,40 +153,147 @@ function updateGreeting() {
   else if (h >= 17 && h < 21) greeting = 'Good Evening';
   else if (h >= 21) greeting = 'Good Night';
   const el = document.getElementById('hero-greeting');
-  if (el) el.textContent = `${greeting}, Aryan 💪`;
+  if (el) el.textContent = `${greeting}, Vidha`;
 }
 
-// ── RENDER ───────────────────────────────────────────────────────────────────
+function copyExName(name) {
+  navigator.clipboard.writeText(name).then(() => {
+    showToast('Copied: ' + name);
+  }).catch(() => {
+    // Fallback for older browsers / Android WebView
+    const ta = document.createElement('textarea');
+    ta.value = name;
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Copied: ' + name);
+  });
+}
+
+// ── IMAGE LIGHTBOX ────────────────────────────────────────────────────────────
+let _lbTouchStartY = 0;
+
+function openLightbox(src, caption) {
+  const lb  = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  const cap = document.getElementById('lightbox-caption');
+  if (!lb || !img) return;
+  img.src = src;
+  img.alt = caption;
+  if (cap) cap.textContent = caption;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Close on Escape
+  document.addEventListener('keydown', _lbKeyHandler);
+  // Swipe-down to close on touch
+  lb.addEventListener('touchstart', _lbTouchStart, {passive:true});
+  lb.addEventListener('touchend',   _lbTouchEnd,   {passive:true});
+}
+
+function closeLightbox(e) {
+  // If called from overlay click, only close if clicking the backdrop (not the inner content)
+  if (e && e.target !== document.getElementById('lightbox')) return;
+  const lb = document.getElementById('lightbox');
+  if (!lb) return;
+  lb.classList.remove('open');
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', _lbKeyHandler);
+  lb.removeEventListener('touchstart', _lbTouchStart);
+  lb.removeEventListener('touchend',   _lbTouchEnd);
+  // Clear src after transition so there's no flash
+  setTimeout(() => {
+    const img = document.getElementById('lightbox-img');
+    if (img) img.src = '';
+  }, 300);
+}
+
+function _lbKeyHandler(e) {
+  if (e.key === 'Escape') { closeLightbox(); }
+}
+function _lbTouchStart(e) {
+  _lbTouchStartY = e.touches[0].clientY;
+}
+function _lbTouchEnd(e) {
+  const dy = e.changedTouches[0].clientY - _lbTouchStartY;
+  if (dy > 60) closeLightbox(); // swipe down 60px → close
+}
+
+
+function icon(key, size = 22) {
+  const svg = ICONS[key];
+  if (!svg) return '';
+  return svg.replace('<svg ', `<svg width="${size}" height="${size}" `);
+}
+
+// ── PHASE SWITCHER ────────────────────────────────────────────────────────────
+function switchPhase(phaseIdx) {
+  currentPhase = phaseIdx;
+  DAYS = ALL_PHASES_DAYS[currentPhase];
+  // Reset weekly completion when phase changes
+  setsDone = {};
+  completedDays = new Set();
+  currentDay = 0;
+  saveState();
+  renderPhaseSwitcher();
+  renderWorkoutTabs();
+  renderWorkout();
+  updateWeekUI();
+  renderOverviewPhaseInfo();
+  showToast(`${PHASES[phaseIdx].name}: ${PHASES[phaseIdx].label} unlocked`);
+}
+
+function renderPhaseSwitcher() {
+  const el = document.getElementById('phase-switcher');
+  if (!el) return;
+  el.innerHTML = PHASES.map((p, i) => `
+    <button class="phase-btn ${currentPhase === i ? 'active' : ''}" onclick="switchPhase(${i})">
+      <div class="phase-btn-name">${p.name}</div>
+      <div class="phase-btn-label">${p.label}</div>
+      <div class="phase-btn-weeks">${p.weeks}</div>
+    </button>`).join('');
+}
+
+function renderOverviewPhaseInfo() {
+  const el = document.getElementById('current-phase-info');
+  if (!el) return;
+  const p = PHASES[currentPhase];
+  el.innerHTML = `
+    <div class="phase-info-badge" style="background:${p.gradient}">
+      <span class="phase-info-name">${p.name} — ${p.label}</span>
+      <span class="phase-info-weeks">${p.weeks}</span>
+    </div>
+    <div class="phase-info-desc">${p.desc}</div>`;
+}
+
+// ── WORKOUT TABS ─────────────────────────────────────────────────────────────
+function renderWorkoutTabs() {
+  const el = document.getElementById('day-tabs');
+  if (!el) return;
+  el.innerHTML = DAYS.map((d, i) => `
+    <button class="day-tab ${i === currentDay ? 'active' : ''} ${d.rest ? 'rest-day' : ''}" onclick="selectDay(${i})">
+      ${d.name}${d.rest ? '' : ` — ${d.tag}`}
+    </button>`).join('');
+}
+
+// ── RENDER WORKOUT ─────────────────────────────────────────────────────────────
 function renderWorkout() {
   const d = DAYS[currentDay];
   const el = document.getElementById('workout-content');
   if (d.rest) {
     el.innerHTML = `<div class="rest-panel">
-      <div class="rest-emoji">🛌</div>
+      <div class="rest-icon-wrap">${icon('moon', 56)}</div>
       <div class="rest-title">${d.name} — ${d.tag}</div>
       <div class="rest-text" style="margin-bottom:24px">${d.restMsg}</div>
       <div style="text-align:left;max-width:440px;margin:0 auto">
-        ${d.restTips.map(t=>`<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;font-size:14px;color:var(--muted);line-height:1.6"><span style="color:var(--green);flex-shrink:0;font-size:16px">✓</span>${t}</div>`).join('')}
+        ${d.restTips.map(t=>`<div class="rest-tip-item">
+          <div class="rest-tip-icon">${icon('check', 14)}</div>
+          <span>${t}</span>
+        </div>`).join('')}
       </div>
     </div>`;
   } else {
-    const isAbsDay = d.tag === 'Abs & Core';
-    const dailyAbsHTML = isAbsDay ? '' : `
-      <div class="daily-abs-block">
-        <div class="daily-abs-header">
-          <span style="font-size:22px">🔥</span>
-          <span class="daily-abs-title">Daily Abs (15 min)</span>
-          <span class="daily-abs-tag">Every Day</span>
-        </div>
-        <div class="daily-abs-exercises">
-          <div class="daily-abs-item"><div class="daily-abs-name">Hanging Leg Raises</div><div class="daily-abs-reps">3 × 10</div></div>
-          <div class="daily-abs-item"><div class="daily-abs-name">Bicycle Crunches</div><div class="daily-abs-reps">3 × 20</div></div>
-          <div class="daily-abs-item"><div class="daily-abs-name">Dead Bugs</div><div class="daily-abs-reps">3 × 10/side</div></div>
-          <div class="daily-abs-item"><div class="daily-abs-name">Plank Hold</div><div class="daily-abs-reps">3 × 45 sec</div></div>
-        </div>
-      </div>`;
-
-    // Calculate progress
     let totalSets = 0, doneSets = 0;
     d.exercises.forEach((ex, i) => {
       const n = parseInt(ex.sets);
@@ -200,19 +304,47 @@ function renderWorkout() {
     });
     const pct = totalSets > 0 ? Math.round((doneSets / totalSets) * 100) : 0;
 
+    // Warmup section
+    const warmupHTML = d.warmup && d.warmup.length ? `
+      <div class="warmup-block">
+        <div class="warmup-block-header">
+          <div class="warmup-block-icon">${icon('bolt', 18)}</div>
+          <div class="warmup-block-title">Warm-Up First</div>
+          <div class="warmup-block-tag">Do before lifting</div>
+        </div>
+        <div class="warmup-block-items">
+          ${d.warmup.map((w, wi) => {
+            const id = `wublock-${currentDay}-${wi}`;
+            return `<div class="warmup-block-item" id="${id}" onclick="toggleWarmupBlock('${id}', this)">
+              <div class="wub-icon">${icon(w.icon || 'bolt', 16)}</div>
+              <span>${w.text}</span>
+              <div class="wub-check">${icon('check', 12)}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>` : '';
+
     el.innerHTML = `
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap">
-        <div style="font-size:13px;color:var(--muted);font-family:'Space Mono',monospace;letter-spacing:.5px;font-weight:600;display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);width:fit-content">🎯 FOCUS: ${d.focus}</div>
-        <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--r);flex:1;min-width:200px">
-          <span style="font-size:12px;color:var(--muted);font-weight:600">Progress</span>
-          <div class="prog-bar" style="flex:1;height:6px;margin:0"><div class="prog-fill" style="width:${pct}%;background:${pct>=100?'var(--accent)':'var(--green)'}"></div></div>
-          <span style="font-size:12px;font-family:'Space Mono',monospace;color:${pct>=100?'var(--accent)':'var(--green)'}; font-weight:700">${pct}%</span>
+      <div class="workout-meta-row">
+        <div class="workout-focus-tag">${icon('target', 14)} ${d.focus}</div>
+        <div class="workout-progress-row">
+          <span class="workout-progress-label">Progress</span>
+          <div class="prog-bar" style="flex:1;height:6px;margin:0"><div class="prog-fill" style="width:${pct}%;background:${pct>=100?'var(--accent)':'var(--mint)'}"></div></div>
+          <span style="font-size:12px;font-family:'Space Mono',monospace;color:${pct>=100?'var(--accent)':'var(--mint)'};font-weight:700">${pct}%</span>
         </div>
       </div>
+      ${warmupHTML}
       <div class="ex-wrap">${d.exercises.map((ex,i)=>renderExCard(ex,i)).join('')}</div>
-      <div class="cardio-block"><div><div class="cb-left-label">Cardio After</div><div class="cb-detail">${d.cardio}</div></div><div class="cb-icon">🏃</div></div>
-      ${dailyAbsHTML}`;
+      <div class="cardio-block">
+        <div><div class="cb-left-label">${icon('run', 14)} Cardio</div><div class="cb-detail">${d.cardio}</div></div>
+        <div class="cb-icon-svg">${icon('run', 28)}</div>
+      </div>`;
   }
+}
+
+function toggleWarmupBlock(id, el) {
+  const done = el.classList.toggle('done');
+  if (done) showToast('Warm-up step done!');
 }
 
 function renderExCard(ex, i) {
@@ -220,6 +352,10 @@ function renderExCard(ex, i) {
   const totalSets = parseInt(ex.sets);
   const doneSetsCount = Array.from({length:totalSets},(_,s)=>setsDone[`${day}-${i}-${s}`]?1:0).reduce((a,b)=>a+b,0);
   const allDone = doneSetsCount === totalSets;
+
+  // Extract image src from ex.svg for the lightbox
+  const imgSrcMatch = ex.svg && ex.svg.match(/src="([^"]+)"/);
+  const imgSrc = imgSrcMatch ? imgSrcMatch[1] : '';
 
   const setsRow = Array.from({length:totalSets},(_,s)=>{
     const k=`${day}-${i}-${s}`, done=setsDone[k];
@@ -229,48 +365,54 @@ function renderExCard(ex, i) {
     const prevR = logged ? logged.r : '';
     return `<div class="set-log-row">
       <button class="set-btn${done?' done':''}" onclick="toggleSet(${day},${i},${s})" title="Set ${s+1}">
-        <span>${done?'✓':s+1}</span>
+        <span>${done ? icon('check', 16) : s+1}</span>
         <span class="set-btn-label">${done?'Done':'Set'}</span>
       </button>
       <input class="log-input" id="log-w-${day}-${i}-${s}" type="number" placeholder="kg" value="${prevW}" step="0.5" min="0">
       <span style="color:var(--dim);font-size:11px">×</span>
       <input class="log-input" id="log-r-${day}-${i}-${s}" type="number" placeholder="reps" value="${prevR}" min="0">
-      <button class="log-save-btn" onclick="saveExLog(${day},${i},${s})" title="Save">💾</button>
+      <button class="log-save-btn" onclick="saveExLog(${day},${i},${s})" title="Save">${icon('check', 14)}</button>
     </div>`;
   }).join('');
 
-  // Build tempo and rest badges if available
-  const tempoBadge = ex.tempo ? `<span class="ex-tempo-badge" title="Tempo: Eccentric-Pause-Concentric-Top">⏱ ${ex.tempo}</span>` : '';
-  const restBadge = ex.rest ? `<span class="ex-rest-badge" title="Rest between sets">⏳ ${ex.rest}</span>` : '';
-  const badgesRow = (tempoBadge || restBadge) ? `<div class="ex-badges">${tempoBadge}${restBadge}</div>` : '';
+  const tempoBadge = ex.tempo ? `<span class="ex-tempo-badge">${icon('clock', 11)} ${ex.tempo}</span>` : '';
+  const restBadge  = ex.rest  ? `<span class="ex-rest-badge">${icon('clock', 11)} ${ex.rest}</span>` : '';
+  const badgesRow  = (tempoBadge || restBadge) ? `<div class="ex-badges">${tempoBadge}${restBadge}</div>` : '';
 
-  // Build breathing section if available
   const breathingSection = ex.breathing ? `
-      <div class="ex-breathing">
-        <div class="ex-breathing-title">🫁 Breathing Guide</div>
-        <div class="ex-breathing-text">${ex.breathing}</div>
-      </div>` : '';
+    <div class="ex-breathing">
+      <div class="ex-breathing-title">${icon('drop', 14)} Breathing Guide</div>
+      <div class="ex-breathing-text">${ex.breathing}</div>
+    </div>` : '';
 
-  return `<div class="ex-card${allDone?' expanded':''}" id="exc-${i}" style="${allDone?'border-color:rgba(61,232,160,.2);box-shadow:0 0 20px rgba(61,232,160,.06)':''}">
+  return `<div class="ex-card${allDone?' ex-card-done':''}" id="exc-${i}">
     <div class="ex-top" onclick="toggleEx(${i})">
-      <div class="ex-svg-wrap">${ex.svg}</div>
+      <div class="ex-svg-wrap" onclick="event.stopPropagation();openLightbox('${imgSrc}','${ex.name.replace(/'/g,"\\'")}')">
+        ${ex.svg}
+        <div class="ex-img-expand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></div>
+      </div>
       <div class="ex-info">
-        <div class="ex-num">Exercise ${i+1} ${allDone ? '· <span style="color:var(--green)">✓ Complete</span>' : `· ${doneSetsCount}/${totalSets} sets`}</div>
-        <div class="ex-name">${ex.name}</div>
+        <div class="ex-num">Exercise ${i+1} ${allDone ? `· <span style="color:var(--mint)">${icon('check',12)} Complete</span>` : `· ${doneSetsCount}/${totalSets} sets`}</div>
+        <div class="ex-name-row">
+          <div class="ex-name">${ex.name}</div>
+          <button class="ex-copy-btn" onclick="event.stopPropagation();copyExName('${ex.name.replace(/'/g,"\\'")}')" title="Copy name to search on YouTube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
         <div class="ex-sets">${ex.sets} × ${ex.reps}</div>
         ${badgesRow}
-        <div class="ex-muscles">${ex.muscles}</div>
+        <div class="ex-muscles">${icon('bolt', 12)} ${ex.muscles}</div>
       </div>
-      <div class="ex-toggle" id="ext-${i}">▼</div>
+      <div class="ex-toggle" id="ext-${i}">${icon('up', 18)}</div>
     </div>
     <div class="ex-detail" id="exd-${i}">
       ${breathingSection}
       <div class="ex-cues">
-        <div class="ex-cues-title">✅ Correct Form</div>
+        <div class="ex-cues-title">${icon('check', 13)} Correct Form</div>
         ${ex.cues.map(c=>`<div class="cue-item"><div class="cue-dot"></div><span>${c}</span></div>`).join('')}
       </div>
       <div class="ex-mistakes">
-        <div class="ex-mistakes-title">❌ Common Mistakes</div>
+        <div class="ex-mistakes-title">${icon('shield', 13)} Common Mistakes</div>
         ${ex.mistakes.map(m=>`<div class="mistake-item"><div class="mistake-dot"></div><span>${m}</span></div>`).join('')}
       </div>
       <div class="ex-set-tracker">
@@ -290,71 +432,70 @@ function toggleEx(i) {
   c.classList.toggle('expanded', open);
 }
 
-function toggleSet(day,ex,set) {
-  const k=`${day}-${ex}-${set}`;
-  setsDone[k]=!setsDone[k];
+function toggleSet(day, ex, set) {
+  const k = `${day}-${ex}-${set}`;
+  setsDone[k] = !setsDone[k];
   renderWorkout();
   checkDayDone(day);
   saveState();
-  if(setsDone[k]) showToast('✓ Set completed!');
+  if (setsDone[k]) showToast('Set done! Keep going.');
 }
 
 function checkDayDone(day) {
   const d = DAYS[day];
   if (d.rest) return;
-  let allDone = d.exercises.every((ex,i)=>{
+  const allDone = d.exercises.every((ex, i) => {
     const total = parseInt(ex.sets);
-    return Array.from({length:total},(_,s)=>setsDone[`${day}-${i}-${s}`]).every(Boolean);
+    return Array.from({length:total}, (_, s) => setsDone[`${day}-${i}-${s}`]).every(Boolean);
   });
   if (allDone && !completedDays.has(day)) {
     completedDays.add(day);
     updateWeekUI();
     saveState();
-    showToast('🎉 Day completed! Great work!');
+    showToast('Day complete! You did amazing, Vidha!');
   }
 }
 
 function updateWeekUI() {
-  for(let i=0;i<7;i++){
-    const el=document.getElementById('wc'+i);
-    if(el) el.textContent = completedDays.has(i) ? '✓' : '○';
+  for (let i = 0; i < 7; i++) {
+    const el = document.getElementById('wc'+i);
+    if (el) el.innerHTML = completedDays.has(i) ? icon('check', 16) : '○';
     const wd = document.querySelectorAll('.wday')[i];
-    if(wd){
-      if(completedDays.has(i)) wd.classList.add('done');
+    if (wd) {
+      if (completedDays.has(i)) wd.classList.add('done');
       else wd.classList.remove('done');
     }
   }
-  // Update gym day count
   const count = document.getElementById('gym-day-count');
   if (count) count.textContent = completedDays.size;
 }
 
 function selectDay(d) {
   currentDay = d;
-  document.querySelectorAll('.day-tab').forEach((t,i)=>t.classList.toggle('active',i===d));
+  document.querySelectorAll('.day-tab').forEach((t, i) => t.classList.toggle('active', i === d));
   renderWorkout();
 }
 
 function goWorkout(d) {
   nav('workout');
-  setTimeout(()=>selectDay(d),50);
+  setTimeout(() => selectDay(d), 50);
 }
 
 // ── FOOD GRID ────────────────────────────────────────────────────────────────
 function renderFoods() {
-  document.getElementById('food-grid').innerHTML = FOODS.map(f=>`
+  document.getElementById('food-grid').innerHTML = FOODS.map(f => `
     <div class="food-card">
-      <div class="food-icon">${f.icon}</div>
+      <div class="food-icon-svg">${icon(f.iconKey || 'food', 32)}</div>
       <div class="food-name">${f.name}</div>
-      <div class="food-protein">${f.protein}</div>
-      <div class="food-tags">${f.tags.map(t=>`<span class="ftag ftag-${t.c}">${t.l}</span>`).join('')}</div>
+      <div class="food-protein">${f.protein} protein</div>
+      <div class="food-tags">${f.tags.map(t => `<span class="ftag ftag-${t.c}">${t.l}</span>`).join('')}</div>
       <div class="food-tip">${f.tip}</div>
     </div>`).join('');
 }
 
 // ── MEALS ────────────────────────────────────────────────────────────────────
 function renderMeals() {
-  document.getElementById('meal-list').innerHTML = MEALS.map(m=>`
+  document.getElementById('meal-list').innerHTML = MEALS.map(m => `
     <div class="meal-item">
       <div class="meal-time">${m.time.replace('\n','<br>')}</div>
       <div>
@@ -370,54 +511,64 @@ function renderMeals() {
 
 // ── TIPS ─────────────────────────────────────────────────────────────────────
 function renderTips() {
-  document.getElementById('tip-grid').innerHTML = TIPS.map(t=>`
-    <div class="tip-card"><div class="tip-icon">${t.icon}</div><div class="tip-title">${t.title}</div><div class="tip-text">${t.text}</div></div>`).join('');
-  document.getElementById('supp-grid').innerHTML = SUPPS.map(s=>`
-    <div class="supp-card"><div class="supp-name">${s.name}</div><div class="supp-dose">${s.dose}</div><div class="supp-info">${s.info}</div></div>`).join('');
+  document.getElementById('tip-grid').innerHTML = TIPS.map(t => `
+    <div class="tip-card">
+      <div class="tip-icon-svg">${icon(t.iconKey || 'star', 28)}</div>
+      <div class="tip-title">${t.title}</div>
+      <div class="tip-text">${t.text}</div>
+    </div>`).join('');
+  document.getElementById('supp-grid').innerHTML = SUPPS.map(s => `
+    <div class="supp-card">
+      <div class="supp-icon-svg">${icon(s.iconKey || 'pill', 22)}</div>
+      <div class="supp-name">${s.name}</div>
+      <div class="supp-dose">${s.dose}</div>
+      <div class="supp-info">${s.info}</div>
+    </div>`).join('');
 }
 
 // ── PROTEIN TRACKER ──────────────────────────────────────────────────────────
 function renderProteinTracker() {
-  document.getElementById('protein-btns').innerHTML = PROTEIN_FOODS.map((f,i)=>`
+  document.getElementById('protein-btns').innerHTML = PROTEIN_FOODS.map(f => `
     <button class="protein-food-btn" onclick="addProtein(${f.g})">
-      + ${f.name}<span class="pf-grams">+${f.g}g</span>
+      ${icon('food', 14)} ${f.name}<span class="pf-grams">+${f.g}g</span>
     </button>`).join('');
 }
 
 function addProtein(g) {
-  proteinG = Math.min(proteinG + g, 200);
+  proteinG = Math.min(proteinG + g, 150);
   updateProteinUI();
   saveState();
   showToast(`+${g}g protein added`);
 }
 
 function updateProteinUI() {
-  const pct = Math.min((proteinG/130)*100,100);
+  const pct = Math.min((proteinG / 72) * 100, 100);
   const el = document.getElementById('protein-count');
   const bar = document.getElementById('protein-bar');
   const badge = document.getElementById('daily-protein-badge');
-  if(el) el.textContent = `${proteinG}g / 130g`;
-  if(bar) bar.style.width = pct+'%';
-  if(badge) badge.textContent = proteinG;
-  if(pct>=100 && bar) bar.style.background='var(--accent)';
+  if (el) el.textContent = `${proteinG}g / 72g`;
+  if (bar) bar.style.width = pct + '%';
+  if (badge) badge.textContent = proteinG;
+  if (pct >= 100 && bar) bar.style.background = 'var(--accent)';
 }
 
-// ── WARMUP CHECKLIST ─────────────────────────────────────────────────────────
+// ── WARMUP CHECKLIST (Timer page) ────────────────────────────────────────────
 function renderWarmup() {
   const items = [
-    {text:'5 min treadmill walk — 4.5–5 km/h', icon:'🚶'},
-    {text:'Arm circles — 10 forward, 10 backward', icon:'🔄'},
-    {text:'Shoulder cross-body stretch — 20 sec each', icon:'💪'},
-    {text:'Hip circles — 10 each direction', icon:'🔁'},
-    {text:'Leg swings — front/back and side/side', icon:'🦵'},
-    {text:'Light band pull-aparts (upper body days)', icon:'🏋️'},
-    {text:'Bodyweight squats × 10 (leg day)', icon:'🏃'},
+    {text:'5 min easy walk on treadmill (4.5–5 km/h) — just to warm up', iconKey:'walk'},
+    {text:'Arm circles — 10 forward, 10 backward each arm', iconKey:'rotate'},
+    {text:'Hip circles — 10 each direction, hands on hips', iconKey:'rotate'},
+    {text:'Cat-cow stretch × 8 slow breaths on all fours', iconKey:'body'},
+    {text:'Bodyweight squats × 8 — slow, feel knees and hips', iconKey:'bolt'},
+    {text:'Leg swings — forward/back × 10 each leg', iconKey:'walk'},
+    {text:'Shoulder rolls + cross-body arm swings × 10', iconKey:'rotate'},
   ];
-  document.getElementById('warmup-list').innerHTML = items.map((item,i)=>{
-    const id='wm'+i;
+  document.getElementById('warmup-list').innerHTML = items.map((item, i) => {
+    const id = 'wm' + i;
     return `<div class="warmup-item" onclick="toggleWarmup('${id}',this)" id="${id}">
       <div class="wm-dot"></div>
-      <span style="font-size:14px;flex:1">${item.icon} ${item.text}</span>
+      <div class="wm-icon">${icon(item.iconKey, 16)}</div>
+      <span style="font-size:14px;flex:1">${item.text}</span>
     </div>`;
   }).join('');
 }
@@ -425,8 +576,8 @@ function renderWarmup() {
 function toggleWarmup(id, el) {
   const done = el.classList.toggle('done');
   const dot = el.querySelector('.wm-dot');
-  dot.innerHTML = done ? '✓' : '';
-  if (done) showToast('✓ Warm-up step done!');
+  dot.innerHTML = done ? icon('check', 12) : '';
+  if (done) showToast('Warm-up step done!');
 }
 
 // ── TIMER ─────────────────────────────────────────────────────────────────────
@@ -434,15 +585,14 @@ function updateTimerDisplay() {
   const m = Math.floor(timerSec/60), s = timerSec%60;
   const disp = document.getElementById('timer-disp');
   disp.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  const pct = (timerSec/timerMax);
-  disp.style.color = pct < 0.25 ? 'var(--red)' : pct < 0.5 ? 'var(--accent)' : 'var(--green)';
+  const pct = timerSec/timerMax;
+  disp.style.color = pct < 0.25 ? 'var(--red)' : pct < 0.5 ? 'var(--accent)' : 'var(--mint)';
 }
 
 function timerToggle() {
   const disp = document.getElementById('timer-disp');
   if (timerRunning) {
-    clearInterval(timerInterval);
-    timerRunning = false;
+    clearInterval(timerInterval); timerRunning = false;
     document.getElementById('timer-main-btn').textContent = 'Resume';
     document.getElementById('timer-main-btn').className = 'timer-btn timer-start';
     document.getElementById('timer-label').textContent = 'PAUSED';
@@ -453,14 +603,14 @@ function timerToggle() {
     document.getElementById('timer-main-btn').className = 'timer-btn timer-pause';
     document.getElementById('timer-label').textContent = 'RESTING...';
     disp.classList.add('pulse');
-    timerInterval = setInterval(()=>{
+    timerInterval = setInterval(() => {
       if (timerSec > 0) { timerSec--; updateTimerDisplay(); }
       else {
         clearInterval(timerInterval); timerRunning = false;
         document.getElementById('timer-main-btn').textContent = 'Start';
         document.getElementById('timer-main-btn').className = 'timer-btn timer-start';
-        document.getElementById('timer-label').textContent = '✓ REST DONE — GO!';
-        disp.style.color = 'var(--green)';
+        document.getElementById('timer-label').textContent = 'REST DONE — GO!';
+        disp.style.color = 'var(--mint)';
         disp.classList.remove('pulse');
         disp.classList.add('shake');
         setTimeout(() => disp.classList.remove('shake'), 500);
@@ -490,7 +640,7 @@ function setPreset(sec, label) {
   document.getElementById('timer-main-btn').className = 'timer-btn timer-start';
   document.getElementById('timer-label').textContent = label.toUpperCase();
   disp.classList.remove('pulse','shake');
-  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('sel'));
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('sel'));
   event.target.classList.add('sel');
   updateTimerDisplay();
 }
@@ -500,9 +650,9 @@ function resetDay() {
   if (!confirm('Reset today\'s progress?')) return;
   const d = DAYS[currentDay];
   if (!d.rest) {
-    d.exercises.forEach((_,i) => {
+    d.exercises.forEach((_, i) => {
       const total = parseInt(d.exercises[i].sets);
-      for(let s=0;s<total;s++) delete setsDone[`${currentDay}-${i}-${s}`];
+      for (let s = 0; s < total; s++) delete setsDone[`${currentDay}-${i}-${s}`];
     });
   }
   completedDays.delete(currentDay);
@@ -512,56 +662,51 @@ function resetDay() {
 
 function resetWeek() {
   if (!confirm('Reset ALL weekly progress? This cannot be undone.')) return;
-  setsDone = {};
-  completedDays = new Set();
-  proteinG = 0;
-  waterGlasses = 0;
+  setsDone = {}; completedDays = new Set(); proteinG = 0; waterGlasses = 0;
   saveState(); renderWorkout(); updateWeekUI(); updateProteinUI(); updateWaterUI();
   showToast('Week reset complete');
 }
 
 // ── NAV ───────────────────────────────────────────────────────────────────────
 const PAGE_TITLES = {
-  overview:['Dashboard','72 kg · 175 cm · BMI 23.5 · Goal: Lean Muscle'],
-  workout:['Workout Plan','Push / Pull / Legs · 2× per week · Breathing & Tempo guided'],
-  timer:['Rest Timer','Track your recovery between sets'],
-  diet:['Diet & Protein','130g protein/day · 2350 kcal · India-friendly'],
-  meals:['Meal Plan','Full day eating guide · ~148g protein'],
-  tips:['Recovery & Tips','Lifestyle, supplements & injury prevention'],
+  overview: ['Dashboard', '44 kg · 163 cm · BMI 16.5 · Goal: Healthy Weight + Lean Muscle'],
+  workout:  ['Workout Plan', '3-day Full Body · Mon · Wed · Fri · 3-Phase Progressive'],
+  timer:    ['Rest Timer', 'Track your recovery between sets'],
+  diet:     ['Nutrition', '72g protein/day · 1950 kcal · India-friendly meals'],
+  meals:    ['Meal Plan', 'Full day eating guide · ~73g protein · ~1950 kcal'],
+  tips:     ['Wellness Tips', 'Lifestyle, supplements & beginner guidance'],
 };
 
 function nav(page) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.bn-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bn-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   const btns = document.querySelectorAll('.sb-btn');
-  const order=['overview','workout','timer','diet','meals','tips'];
+  const order = ['overview','workout','timer','diet','meals','tips'];
   const idx = order.indexOf(page);
-  if(btns[idx]) btns[idx].classList.add('active');
+  if (btns[idx]) btns[idx].classList.add('active');
   const bnBtns = document.querySelectorAll('.bn-btn');
-  if(bnBtns[idx]) bnBtns[idx].classList.add('active');
-  const [t,s] = PAGE_TITLES[page]||['',''];
+  if (bnBtns[idx]) bnBtns[idx].classList.add('active');
+  const [t, s] = PAGE_TITLES[page] || ['',''];
   document.getElementById('page-title').textContent = t;
   document.getElementById('page-sub').textContent = s;
-  // Scroll to top on page change
-  document.querySelector('.main-area').scrollTo({top:0,behavior:'smooth'});
+  document.querySelector('.main-area').scrollTo({top: 0, behavior: 'smooth'});
 }
 
 // ── PWA INSTALL ──────────────────────────────────────────────────────────────
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
+  e.preventDefault(); deferredPrompt = e;
   const banner = document.getElementById('install-banner');
-  if(banner) banner.classList.add('show');
+  if (banner) banner.classList.add('show');
 });
 
 function installPWA() {
   if (!deferredPrompt) return;
   deferredPrompt.prompt();
   deferredPrompt.userChoice.then(r => {
-    if (r.outcome === 'accepted') showToast('App installed! 🎉');
+    if (r.outcome === 'accepted') showToast('App installed!');
     deferredPrompt = null;
     document.getElementById('install-banner').classList.remove('show');
   });
@@ -571,12 +716,10 @@ function dismissInstall() {
   document.getElementById('install-banner').classList.remove('show');
 }
 
-// ── SERVICE WORKER REGISTRATION ──────────────────────────────────────────────
+// ── SERVICE WORKER ────────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(r => console.log('SW registered:', r.scope))
-      .catch(e => console.log('SW registration failed:', e));
+    navigator.serviceWorker.register('./sw.js').catch(e => {});
   });
 }
 
@@ -586,16 +729,12 @@ function addWater() {
     waterGlasses++;
     updateWaterUI();
     saveState();
-    showToast(`💧 Glass ${waterGlasses}/8 — ${waterGlasses >= 8 ? 'Goal hit!' : 'Keep drinking!'}`);
+    showToast(`Glass ${waterGlasses}/8 — ${waterGlasses >= 8 ? 'Goal hit!' : 'Keep going!'}`);
   }
 }
 
 function removeWater() {
-  if (waterGlasses > 0) {
-    waterGlasses--;
-    updateWaterUI();
-    saveState();
-  }
+  if (waterGlasses > 0) { waterGlasses--; updateWaterUI(); saveState(); }
 }
 
 function updateWaterUI() {
@@ -607,7 +746,9 @@ function updateWaterUI() {
   if (bar && waterGlasses >= 8) bar.style.background = 'var(--blue)';
   if (glasses) {
     glasses.innerHTML = Array.from({length: 8}, (_, i) =>
-      `<div class="water-glass ${i < waterGlasses ? 'filled' : ''}" onclick="${i < waterGlasses ? 'removeWater()' : 'addWater()'}">${i < waterGlasses ? '💧' : '○'}</div>`
+      `<div class="water-glass ${i < waterGlasses ? 'filled' : ''}" onclick="${i < waterGlasses ? 'removeWater()' : 'addWater()'}">
+        ${i < waterGlasses ? icon('drop', 18) : ''}
+      </div>`
     ).join('');
   }
 }
@@ -618,7 +759,6 @@ function logWeight() {
   const val = parseFloat(input.value);
   if (!val || val < 30 || val > 200) { showToast('Enter a valid weight (30–200 kg)'); return; }
   const today = new Date().toISOString().split('T')[0];
-  // Replace if same date exists
   weightLog = weightLog.filter(e => e.date !== today);
   weightLog.push({date: today, kg: val});
   weightLog.sort((a, b) => a.date.localeCompare(b.date));
@@ -626,7 +766,7 @@ function logWeight() {
   input.value = '';
   saveState();
   renderWeightChart();
-  showToast(`✓ Weight logged: ${val} kg`);
+  showToast(`Weight logged: ${val} kg`);
 }
 
 function renderWeightChart() {
@@ -646,12 +786,10 @@ function renderWeightChart() {
     const y = h - ((e.kg - min) / range) * h;
     return `${x},${y}`;
   }).join(' ');
-
   const latest = last[last.length - 1];
   const diff = last.length > 1 ? (latest.kg - last[0].kg).toFixed(1) : 0;
-  const diffColor = diff > 0 ? 'var(--red)' : diff < 0 ? 'var(--green)' : 'var(--muted)';
-  const diffSign = diff > 0 ? '+' : '';
-
+  const diffColor = parseFloat(diff) > 0 ? 'var(--mint)' : parseFloat(diff) < 0 ? 'var(--red)' : 'var(--muted)';
+  const diffSign = parseFloat(diff) > 0 ? '+' : '';
   container.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div><span style="font-size:28px;font-weight:800;color:var(--accent);font-family:'Space Mono',monospace">${latest.kg}</span><span style="font-size:14px;color:var(--muted)"> kg</span></div>
@@ -664,7 +802,7 @@ function renderWeightChart() {
         const y = h - ((e.kg - min) / range) * h;
         return `<circle cx="${x}" cy="${y}" r="3" fill="var(--accent)" stroke="var(--bg)" stroke-width="1.5"/>`;
       }).join('')}
-      <defs><linearGradient id="wgrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="var(--accent)"/><stop offset="100%" stop-color="var(--green)"/></linearGradient></defs>
+      <defs><linearGradient id="wgrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="var(--accent)"/><stop offset="100%" stop-color="var(--mint)"/></linearGradient></defs>
     </svg>
     <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-top:4px;font-family:'Space Mono',monospace">
       <span>${last[0].date.slice(5)}</span><span>${latest.date.slice(5)}</span>
@@ -675,38 +813,29 @@ function renderWeightChart() {
 function toggleWorkoutStopwatch() {
   const btn = document.getElementById('sw-btn');
   if (workoutStopwatchRunning) {
-    clearInterval(workoutStopwatch);
-    workoutStopwatchRunning = false;
-    btn.textContent = '▶ Resume';
-    btn.className = 'sw-btn sw-start';
+    clearInterval(workoutStopwatch); workoutStopwatchRunning = false;
+    btn.textContent = 'Resume'; btn.className = 'sw-btn sw-start';
   } else {
     workoutStopwatchRunning = true;
-    btn.textContent = '⏸ Pause';
-    btn.className = 'sw-btn sw-pause';
-    workoutStopwatch = setInterval(() => {
-      workoutElapsed++;
-      updateStopwatchDisplay();
-    }, 1000);
+    btn.textContent = 'Pause'; btn.className = 'sw-btn sw-pause';
+    workoutStopwatch = setInterval(() => { workoutElapsed++; updateStopwatchDisplay(); }, 1000);
   }
 }
 
 function resetWorkoutStopwatch() {
-  clearInterval(workoutStopwatch);
-  workoutStopwatchRunning = false;
-  workoutElapsed = 0;
+  clearInterval(workoutStopwatch); workoutStopwatchRunning = false; workoutElapsed = 0;
   updateStopwatchDisplay();
   const btn = document.getElementById('sw-btn');
-  if (btn) { btn.textContent = '▶ Start'; btn.className = 'sw-btn sw-start'; }
+  if (btn) { btn.textContent = 'Start'; btn.className = 'sw-btn sw-start'; }
 }
 
 function updateStopwatchDisplay() {
-  const m = Math.floor(workoutElapsed / 60);
-  const s = workoutElapsed % 60;
+  const m = Math.floor(workoutElapsed / 60), s = workoutElapsed % 60;
   const el = document.getElementById('sw-display');
-  if (el) el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  if (el) el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
-// ── WORKOUT LOG (weight x reps per exercise) ────────────────────────────────
+// ── WORKOUT LOG ──────────────────────────────────────────────────────────────
 function saveExLog(day, exIdx, setIdx) {
   const wInput = document.getElementById(`log-w-${day}-${exIdx}-${setIdx}`);
   const rInput = document.getElementById(`log-r-${day}-${exIdx}-${setIdx}`);
@@ -717,9 +846,9 @@ function saveExLog(day, exIdx, setIdx) {
   if (!workoutLog[key]) workoutLog[key] = {};
   workoutLog[key][setIdx] = {w, r, date: new Date().toDateString()};
   saveState();
-  showToast(`✓ Logged: ${w}kg × ${r} reps`);
-  wInput.style.borderColor = 'rgba(61,232,160,.3)';
-  rInput.style.borderColor = 'rgba(61,232,160,.3)';
+  showToast(`Logged: ${w}kg x ${r} reps`);
+  wInput.style.borderColor = 'rgba(110,233,194,.3)';
+  rInput.style.borderColor = 'rgba(110,233,194,.3)';
   setTimeout(() => { wInput.style.borderColor = ''; rInput.style.borderColor = ''; }, 1500);
 }
 
@@ -734,6 +863,9 @@ function renderQuote() {
 // ── INIT ──────────────────────────────────────────────────────────────────────
 loadState();
 updateGreeting();
+renderPhaseSwitcher();
+renderOverviewPhaseInfo();
+renderWorkoutTabs();
 renderWorkout();
 renderFoods();
 renderMeals();
@@ -748,16 +880,23 @@ renderWeightChart();
 renderQuote();
 updateStopwatchDisplay();
 
-// animate progress bars on load
-setTimeout(()=>{
-  document.querySelectorAll('.prog-fill').forEach(f=>{
-    const w = f.style.width; f.style.width='0';
-    setTimeout(()=>f.style.width=w, 100);
+// Animate progress bars on load
+setTimeout(() => {
+  document.querySelectorAll('.prog-fill').forEach(f => {
+    const w = f.style.width; f.style.width = '0';
+    setTimeout(() => f.style.width = w, 100);
   });
 }, 300);
 
-// splash screen
+// Handle PWA shortcut URLs (?page=workout etc.)
+const urlParams = new URLSearchParams(window.location.search);
+const targetPage = urlParams.get('page');
+if (targetPage && ['overview','workout','timer','diet','meals','tips'].includes(targetPage)) {
+  setTimeout(() => nav(targetPage), 100);
+}
+
+// Splash
 setTimeout(() => {
   const splash = document.getElementById('splash');
-  if(splash) splash.classList.add('hidden');
+  if (splash) splash.classList.add('hidden');
 }, 1200);

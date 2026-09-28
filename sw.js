@@ -1,123 +1,139 @@
-const CACHE_NAME = 'aryan-fitness-v5';
-const ASSETS = [
+// ══════════════════════════════════════════════════════════════════════════════
+//   VIDHA FITNESS APP — SERVICE WORKER
+//   Cache-first for static assets, network-first for fonts
+//   Version: bump CACHE_NAME to force update on all clients
+// ══════════════════════════════════════════════════════════════════════════════
+
+const CACHE_NAME = 'vidha-fit-v1';
+
+// Core app shell — always cached
+const CORE_ASSETS = [
   './',
   './index.html',
   './style.css',
   './data.js',
   './app.js',
   './manifest.json',
+  // Icons
+  './icons/favicon.ico',
+  './icons/favicon.svg',
+  './icons/favicon-16.png',
+  './icons/favicon-32.png',
+  './icons/icon-144.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './images/flat_dumbbell_press.png',
-  './images/incline_dumbbell_press.png',
-  './images/incline_db_flyes.jpg',
-  './images/db_flyes.jpg',
-  './images/pec_deck.jpg',
-  './images/cable_crossover.jpg',
-  './images/tricep_pushdown.png',
-  './images/overhead_tricep_extension.jpg',
-  './images/tricep_dips.jpg',
-  './images/push_ups.png',
-  './images/pullups.jpg',
-  './images/lat_pulldown.png',
-  './images/bent_over_db_row.jpg',
-  './images/seated_cable_row.png',
-  './images/db_pullover.jpg',
-  './images/cable_face_pulls.png',
-  './images/db_shrugs.jpg',
-  './images/close_grip_lat_pulldown.jpg',
-  './images/barbell_squat.jpg',
-  './images/leg_press.png',
-  './images/goblet_squat.png',
-  './images/leg_extensions.jpg',
-  './images/walking_lunges.jpg',
-  './images/hip_thrust.jpg',
-  './images/standing_calf_raises.jpg',
-  './images/mountain_climbers.jpg',
-  './images/seated_shoulder_press.png',
-  './images/arnold_press.jpg',
-  './images/lateral_raises.png',
-  './images/cable_lateral_raise.jpg',
-  './images/db_front_raises.jpg',
-  './images/rear_delt_fly.jpg',
-  './images/hanging_leg_raises.jpg',
-  './images/cable_crunches.jpg',
-  './images/ab_roller.jpg',
-  './images/decline_crunches.jpg',
-  './images/romanian_deadlift.png',
-  './images/stiff_leg_deadlift.jpg',
-  './images/lying_leg_curls.jpg',
-  './images/seated_leg_curl.jpg',
-  './images/leg_curl.png',
-  './images/db_lunges.jpg',
-  './images/seated_calf_raise.jpg',
-  './images/bicycle_crunches.jpg',
-  './images/barbell_curl.jpg',
-  './images/alternate_db_curl.jpg',
-  './images/hammer_curls.png',
-  './images/preacher_curls.jpg',
-  './images/spider_curls.jpg',
-  './images/concentration_curls.jpg',
-  './images/close_grip_bench.jpg',
-  './images/skullcrushers.jpg',
-  './images/reverse_curls.jpg',
-  './images/wrist_curls.jpg',
-  './images/farmers_walk.jpg',
-  './images/dead_bugs.jpg',
-  './images/one_arm_row.png',
-  './images/machine_chest_press.jpg',
+  './icons/icon-maskable-192.png',
+  './icons/icon-maskable-512.png',
+  './icons/apple-touch-icon.png',
+  './icons/apple-touch-icon-152.png',
+  './icons/apple-touch-icon-167.png',
 ];
 
-// Install — cache all assets
+// Exercise images — only those actually referenced in data.js
+const IMAGE_ASSETS = [
+  // Phase 1 images
+  './images/w_breathing.jpg',
+  './images/w_stretch.jpg',
+  './images/w_hip_thrust.jpg',
+  './images/w_core.jpg',
+  './images/w_warmup.jpg',
+  './images/w_gym_general.jpg',
+  './images/w_glute.jpg',
+  './images/w_yoga.jpg',
+  './images/w_lunges.jpg',
+  './images/w_walk.jpg',
+  // Phase 2 images
+  './images/w_squat.jpg',
+  './images/w_deadlift.jpg',
+  './images/w_pushup.jpg',
+  './images/w_row.jpg',
+  './images/w_plank.jpg',
+  './images/w_sumo_squat.jpg',
+  // Phase 3 images
+  './images/w_leg_press.jpg',
+  './images/w_chest_press.jpg',
+  './images/w_lat_pulldown.jpg',
+  './images/w_shoulder_press.jpg',
+  './images/w_curl.jpg',
+  './images/w_lateral_raise.jpg',
+];
+
+const ALL_ASSETS = [...CORE_ASSETS, ...IMAGE_ASSETS];
+
+// ── INSTALL ───────────────────────────────────────────────────────────────────
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      console.log('Caching app assets');
-      return cache.addAll(ASSETS);
+      // Cache core assets immediately, images lazily
+      return cache.addAll(CORE_ASSETS).then(() => {
+        // Cache images in background — don't block install
+        cache.addAll(IMAGE_ASSETS).catch(() => {});
+      });
     })
   );
   self.skipWaiting();
 });
 
-// Activate — clean old caches
+// ── ACTIVATE ──────────────────────────────────────────────────────────────────
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+      Promise.all(
+        keys
+          .filter(k => k !== CACHE_NAME)
+          .map(k => caches.delete(k))
+      )
     )
   );
   self.clients.claim();
 });
 
-// Fetch — cache first, network fallback
+// ── FETCH ─────────────────────────────────────────────────────────────────────
 self.addEventListener('fetch', event => {
-  // Handle cross-origin requests (Google Fonts etc.) — network first
-  if (!event.request.url.startsWith(self.location.origin)) {
+  const url = new URL(event.request.url);
+
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') return;
+
+  // Google Fonts — network first, cache fallback
+  if (url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com') {
     event.respondWith(
-      fetch(event.request).then(response => {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        return response;
-      }).catch(() => caches.match(event.request))
+      fetch(event.request)
+        .then(response => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          return response;
+        })
+        .catch(() => caches.match(event.request))
     );
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request).then(response => {
-        // Cache new requests dynamically (except non-GET)
-        if (event.request.method !== 'GET') return response;
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        return response;
-      }).catch(() => {
-        // Offline fallback
-        if (event.request.destination === 'document') {
-          return caches.match('./index.html');
-        }
-      });
-    })
-  );
+  // Same-origin: cache first, network fallback, cache dynamically
+  if (url.origin === self.location.origin) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+
+        return fetch(event.request)
+          .then(response => {
+            if (response.ok) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+            }
+            return response;
+          })
+          .catch(() => {
+            // Offline fallback — serve index.html for navigation requests
+            if (event.request.destination === 'document') {
+              return caches.match('./index.html');
+            }
+          });
+      })
+    );
+    return;
+  }
+
+  // All other requests — network only
+  event.respondWith(fetch(event.request).catch(() => {}));
 });
