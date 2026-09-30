@@ -156,6 +156,14 @@ function updateGreeting() {
   if (el) el.textContent = `${greeting}, Vidha`;
 }
 
+// ── TODAY → APP DAY INDEX ────────────────────────────────────────────────────
+// JS getDay(): Sun=0, Mon=1 ... Sat=6.  App DAYS array: Mon=0 ... Sun=6.
+function getTodayIndex() {
+  const jsDay = new Date().getDay();      // 0=Sun … 6=Sat
+  return (jsDay + 6) % 7;                  // → 0=Mon … 6=Sun
+}
+
+
 function copyExName(name) {
   navigator.clipboard.writeText(name).then(() => {
     showToast('Copied: ' + name);
@@ -234,11 +242,12 @@ function switchPhase(phaseIdx) {
   // Reset weekly completion when phase changes
   setsDone = {};
   completedDays = new Set();
-  currentDay = 0;
+  currentDay = getTodayIndex();
   saveState();
   renderPhaseSwitcher();
   renderWorkoutTabs();
   renderWorkout();
+  renderWeekGrid();
   updateWeekUI();
   renderOverviewPhaseInfo();
   showToast(`${PHASES[phaseIdx].name}: ${PHASES[phaseIdx].label} unlocked`);
@@ -282,7 +291,16 @@ function renderWorkout() {
   const d = DAYS[currentDay];
   const el = document.getElementById('workout-content');
   if (d.rest) {
-    el.innerHTML = `<div class="rest-panel">
+    const ph = PHASES[currentPhase];
+    el.innerHTML = `
+      <div class="wk-phase-banner" style="background:${ph.gradient}">
+        <div class="wk-phase-left">
+          <div class="wk-phase-name">${ph.name} · ${ph.label}</div>
+          <div class="wk-phase-weeks">${ph.weeks}</div>
+        </div>
+        <div class="wk-phase-day">${d.name} · ${d.tag}</div>
+      </div>
+      <div class="rest-panel">
       <div class="rest-icon-wrap">${icon('moon', 56)}</div>
       <div class="rest-title">${d.name} — ${d.tag}</div>
       <div class="rest-text" style="margin-bottom:24px">${d.restMsg}</div>
@@ -304,27 +322,62 @@ function renderWorkout() {
     });
     const pct = totalSets > 0 ? Math.round((doneSets / totalSets) * 100) : 0;
 
-    // Warmup section
+    // ── Phase banner — always show which phase & week Vidha is in ──
+    const ph = PHASES[currentPhase];
+    const phaseBanner = `
+      <div class="wk-phase-banner" style="background:${ph.gradient}">
+        <div class="wk-phase-left">
+          <div class="wk-phase-name">${ph.name} · ${ph.label}</div>
+          <div class="wk-phase-weeks">${ph.weeks}</div>
+        </div>
+        <div class="wk-phase-day">${d.name} · ${d.tag}</div>
+      </div>`;
+
+    // ── Friendly intro — reassure & explain the flow ──
+    const isMobilise = currentPhase === 0;
+    const introText = isMobilise
+      ? `Welcome, Vidha. Today is all about gently waking up your body — no weights, no pressure. Just follow along step by step. You've got this.`
+      : `Here's your plan for today, Vidha. First warm up, then move through your strength exercises one at a time. Take your time — there's no rush.`;
+    const introBlock = `
+      <div class="wk-intro">
+        <div class="wk-intro-icon">${icon('heart', 20)}</div>
+        <div class="wk-intro-text">${introText}</div>
+      </div>`;
+
+    // ── STEP 1 — Warm-up, now with images + how-to for each move ──
     const warmupHTML = d.warmup && d.warmup.length ? `
-      <div class="warmup-block">
-        <div class="warmup-block-header">
-          <div class="warmup-block-icon">${icon('bolt', 18)}</div>
-          <div class="warmup-block-title">Warm-Up First</div>
-          <div class="warmup-block-tag">Do before lifting</div>
-        </div>
-        <div class="warmup-block-items">
-          ${d.warmup.map((w, wi) => {
-            const id = `wublock-${currentDay}-${wi}`;
-            return `<div class="warmup-block-item" id="${id}" onclick="toggleWarmupBlock('${id}', this)">
-              <div class="wub-icon">${icon(w.icon || 'bolt', 16)}</div>
-              <span>${w.text}</span>
-              <div class="wub-check">${icon('check', 12)}</div>
-            </div>`;
-          }).join('')}
-        </div>
+      <div class="wk-step-label"><span class="wk-step-num">1</span> Warm-Up First <span class="wk-step-hint">— always start here (about 5 min)</span></div>
+      <div class="warmup-cards">
+        ${d.warmup.map((w, wi) => {
+          const g = warmupGuideFor(w.text);
+          const id = `wublock-${currentDay}-${wi}`;
+          const copyName = w.text.split('—')[0].trim().replace(/'/g,"\\'");
+          return `<div class="warmup-card" id="${id}" onclick="toggleWarmupBlock('${id}', this)">
+            <div class="warmup-card-img">
+              <img src="${g.img}" alt="${w.text.replace(/"/g,'')}" loading="lazy">
+              <div class="warmup-card-check">${icon('check', 14)}</div>
+            </div>
+            <div class="warmup-card-body">
+              <div class="warmup-card-title-row">
+                <div class="warmup-card-title">${w.text}</div>
+                <button class="ex-copy-btn" onclick="event.stopPropagation();copyExName('${copyName}')" title="Copy name to search on YouTube">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+              </div>
+              <div class="warmup-card-how">${g.how}</div>
+            </div>
+          </div>`;
+        }).join('')}
       </div>` : '';
 
+    // ── STEP 2 — Strength / main exercises ──
+    const stepTwoLabel = isMobilise
+      ? `<div class="wk-step-label"><span class="wk-step-num">2</span> Gentle Movements <span class="wk-step-hint">— mobility & light moves, no weights</span></div>`
+      : `<div class="wk-step-label"><span class="wk-step-num">2</span> Strength Exercises <span class="wk-step-hint">— tap any exercise to see how to do it</span></div>`;
+
     el.innerHTML = `
+      ${phaseBanner}
+      ${introBlock}
       <div class="workout-meta-row">
         <div class="workout-focus-tag">${icon('target', 14)} ${d.focus}</div>
         <div class="workout-progress-row">
@@ -334,6 +387,7 @@ function renderWorkout() {
         </div>
       </div>
       ${warmupHTML}
+      ${stepTwoLabel}
       <div class="ex-wrap">${d.exercises.map((ex,i)=>renderExCard(ex,i)).join('')}</div>
       <div class="cardio-block">
         <div><div class="cb-left-label">${icon('run', 14)} Cardio</div><div class="cb-detail">${d.cardio}</div></div>
@@ -344,7 +398,7 @@ function renderWorkout() {
 
 function toggleWarmupBlock(id, el) {
   const done = el.classList.toggle('done');
-  if (done) showToast('Warm-up step done!');
+  if (done) showToast('Nice — one step done!');
 }
 
 function renderExCard(ex, i) {
@@ -456,23 +510,52 @@ function checkDayDone(day) {
   }
 }
 
+function renderWeekGrid() {
+  const el = document.getElementById('week-grid');
+  if (!el) return;
+  const dayNames = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  // Icon for workout days vs rest days
+  const workoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>`;
+  const restIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+  el.innerHTML = DAYS.map((d, i) => {
+    const isActive = i === currentDay;
+    const isDone = completedDays.has(i);
+    const tagClass = d.rest ? 'rest' : (d.tagClass || 'push');
+    const tagText = d.rest ? 'Rest' : d.tag;
+    return `<div class="wday${isActive ? ' active' : ''}${isDone ? ' done' : ''}" onclick="goWorkout(${i})">
+      <div class="wday-name">${dayNames[i]}</div>
+      <div class="wday-icon-svg">${d.rest ? restIcon : workoutIcon}</div>
+      <div class="wday-tag ${tagClass}">${tagText}</div>
+      <div class="wday-check" id="wc${i}">${isDone ? icon('check', 16) : '○'}</div>
+    </div>`;
+  }).join('');
+}
+
 function updateWeekUI() {
-  for (let i = 0; i < 7; i++) {
+  const wdays = document.querySelectorAll('.wday');
+  for (let i = 0; i < DAYS.length; i++) {
     const el = document.getElementById('wc'+i);
     if (el) el.innerHTML = completedDays.has(i) ? icon('check', 16) : '○';
-    const wd = document.querySelectorAll('.wday')[i];
+    const wd = wdays[i];
     if (wd) {
-      if (completedDays.has(i)) wd.classList.add('done');
-      else wd.classList.remove('done');
+      wd.classList.toggle('done', completedDays.has(i));
+      wd.classList.toggle('active', i === currentDay);
     }
   }
+  // Count only actual workout days that are completed
   const count = document.getElementById('gym-day-count');
   if (count) count.textContent = completedDays.size;
+  // Update total workout days per week in the stat card
+  const totalWorkouts = DAYS.filter(d => !d.rest).length;
+  const gymStat = document.getElementById('gym-days-stat');
+  if (gymStat) gymStat.textContent = totalWorkouts;
 }
 
 function selectDay(d) {
   currentDay = d;
   document.querySelectorAll('.day-tab').forEach((t, i) => t.classList.toggle('active', i === d));
+  document.querySelectorAll('.wday').forEach((w, i) => w.classList.toggle('active', i === d));
   renderWorkout();
 }
 
@@ -670,7 +753,7 @@ function resetWeek() {
 // ── NAV ───────────────────────────────────────────────────────────────────────
 const PAGE_TITLES = {
   overview: ['Dashboard', '44 kg · 163 cm · BMI 16.5 · Goal: Healthy Weight + Lean Muscle'],
-  workout:  ['Workout Plan', '3-day Full Body · Mon · Wed · Fri · 3-Phase Progressive'],
+  workout:  ['Workout Plan', '6 days/week · Mon–Sat · Warm-up then Strength · 3-Phase'],
   timer:    ['Rest Timer', 'Track your recovery between sets'],
   diet:     ['Nutrition', '72g protein/day · 1950 kcal · India-friendly meals'],
   meals:    ['Meal Plan', 'Full day eating guide · ~73g protein · ~1950 kcal'],
@@ -862,11 +945,13 @@ function renderQuote() {
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 loadState();
+currentDay = getTodayIndex();   // start on the real system day
 updateGreeting();
 renderPhaseSwitcher();
 renderOverviewPhaseInfo();
 renderWorkoutTabs();
 renderWorkout();
+renderWeekGrid();
 renderFoods();
 renderMeals();
 renderTips();

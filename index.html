@@ -126,8 +126,8 @@
   <div class="stat-grid">
     <div class="stat-card"><div class="sc-label">Daily Protein</div><div class="sc-val sc-accent">72<span style="font-size:16px">g</span></div><div class="sc-sub">44kg × 1.6g/kg</div></div>
     <div class="stat-card"><div class="sc-label">Daily Calories</div><div class="sc-val sc-blue">1950<span style="font-size:16px">kcal</span></div><div class="sc-sub">Healthy gain</div></div>
-    <div class="stat-card"><div class="sc-label">Gym Days/wk</div><div class="sc-val sc-green">3<span style="font-size:16px">days</span></div><div class="sc-sub">Mon · Wed · Fri</div></div>
-    <div class="stat-card"><div class="sc-label">Cardio/wk</div><div class="sc-val sc-red">1×</div><div class="sc-sub">10 min Friday only</div></div>
+    <div class="stat-card"><div class="sc-label">Gym Days/wk</div><div class="sc-val sc-green"><span id="gym-days-stat">6</span><span style="font-size:16px">days</span></div><div class="sc-sub">Mon–Sat · Sun rest</div></div>
+    <div class="stat-card"><div class="sc-label">Cardio/wk</div><div class="sc-val sc-red">Daily</div><div class="sc-sub">Warm-up each session</div></div>
     <div class="stat-card"><div class="sc-label">BMR</div><div class="sc-val" style="color:var(--purple)">1370<span style="font-size:16px">kcal</span></div><div class="sc-sub">At rest</div></div>
     <div class="stat-card"><div class="sc-label">Goal Weight</div><div class="sc-val sc-accent">52–55<span style="font-size:16px">kg</span></div><div class="sc-sub">6-month target</div></div>
   </div>
@@ -147,42 +147,8 @@
   </div>
 
   <div class="sh">This Week</div>
-  <div class="week-grid">
-    <div class="wday active" onclick="goWorkout(0)">
-      <div class="wday-name">MON</div>
-      <div class="wday-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg></div>
-      <div class="wday-tag push">Workout A</div><div class="wday-check" id="wc0">○</div>
-    </div>
-    <div class="wday" onclick="goWorkout(1)">
-      <div class="wday-name">TUE</div>
-      <div class="wday-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
-      <div class="wday-tag rest">Rest</div><div class="wday-check" id="wc1">○</div>
-    </div>
-    <div class="wday" onclick="goWorkout(2)">
-      <div class="wday-name">WED</div>
-      <div class="wday-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg></div>
-      <div class="wday-tag back">Workout B</div><div class="wday-check" id="wc2">○</div>
-    </div>
-    <div class="wday" onclick="goWorkout(3)">
-      <div class="wday-name">THU</div>
-      <div class="wday-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></div>
-      <div class="wday-tag rest">Rest</div><div class="wday-check" id="wc3">○</div>
-    </div>
-    <div class="wday" onclick="goWorkout(4)">
-      <div class="wday-name">FRI</div>
-      <div class="wday-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg></div>
-      <div class="wday-tag legs">Workout C</div><div class="wday-check" id="wc4">○</div>
-    </div>
-    <div class="wday" onclick="goWorkout(5)">
-      <div class="wday-name">SAT</div>
-      <div class="wday-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
-      <div class="wday-tag rest">Rest</div><div class="wday-check" id="wc5">○</div>
-    </div>
-    <div class="wday" onclick="goWorkout(6)">
-      <div class="wday-name">SUN</div>
-      <div class="wday-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
-      <div class="wday-tag rest">Rest</div><div class="wday-check" id="wc6">○</div>
-    </div>
+  <div class="week-grid" id="week-grid">
+    <!-- Rendered by renderWeekGrid() in app.js -->
   </div>
 
   <div class="sh">Your Plan at a Glance</div>
@@ -194,8 +160,8 @@
     </div>
     <div class="strat-card">
       <div class="strat-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-      <div class="strat-title">3-Phase 12-Week Plan</div>
-      <div class="strat-text">Phase 1: Breathing + mobility. Phase 2: Bodyweight movements. Phase 3: Light machines + dumbbells. Each phase builds safely on the last.</div>
+      <div class="strat-title">6-Day Split, 3 Phases</div>
+      <div class="strat-text">Train Mon–Sat, rest Sunday. Weeks 1–2: warm-ups and mobility only. Weeks 3–8: warm-up then strength. Weeks 9–12: heavier, progressive. Every session starts with a warm-up.</div>
     </div>
     <div class="strat-card">
       <div class="strat-icon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>

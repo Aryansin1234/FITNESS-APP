@@ -4,7 +4,7 @@
 //   Version: bump CACHE_NAME to force update on all clients
 // ══════════════════════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'vidha-fit-v1';
+const CACHE_NAME = 'vidha-fit-v7';
 
 // Core app shell — always cached
 const CORE_ASSETS = [

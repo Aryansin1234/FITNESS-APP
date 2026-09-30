@@ -1,8 +1,8 @@
 // ══════════════════════════════════════════════════════════════════════════════
 //   VIDHA'S FITNESS APP — DATA
 //   21 yrs · 44 kg · 163 cm · BMI 16.5 → Target 18.5–21
-//   3-Phase 12-week progressive plan  (Phase 1: Weeks 1-4 · Phase 2: Weeks 5-8 · Phase 3: Weeks 9-12)
-//   Each phase has 7-day DAYS array (Mon=workout, Tue=rest, Wed=workout, Thu=rest, Fri=workout, Sat/Sun=rest)
+//   3-Phase progressive plan · 6 days/week (Mon–Sat) · Sunday rest
+//   Phase 1 (wks 1–2): mobilise · Phase 2 (wks 3–8): build · Phase 3 (wks 9–12): progress
 // ══════════════════════════════════════════════════════════════════════════════
 
 // ── SVG ICON LIBRARY ──────────────────────────────────────────────────────────
@@ -46,14 +46,106 @@ const ICONS = {
   tofu:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/><path d="M3 14h18"/><path d="M9 6v12"/><path d="M15 6v12"/></svg>`,
 };
 
+// ══════════════════════════════════════════════════════════════════════════════
+//   WARM-UP GUIDE — image + friendly "how to do it" for each warm-up move
+//   Matched by keyword against each warm-up step's text. Every warm-up step in
+//   every phase gets a clear picture + simple description automatically.
+// ══════════════════════════════════════════════════════════════════════════════
+const WARMUP_GUIDE = [
+  // keyword (lowercase, matched against warmup text)  →  image + how-to
+  {match:['march','high knee','knee lift'], img:'./images/w_walk.jpg',
+   how:'Stand tall and lift your knees up and down on the spot, swinging your arms gently — like walking without moving forward. This gets your blood flowing and warms your whole body.'},
+  {match:['belly breath','deep breath','breaths'], img:'./images/w_breathing.jpg',
+   how:'Place one hand on your belly. Breathe in slowly through your nose so your belly pushes out into your hand, then breathe out slowly through your mouth. This calms your mind and switches on your core.'},
+  {match:['brisk walk','easy walk','walk to','walk or'], img:'./images/w_walk.jpg',
+   how:'A gentle walk on the treadmill (or on the spot). Keep it easy — you should still be able to chat comfortably. This gently raises your body temperature so your muscles are ready.'},
+  {match:['bike'], img:'./images/w_cardio.jpg',
+   how:'Sit on the stationary bike and pedal at an easy, comfortable pace with light resistance. No need to rush — this just warms up your legs and gets your heart moving gently.'},
+  {match:['jog'], img:'./images/w_cardio.jpg',
+   how:'A very light jog on the treadmill. Keep the pace slow and relaxed — this is only to warm up, not to tire you out.'},
+  {match:['ankle circle'], img:'./images/w_stretch.jpg',
+   how:'Lift one foot slightly off the floor and slowly draw circles in the air with your toes. Do both directions, then switch feet. This loosens stiff ankles before squats.'},
+  {match:['hip circle'], img:'./images/w_warmup.jpg',
+   how:'Place your hands on your hips and make slow, big circles with your hips — like using a hula hoop. Go both directions. This loosens the hips for squats and lunges.'},
+  {match:['arm circle'], img:'./images/w_warmup.jpg',
+   how:'Stretch both arms out to the sides and draw circles in the air — small at first, then bigger. Do forwards, then backwards. This warms up your shoulders.'},
+  {match:['arm swing','across the chest'], img:'./images/w_warmup.jpg',
+   how:'Swing both arms across your chest and back out wide, like giving yourself a hug and then opening up. This loosens your chest and shoulders.'},
+  {match:['shoulder roll'], img:'./images/w_warmup.jpg',
+   how:'Roll your shoulders in big slow circles — up, back, and down. Do forwards and backwards. This releases tension and prepares your shoulders.'},
+  {match:['neck roll'], img:'./images/w_stretch.jpg',
+   how:'Slowly and gently roll your head in a half-circle from one shoulder to the other. Keep it slow and soft — never force it. This releases neck tension.'},
+  {match:['leg swing'], img:'./images/w_walk.jpg',
+   how:'Hold a wall for balance and gently swing one leg forwards and backwards, then switch. Keep it relaxed. This warms up your hips and hamstrings.'},
+  {match:['cat-cow','cat cow'], img:'./images/w_yoga.jpg',
+   how:'On all fours: breathe in and drop your belly, lifting your head (cow). Breathe out and round your back up, tucking your chin (cat). Move slowly with your breath to warm up your spine.'},
+  {match:['torso twist','torso rotation'], img:'./images/w_yoga.jpg',
+   how:'Stand with feet apart and gently rotate your upper body left and right, letting your arms swing loosely. This warms up your waist and lower back.'},
+  {match:['bodyweight squat','squats —','squat —'], img:'./images/w_squat.jpg',
+   how:'A few slow squats with no weight. Sit back and down like sitting into a chair, then stand tall. This grooves the movement so it feels natural when you add weight.'},
+  {match:['glute bridge'], img:'./images/w_hip_thrust.jpg',
+   how:'Lie on your back, knees bent, feet flat. Squeeze your bottom and lift your hips up, then lower slowly. This wakes up your glutes before your main exercises.'},
+  {match:['wall slide'], img:'./images/w_warmup.jpg',
+   how:'Stand with your back against a wall, arms bent in a "cactus" shape touching the wall. Slide your arms up and down while keeping them on the wall. This opens the shoulders.'},
+  {match:['band pull-apart','pull-apart'], img:'./images/w_row.jpg',
+   how:'Hold a light resistance band in front of you and pull it apart, squeezing your shoulder blades together, then release slowly. This activates your upper back.'},
+  {match:['chest opener','chest stretch'], img:'./images/w_stretch.jpg',
+   how:'Clasp your hands behind your back, gently straighten your arms and lift them slightly to open your chest. Hold and breathe. This undoes hunching from sitting.'},
+  {match:['incline push-up','wall push-up','push-up'], img:'./images/w_pushup.jpg',
+   how:'A few easy push-ups against a wall or a bench to gently warm up your chest and arms before your pressing exercises.'},
+  {match:['calf raise'], img:'./images/w_walk.jpg',
+   how:'Stand tall and rise up onto the balls of your feet, then lower slowly. This warms up your calves and ankles.'},
+
+  // ── Expanded pool: dynamic, targeted warm-up moves ──
+  {match:['world\'s greatest','worlds greatest','world greatest'], img:'./images/w_lunges.jpg',
+   how:'Step into a deep lunge, place both hands inside your front foot, then rotate your top arm up toward the ceiling and follow it with your eyes. The best single stretch — it opens hips, back and shoulders all at once.'},
+  {match:['hip opener','deep squat hold','squat hold','frog'], img:'./images/w_squat.jpg',
+   how:'Lower into a deep squat and hold, gently pushing your knees out with your elbows. Rock side to side. This opens tight hips and prepares you for squatting and lunging.'},
+  {match:['glute kickback','donkey kick','fire hydrant'], img:'./images/w_glute.jpg',
+   how:'On all fours, lift one leg back and up, squeezing your glute at the top, then lower. Do both sides. This switches on your glutes so they work properly during your main lifts.'},
+  {match:['bird dog','bird-dog'], img:'./images/w_core.jpg',
+   how:'On all fours, reach one arm forward and the opposite leg back, keeping your hips level. Hold briefly, then switch. This wakes up your deep core and improves balance.'},
+  {match:['dead bug'], img:'./images/w_core.jpg',
+   how:'Lie on your back, arms up and knees bent at 90°. Slowly lower one arm and the opposite leg, keeping your lower back pressed to the floor. This activates your core safely.'},
+  {match:['inchworm','walk-out','walk out'], img:'./images/w_stretch.jpg',
+   how:'Stand tall, hinge and walk your hands out to a plank, hold a second, then walk your feet up to your hands. This warms the whole body and gently stretches your hamstrings.'},
+  {match:['torso rotation','trunk rotation','open book','thoracic'], img:'./images/w_yoga.jpg',
+   how:'Lie on your side with knees bent, arms stretched in front. Open your top arm across your body like opening a book, following it with your eyes. This loosens the upper back and improves rotation.'},
+  {match:['scapular','shoulder blade','wall angel'], img:'./images/w_warmup.jpg',
+   how:'Stand against a wall, arms in a "goal-post" shape. Squeeze your shoulder blades together and slide your arms up and down the wall. This activates the muscles that keep your shoulders healthy while pressing.'},
+  {match:['banded row','face pull','band row'], img:'./images/w_row.jpg',
+   how:'Hold a light band and pull it toward your face, elbows high, squeezing your upper back. Great for waking up the back muscles before pulling exercises.'},
+  {match:['side lunge','lateral lunge','cossack'], img:'./images/w_lunges.jpg',
+   how:'Step wide to one side and sit into that hip, keeping the other leg straight. Shift side to side. This opens the inner thighs and hips for squats and lunges.'},
+  {match:['jumping jack','star jump'], img:'./images/w_cardio.jpg',
+   how:'Classic jumping jacks — jump feet out and arms overhead, then back in. Keep it light and rhythmic. Gets your heart rate up and warms the whole body fast.'},
+  {match:['wrist','forearm'], img:'./images/w_warmup.jpg',
+   how:'Circle your wrists both directions, then gently pull your fingers back to stretch the forearms. Important before any exercise where you grip weights.'},
+  {match:['cobra','upward dog','back extension stretch'], img:'./images/w_yoga.jpg',
+   how:'Lie face down, hands under shoulders, and gently press your chest up while keeping hips down. Opens the front of your body and mobilises the spine.'},
+  {match:['child pose','child\'s pose','childs pose'], img:'./images/w_yoga.jpg',
+   how:'Kneel and sit back on your heels, reaching your arms forward and resting your forehead down. Breathe slowly. A calming reset that gently stretches your back and hips.'},
+];
+
+// Returns { img, how } for a given warm-up step text (best keyword match)
+function warmupGuideFor(text) {
+  const t = (text || '').toLowerCase();
+  for (const g of WARMUP_GUIDE) {
+    if (g.match.some(k => t.includes(k))) return g;
+  }
+  // sensible fallback
+  return {img:'./images/w_warmup.jpg', how:'A gentle warm-up movement to prepare your body. Take it slow and stay relaxed.'};
+}
+
+
 // ── PHASE DEFINITIONS ─────────────────────────────────────────────────────────
 const PHASES = [
   {
     id: 0,
     name: 'Phase 1',
-    label: 'Foundation',
-    weeks: 'Weeks 1–4',
-    desc: 'Warmup-dominant. Learn movement patterns. Build body awareness. Light cardio. No weights yet.',
+    label: 'Mobilise',
+    weeks: 'Weeks 1–2',
+    desc: 'Your first 2 weeks. 6 days of warm-ups, light cardio and mobility only — no weights. Build the gym habit and wake up your body gently before any strength training.',
     color: 'var(--mint)',
     gradient: 'var(--gradient-green)',
   },
@@ -61,8 +153,8 @@ const PHASES = [
     id: 1,
     name: 'Phase 2',
     label: 'Build',
-    weeks: 'Weeks 5–8',
-    desc: 'Introduce light weights. 3 sets per exercise. Moderate cardio. Start tracking progress.',
+    weeks: 'Weeks 3–8',
+    desc: '6-day split. Every training day starts with a warm-up, then strength exercises. Bodyweight and light dumbbells/machines. This is where real strength building begins.',
     color: 'var(--lavender)',
     gradient: 'var(--gradient-purple)',
   },
@@ -71,673 +163,900 @@ const PHASES = [
     name: 'Phase 3',
     label: 'Progress',
     weeks: 'Weeks 9–12',
-    desc: 'Add resistance. Progressive overload begins. Heavier cardio. Body composition improves.',
+    desc: '6-day split with progressive overload. Warm-up first, then heavier weights and more sets. Your body composition visibly improves as you get measurably stronger.',
     color: 'var(--accent)',
     gradient: 'var(--gradient-accent)',
   },
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
-//   PHASE 1 — FOUNDATION (Weeks 1–4)
-//   Goal: Learn to move. Build routine. Warmup + bodyweight + very light cardio.
-//   No barbells. No heavy loading. Form comes first.
-// ══════════════════════════════════════════════════════════════════════════════
-// ══════════════════════════════════════════════════════════════════════════════
-//   PHASE 1 — WAKE UP (Weeks 1–4)
-//   Goal: Get comfortable in the gym. Learn to breathe. Fix posture. Move.
-//   NO weights. NO machines. NO squats. Pure mobility, breathing, gentle movement.
-//   Sessions: 35–40 min including warmup + gentle cardio finish.
+//   PHASE 1 — MOBILISE (Weeks 1–2)
+//   6 days/week (Mon–Sat), Sunday rest.
+//   NO weights. Warm-up + light cardio + mobility only. Build the habit, wake the body.
+//   Every day: a warm-up block, then a set of gentle mobility "exercises".
 // ══════════════════════════════════════════════════════════════════════════════
 const DAYS_PHASE1 = [
 
-  /* ── MONDAY — Breathe & Move ── */
-  {name:'Monday', tag:'Breathe & Move', tagClass:'push',
-   phase:'Phase 1 · Weeks 1–4',
-   focus:'Diaphragmatic Breathing · Posture Awareness · Gentle Mobility',
-   cardio:'10 min easy treadmill walk (4.5–5 km/h, flat) — this is enough for Week 1',
+  /* ── MONDAY — Lower Body Mobility ── */
+  {name:'Monday', tag:'Lower Body Mobility', tagClass:'legs',
+   phase:'Phase 1 · Weeks 1–2',
+   focus:'Hips · Knees · Ankles · Gentle Cardio',
+   cardio:'10 min easy treadmill walk (4.5–5 km/h, flat) at the START to warm the body',
    warmup:[
-     {text:'Stand tall and take 5 deep belly breaths — hand on stomach, feel it rise', icon:'drop'},
-     {text:'Gentle neck rolls — 5 each direction, very slow', icon:'rotate'},
+     {text:'March in place — 2 minutes, arms swinging', icon:'walk'},
+     {text:'Ankle circles — 10 each foot, both ways', icon:'rotate'},
+     {text:'Hip circles — 10 each direction', icon:'rotate'},
+     {text:'Deep squat hold — 20 sec, rocking gently', icon:'bolt'},
+     {text:'Leg swings — 10 each leg, front to back', icon:'walk'},
+   ],
+   exercises:[
+    {name:'Bodyweight Hip Hinge (Pattern Practice)',sets:'2',reps:'10',
+     tempo:'3 down · 2 up',rest:'40 sec',
+     muscles:'Hamstrings, Glutes, Lower Back — teaches the hinge, the single most important movement pattern. No weight, just the shape.',
+     svg:`<img src="./images/w_deadlift.jpg" alt="Hip Hinge">`,
+     breathing:'Breathe in as you hinge forward. Breathe out as you stand tall. Never rush — feel the stretch in the back of your legs.',
+     cues:['Feet hip-width apart, soft bend in your knees','Push your hips BACKWARD — imagine closing a car door with your bottom','Hands slide down the front of your thighs as you fold','Keep your back flat like a table — do not round','Feel a gentle stretch in the back of your legs, then stand tall','Squeeze your glutes at the top'],
+     mistakes:['Squatting down instead of hinging back','Rounding the lower back — keep it flat','Going too low too soon — only go where it feels comfortable','Rushing — this is slow, controlled practice']},
+
+    {name:'Bodyweight Squat to Chair',sets:'2',reps:'10',
+     tempo:'3 down · 1 pause · 2 up',rest:'45 sec',
+     muscles:'Quads, Glutes — learn the squat by sitting back to a chair. Builds confidence and the movement pattern safely.',
+     svg:`<img src="./images/w_squat.jpg" alt="Squat to Chair">`,
+     breathing:'Breathe in as you sit down. Breathe out as you stand up.',
+     cues:['Stand in front of a bench or chair, feet shoulder-width','Sit back and down slowly until you lightly touch the seat','Do NOT flop down — control the descent','Keep your chest up and knees pushing outward','Stand back up by driving through your whole foot','The chair is just a target — barely touch it, do not rest'],
+     mistakes:['Dropping onto the chair — stay in control','Knees caving inward — push them out','Heels lifting off the floor','Looking down — keep your gaze forward']},
+
+    {name:'Standing Calf Raises',sets:'2',reps:'15',
+     tempo:'2 up · 1 hold · 2 down',rest:'30 sec',
+     muscles:'Calves, Ankle Stability — wakes up the lower legs and improves balance for all standing exercises.',
+     svg:`<img src="./images/w_walk.jpg" alt="Calf Raise">`,
+     breathing:'Breathe out as you rise up, breathe in as you lower. Keep it steady.',
+     cues:['Stand tall near a wall for balance','Rise up onto the balls of your feet as high as you can','Hold at the top for 1 second — squeeze your calves','Lower your heels slowly back to the floor','Keep your body straight and tall throughout'],
+     mistakes:['Bouncing at the bottom','Rushing — control every rep','Leaning on the wall too heavily — just use it for light balance']},
+
+    {name:'Lying Knee-to-Chest Stretch',sets:'2',reps:'Hold 30 sec each leg',
+     tempo:'Hold + breathe',rest:'20 sec',
+     muscles:'Lower Back, Glutes, Hip Flexors — a gentle release for the lower back and hips.',
+     svg:`<img src="./images/w_stretch.jpg" alt="Knee to Chest">`,
+     breathing:'Breathe slowly and deeply. With each exhale, gently draw the knee a little closer.',
+     cues:['Lie on your back on a mat','Draw one knee up toward your chest, hold it with both hands','Keep the other leg relaxed, flat or bent on the floor','Feel a gentle stretch in your lower back and glute','Hold for 30 seconds, breathing slowly, then switch legs'],
+     mistakes:['Pulling too hard — this is gentle, never forced','Lifting your head off the floor — keep it relaxed','Holding your breath']}
+   ]},
+
+  /* ── TUESDAY — Upper Body Mobility ── */
+  {name:'Tuesday', tag:'Upper Body Mobility', tagClass:'back',
+   phase:'Phase 1 · Weeks 1–2',
+   focus:'Shoulders · Upper Back · Posture · Gentle Cardio',
+   cardio:'10 min light stationary bike (lowest resistance, comfortable pace) at the START',
+   warmup:[
      {text:'Shoulder rolls — 10 forward, 10 backward', icon:'rotate'},
-     {text:'Wrist and ankle circles — 10 each, both directions', icon:'rotate'},
+     {text:'Arm circles — 10 each direction', icon:'rotate'},
+     {text:'Wall angels — 8 slow slides', icon:'body'},
+     {text:'Open-book torso rotation — 8 each side', icon:'rotate'},
+     {text:'Neck rolls — 5 each direction, gentle', icon:'rotate'},
+   ],
+   exercises:[
+    {name:'Wall Slides (Shoulder Mobility)',sets:'2',reps:'10',
+     tempo:'3 up · 3 down',rest:'40 sec',
+     muscles:'Shoulders, Upper Back, Rotator Cuff — improves the shoulder mobility you need before any pressing exercise.',
+     svg:`<img src="./images/w_warmup.jpg" alt="Wall Slide">`,
+     breathing:'Breathe in as you slide up, breathe out as you slide down. Relaxed and steady.',
+     cues:['Stand with your back against a wall, feet slightly forward','Press your lower back, upper back and head to the wall','Bend elbows 90° and place forearms on the wall (cactus shape)','Slide your arms up the wall as far as you can while keeping contact','Slide back down slowly — feel your shoulder blades move'],
+     mistakes:['Forearms leaving the wall — go only as high as you can with contact','Lower back arching away from the wall — tuck the pelvis slightly','Shrugging shoulders up — keep them relaxed and down']},
+
+    {name:'Cat-Cow Stretch',sets:'2',reps:'8 slow cycles',
+     tempo:'4 sec each direction',rest:'20 sec',
+     muscles:'Spine Mobility, Core — gently mobilises the whole spine. Essential for anyone who sits a lot.',
+     svg:`<img src="./images/w_yoga.jpg" alt="Cat-Cow">`,
+     breathing:'Breathe IN as you arch (cow), breathe OUT as you round (cat). The breath leads the movement.',
+     cues:['On all fours — wrists under shoulders, knees under hips','COW: breathe in, drop your belly, lift your head and tailbone','CAT: breathe out, round your back up, tuck chin and tailbone','Move slowly, feeling each part of your spine','Keep the movement smooth and connected to your breath'],
+     mistakes:['Moving too fast','Only bending at one point — move the whole spine','Holding the breath — breath and movement are linked']},
+
+    {name:'Prone Y-T-W Raises (Posture)',sets:'2',reps:'8 of each letter',
+     tempo:'2 up · 2 hold · 2 down',rest:'30 sec',
+     muscles:'Upper Back, Rear Shoulders — strengthens the posture muscles that fight rounded shoulders.',
+     svg:`<img src="./images/w_stretch.jpg" alt="Y-T-W">`,
+     breathing:'Breathe in lying flat, breathe out as you lift. Small, controlled lifts.',
+     cues:['Lie face down on a mat, forehead resting down','Y: arms overhead at 45° — lift both, hold 2 sec, lower','T: arms straight out to the sides — lift, hold 2 sec, lower','W: elbows bent, hands by ears — lift, hold 2 sec, lower','Lift only a few centimetres — small is correct','Feel the muscles between your shoulder blades working'],
+     mistakes:['Lifting too high and straining the neck','Craning the neck up — keep it neutral, look at the floor','Rushing — each rep is slow and controlled']},
+
+    {name:'Seated Chest Opener Stretch',sets:'2',reps:'Hold 30 sec',
+     tempo:'Hold + breathe',rest:'20 sec',
+     muscles:'Chest, Front Shoulders — opens up the chest, undoing hours of hunching forward.',
+     svg:`<img src="./images/w_gym_general.jpg" alt="Chest Opener">`,
+     breathing:'Breathe deeply into your chest. Each exhale lets you open a little more.',
+     cues:['Sit or stand tall','Clasp your hands together behind your back','Gently straighten your arms and lift them slightly','Squeeze your shoulder blades together','Feel the stretch across the front of your chest and shoulders','Hold, breathing deeply — do not force'],
+     mistakes:['Rounding forward — keep your chest proud','Forcing the arms too high','Holding your breath']}
+   ]},
+
+  /* ── WEDNESDAY — Full-Body Flow ── */
+  {name:'Wednesday', tag:'Full-Body Flow', tagClass:'push',
+   phase:'Phase 1 · Weeks 1–2',
+   focus:'Whole Body · Coordination · Gentle Cardio',
+   cardio:'12 min brisk treadmill walk (5–5.5 km/h) at the START',
+   warmup:[
+     {text:'March in place — 2 minutes to start', icon:'walk'},
+     {text:'World\'s greatest stretch — 4 each side', icon:'leaf'},
+     {text:'Inchworm walk-out — 5 slow reps', icon:'body'},
+     {text:'Hip circles — 10 each direction', icon:'rotate'},
+     {text:'5 deep belly breaths', icon:'drop'},
+   ],
+   exercises:[
+    {name:'Glute Bridge Hold',sets:'2',reps:'10 · 3 sec hold each',
+     tempo:'2 up · 3 hold · 2 down',rest:'40 sec',
+     muscles:'Glutes, Core — the safest way to switch on your glutes, which most beginners struggle to feel.',
+     svg:`<img src="./images/w_hip_thrust.jpg" alt="Glute Bridge">`,
+     breathing:'Breathe in lying flat, breathe out as you squeeze and lift, breathe in as you lower.',
+     cues:['Lie on your back, knees bent, feet flat, arms at your sides','Squeeze your glutes FIRST, then lift your hips','Rise until your body is a straight line from knees to shoulders','Hold 3 full seconds — keep squeezing','Lower slowly — do not drop'],
+     mistakes:['Lifting with your lower back instead of glutes','Feet too far away — heels should be close','Not squeezing at the top']},
+
+    {name:'Bird-Dog',sets:'2',reps:'6 each side',
+     tempo:'4 sec extend · 2 sec return',rest:'40 sec',
+     muscles:'Core, Balance, Coordination — the gentlest core-and-balance exercise. Builds the stability everything else relies on.',
+     svg:`<img src="./images/w_core.jpg" alt="Bird-Dog">`,
+     breathing:'Breathe out as you extend, hold while breathing shallowly, breathe in as you return.',
+     cues:['On all fours, back flat like a table','Extend your right arm forward and left leg back together','Go only as far as you can without your hips tilting','Hold 4 seconds, then return slowly and switch sides','Keep your belly gently braced throughout'],
+     mistakes:['Hips tilting — keep them level','Arm/leg lifting too high and arching the back','Moving too fast']},
+
+    {name:'Standing March with Knee Lift',sets:'2',reps:'20 total (10 each leg)',
+     tempo:'Controlled',rest:'30 sec',
+     muscles:'Hip Flexors, Core, Balance — gentle standing coordination and balance work.',
+     svg:`<img src="./images/w_walk.jpg" alt="Standing March">`,
+     breathing:'Breathe naturally and steadily throughout.',
+     cues:['Stand tall, core gently braced','Lift one knee up toward hip height, slowly','Lower it with control and lift the other knee','Keep your chest up and stand tall — do not lean back','Use a wall for balance if needed'],
+     mistakes:['Rushing — this is a slow balance drill','Leaning backward as you lift','Slouching — stay tall']},
+
+    {name:'Standing Side Bend Stretch',sets:'2',reps:'Hold 30 sec each side',
+     tempo:'Hold + breathe',rest:'20 sec',
+     muscles:'Obliques, Lats, Side Body — lengthens the whole side of your torso.',
+     svg:`<img src="./images/w_gym_general.jpg" alt="Side Bend">`,
+     breathing:'Breathe into the stretched side. Each exhale opens it a little more.',
+     cues:['Stand tall, feet hip-width','Raise your right arm overhead','Bend gently to the LEFT — feel the right side lengthen','Keep both feet flat and hips level','Hold, breathing slowly, then switch sides'],
+     mistakes:['Leaning forward or backward — stay purely sideways','Letting the hips shift out','Bouncing in the stretch']}
+   ]},
+
+  /* ── THURSDAY — Core & Breathing ── */
+  {name:'Thursday', tag:'Core & Breathing', tagClass:'shoulders',
+   phase:'Phase 1 · Weeks 1–2',
+   focus:'Deep Core · Breathing · Gentle Cardio',
+   cardio:'10 min easy stationary bike (light resistance) at the START',
+   warmup:[
+     {text:'5 deep belly breaths, hand on stomach', icon:'drop'},
+     {text:'Cat-cow — 6 slow cycles', icon:'body'},
+     {text:'Bird-dog — 6 each side', icon:'bolt'},
+     {text:'Dead bug — 6 each side', icon:'bolt'},
+     {text:'Gentle torso twists — 10 each way', icon:'rotate'},
    ],
    exercises:[
     {name:'Diaphragmatic Breathing Practice',sets:'3',reps:'10 breaths',
      tempo:'4 sec in · 6 sec out',rest:'30 sec',
-     muscles:'Core, Diaphragm, Pelvic Floor — the foundation of all exercise. Most people breathe incorrectly. Fix this first.',
+     muscles:'Core, Diaphragm — proper breathing is the foundation of all training. Learn it now.',
      svg:`<img src="./images/w_breathing.jpg" alt="Breathing">`,
-     breathing:'This IS the exercise. Breathe in through your nose for 4 seconds — feel your belly expand outward, not your chest. Hold for 1 second. Breathe out slowly through your mouth for 6 seconds — feel your belly fall. This belly breathing (diaphragmatic) is what protects your spine during all exercise.',
-     cues:['Lie on your back with knees bent, one hand on chest, one on belly','The belly hand should rise. The chest hand should stay still.','4 counts IN through the nose — belly expands like a balloon','Hold 1 count','6 counts OUT through the mouth — belly falls gently','By week 4, you will do this automatically during every exercise'],
-     mistakes:['Chest rising instead of belly — this is chest breathing, incorrect','Rushing — each breath cycle takes 11 seconds, go slowly','Holding your breath at any point — release is as important as intake','Tensing your shoulders — they should stay completely relaxed']},
+     breathing:'This IS the exercise. Breathe in through the nose 4 seconds — belly expands, not chest. Hold 1 second. Breathe out slowly through the mouth 6 seconds.',
+     cues:['Lie on your back, knees bent, one hand on chest, one on belly','The belly hand rises. The chest hand stays still.','4 counts in through the nose — belly expands like a balloon','6 counts out through the mouth — belly falls gently','Keep shoulders completely relaxed'],
+     mistakes:['Chest rising instead of belly','Rushing the breath','Tensing the shoulders']},
 
-    {name:'Cat-Cow Stretch',sets:'3',reps:'8 slow cycles',
-     tempo:'4 sec each direction',rest:'20 sec',
-     muscles:'Spine Mobility, Lower Back, Core — wakes up your spine gently. The most important mobility exercise for a desk-sitter.',
-     svg:`<img src="./images/w_stretch.jpg" alt="Cat-Cow">`,
-     breathing:'Breathe IN as you arch your back (cow — belly drops). Breathe OUT as you round your back (cat — belly tucks). The breath drives the movement.',
-     cues:['Start on all fours — wrists under shoulders, knees under hips','COW: breathe in, drop your belly toward the floor, lift your head and tailbone','CAT: breathe out, round your back toward the ceiling, tuck chin and tailbone','Move very slowly — each position held for 4 seconds','Feel every vertebra in your spine moving','Close your eyes — notice where your back feels stiff'],
-     mistakes:['Moving too fast — this is not a cardio exercise, go slow','Only moving one end of the spine — try to feel the whole spine','Holding the breath — breath and movement are linked here','Wrists hurting — make fists or use a folded towel for support']},
-
-    {name:'Glute Bridge Hold',sets:'3',reps:'8 reps · 3 sec hold each',
-     tempo:'2 up · 3 hold · 2 down',rest:'40 sec',
-     muscles:'Glutes, Lower Back Stability — the safest glute exercise. Also teaches you to feel your glutes working, which most beginners cannot do.',
-     svg:`<img src="./images/w_hip_thrust.jpg" alt="Glute Bridge">`,
-     breathing:'Breathe in lying flat. Breathe OUT as you squeeze and lift. Hold at the top breathing shallowly. Breathe in as you lower slowly.',
-     cues:['Lie on your back, knees bent, feet flat, arms by your sides','Squeeze your glutes FIRST — then lift your hips','Hips rise until your body is a straight line from knees to shoulders','Hold for 3 full seconds — keep squeezing the bottom hard','Lower slowly for 2 counts — do not drop','Feet should be placed so your shins are vertical at the top'],
-     mistakes:['Lifting with your lower back — squeeze GLUTES first, not back muscles','Feet too far away — heels should be close enough to nearly touch with your hands','Not feeling anything — if no glute sensation, try pressing heels into the floor harder','Rushing the hold — count 3 full seconds at the top']},
-
-    {name:'Bird-Dog',sets:'3',reps:'6 each side',
-     tempo:'4 sec extend · 2 sec return',rest:'40 sec',
-     muscles:'Deep Core, Balance, Coordination — the gentlest core exercise that builds real stability. No sit-ups ever needed.',
-     svg:`<img src="./images/w_core.jpg" alt="Bird-Dog">`,
-     breathing:'Breathe OUT slowly as you extend your arm and leg. Hold breathing shallowly. Breathe in as you return to start.',
-     cues:['All fours — wrists under shoulders, knees under hips, back flat like a table','Tighten your core gently — imagine bracing for a soft tap on your belly','Slowly extend your RIGHT arm forward and LEFT leg back at the same time','Go only as far as you can without your back arching or hips tilting','Hold for 4 seconds, then return slowly','Think slow, smooth, quiet — no jerking'],
-     mistakes:['Hips tilting to one side — keep them level, like a table','Arm or leg going too high and causing back arch — go lower','Moving too fast — if it takes less than 6 seconds per rep, slow down','Holding your breath — keep exhaling throughout the extension']},
-
-    {name:'Seated Shoulder Rolls + Neck Stretch',sets:'2',reps:'10 rolls + 20 sec each side',
-     tempo:'Slow and controlled',rest:'20 sec',
-     muscles:'Neck, Upper Traps, Shoulders — releases the tension most people carry here. Essential for posture.',
-     svg:`<img src="./images/w_warmup.jpg" alt="Shoulder Stretch">`,
-     breathing:'Breathe in on the stretch, breathe out to release deeper into it. Never hold your breath during stretching.',
-     cues:['Sit on a bench, feet flat on the floor, spine tall','10 big backward shoulder rolls — slow, making the biggest circle possible','Now drop your right ear toward your right shoulder — feel the left side of your neck stretch','Hold 20 seconds, breathe into the stretch','Switch sides','Your shoulders should feel noticeably lower afterward'],
-     mistakes:['Rolling shoulders forward (forward rolls tighten the chest further)','Raising the opposite shoulder during the neck stretch — keep it pressed down','Bouncing in the stretch — hold still, breathe','Skipping this because it feels too easy — postural muscles need this']},
-
-    {name:'Standing Wall Posture Check',sets:'2',reps:'Hold 30 sec',
-     tempo:'Hold with breath awareness',rest:'20 sec',
-     muscles:'Posture Muscles, Spinal Alignment — most gym injuries come from poor posture. Fix it before you lift.',
-     svg:`<img src="./images/w_gym_general.jpg" alt="Posture">`,
-     breathing:'Breathe normally. Focus on belly breathing while maintaining the posture. This combines your two most important Phase 1 skills.',
-     cues:['Stand with your back against a wall, heels 2 inches from the wall','Your head, shoulder blades, and bottom should all touch the wall','There will be a natural gap behind your lower back — that is correct','Try to close the gap slightly by gently tucking your pelvis — do not flatten it completely','Hold for 30 seconds breathing into your belly','Walk away — try to maintain this position for the next 10 minutes'],
-     mistakes:['Forcing your back flat against the wall — the natural curve is correct','Chin jutting forward — the back of your head touches the wall, not the front','Shoulders tensing up — breathe and let them relax DOWN','Forgetting about it after you walk away — posture work is all-day, not just in the gym']}
-   ]},
-
-  /* ── TUESDAY REST ── */
-  {name:'Tuesday',tag:'Rest',tagClass:'rest',rest:true,
-   restMsg:'Your first rest day. Notice if your body feels any different — even gentle movement creates change.',
-   restTips:[
-    '15 min gentle walk outside — fresh air and sunlight do more than you think',
-    'Try the belly breathing practice (diaphragmatic breathing) for 5 minutes before sleep',
-    'Drink at least 2 litres of water today',
-    'Notice your posture right now — are your shoulders rounded? Correct it.',
-    'Eat your full calorie target — rest days need fuel too',
-    'Sleep 7–9 hours — recovery happens during sleep, not during the workout'
-   ]},
-
-  /* ── WEDNESDAY — Feel Your Body ── */
-  {name:'Wednesday',tag:'Feel Your Body',tagClass:'back',
-   phase:'Phase 1 · Weeks 1–4',
-   focus:'Hip Mobility · Body Awareness · Light Core Activation',
-   cardio:'10 min light stationary bike (lowest resistance) — comfortable and easy',
-   warmup:[
-     {text:'5 deep belly breaths standing — establish breathing from the start', icon:'drop'},
-     {text:'Hip circles — 10 slow rotations each direction', icon:'rotate'},
-     {text:'Ankle circles — 10 each foot to loosen joints', icon:'rotate'},
-     {text:'Gentle calf raises × 10 — just to get the blood moving', icon:'walk'},
-   ],
-   exercises:[
-    {name:'90/90 Hip Stretch',sets:'2',reps:'Hold 40 sec each side',
-     tempo:'Hold + breathe',rest:'20 sec',
-     muscles:'Hip Flexors, Piriformis, IT Band — the most common area of tightness in young women who sit. Tightness here causes lower back pain and limits ALL lower body exercises.',
-     svg:`<img src="./images/w_stretch.jpg" alt="90/90 Stretch">`,
-     breathing:'Breathe in through your nose, out through your mouth. With every exhale, let the hip sink a little deeper. Do not force it — use the breath.',
-     cues:['Sit on the floor. Bend your front leg at 90° in front of you. Bend your back leg at 90° to the side.','Both legs are in an "L" shape. Sit tall, hands on the floor for support.','Feel a deep stretch in the outer hip of your front leg and the front of your back hip.','Hold for 40 seconds, breathing slowly. Then switch sides.','Do not force yourself lower — let gravity and the breath do the work.','After 2 weeks, you will go significantly deeper. That is your flexibility returning.'],
-     mistakes:['One side is much tighter than the other — that is very normal, spend more time on the tighter side','Leaning heavily on your hands instead of sitting tall — try to lighten your hand pressure','Rounding your back — sit tall like someone is pulling a string from the top of your head','Holding your breath — this locks up the muscles and prevents the stretch from working']},
-
-    {name:'Clamshell',sets:'3',reps:'15 each side',
-     tempo:'2 up · 1 hold · 2 down',rest:'30 sec',
-     muscles:'Glute Medius (outer hip/glute) — this muscle stabilises your knees and hips. Weakness here is the #1 cause of knee pain in women.',
-     svg:`<img src="./images/w_glute.jpg" alt="Clamshell">`,
-     breathing:'Exhale as you open your knee upward. Breathe in as you lower. One breath per rep.',
-     cues:['Lie on your side, hips stacked, both knees bent to 45°, feet together','Keep your feet touching — do NOT let them separate','Rotate your top knee upward toward the ceiling — like a clamshell opening','Only go as high as you can without your hips rolling backward','Hold 1 second at the top, then lower slowly for 2 counts','By rep 12 you should feel a mild burn in your outer glute'],
-     mistakes:['Hips rolling backward to create more range — hold them still','Feet separating — keep them pressed together throughout','Moving too fast — 2 seconds up, 1 hold, 2 down is the tempo','Not feeling it in the right place — if you feel the back of your thigh, your knee is not going high enough']},
-
-    {name:'Dead Bug',sets:'3',reps:'5 each side',
-     tempo:'4 sec lower · pause · 2 sec return',rest:'40 sec',
-     muscles:'Deep Core (Transverse Abdominis) — the inner corset muscle that protects your spine. Sit-ups do not train this. Dead Bug does.',
+    {name:'Dead Bug',sets:'2',reps:'6 each side',
+     tempo:'4 sec lower · 2 sec return',rest:'40 sec',
+     muscles:'Deep Core — trains the inner core that protects your spine. Far better and safer than sit-ups.',
      svg:`<img src="./images/w_core.jpg" alt="Dead Bug">`,
-     breathing:'EXHALE fully before you start moving. Keep breathing out slowly as you lower your limbs. If you run out of breath, the rep is over — return to start. This is correct.',
-     cues:['Lie on your back. Press your lower back into the floor — this is essential.','Arms point to the ceiling. Both legs lifted, knees at 90°.','Lower your RIGHT arm back and LEFT leg forward — VERY SLOWLY, taking 4 full seconds','Your lower back must stay pressed to the floor the ENTIRE time','Return to start slowly (2 counts), then do the other side','Start with very small range of motion if needed — that is fine'],
-     mistakes:['Lower back lifting off the floor — make your range SMALLER, not bigger','Moving too fast — if each rep takes less than 6 seconds, slow down','Using opposite-side arm and leg from what was described (easy mistake)','Holding your breath — the exhale is what makes this exercise work']},
+     breathing:'EXHALE fully as you lower your limbs. Breathe in to reset. The exhale is what switches on your deep core.',
+     cues:['Lie on your back, press your lower back into the floor','Arms point at the ceiling, knees bent at 90° in the air','Slowly lower your right arm back and left leg forward','Lower back must stay pressed to the floor throughout','Return and switch sides — small range is fine'],
+     mistakes:['Lower back lifting — make the range smaller','Moving too fast','Holding the breath — always exhale as you extend']},
 
-    {name:'Prone Y-T-W (Posture)',sets:'2',reps:'8 of each letter',
-     tempo:'2 up · 2 hold · 2 down',rest:'30 sec',
-     muscles:'Lower Traps, Rear Deltoids, Rhomboids — the postural muscles that prevent rounded shoulders. Essential for all overhead and pressing movements.',
-     svg:`<img src="./images/w_stretch.jpg" alt="Y-T-W">`,
-     breathing:'Breathe in lying flat. Breathe out as you lift. Hold breathing shallowly. Breathe in as you lower.',
-     cues:['Lie face down on a mat, forehead resting on the floor or a folded towel','Y: arms extended above your head at 45° — lift both arms, hold 2 sec, lower','T: arms out to the sides at 90° — lift both arms, hold 2 sec, lower','W: elbows bent 90°, hands at ear level — lift, hold 2 sec, lower','The lift should be small — just a few centimetres off the ground','You should feel this between your shoulder blades and in your upper back'],
-     mistakes:['Lifting too high and straining the neck — small lift is correct','Neck craning upward — keep it neutral, look at the floor','Going too fast — each letter set is 6 seconds per rep','Shrugging the shoulders up — keep them pressed DOWN throughout']},
+    {name:'Modified Plank (Knees Down)',sets:'2',reps:'Hold 15–20 sec',
+     tempo:'Hold',rest:'40 sec',
+     muscles:'Core, Shoulders — start planks on your knees. Build the hold time gently over the 2 weeks.',
+     svg:`<img src="./images/w_plank.jpg" alt="Modified Plank">`,
+     breathing:'Breathe in through the nose, out through the mouth. Never hold your breath.',
+     cues:['Knees on the floor, forearms down, elbows under shoulders','Body forms a straight line from knees to head','Squeeze your glutes and gently pull your belly in','Keep hips level — do not let them sag or pike up','Start with 15 seconds, build toward 20 over the 2 weeks'],
+     mistakes:['Hips sagging','Holding the breath','Neck craning — look at the floor']},
 
-    {name:'Supine Spinal Twist',sets:'2',reps:'Hold 40 sec each side',
+    {name:'Supine Spinal Twist',sets:'2',reps:'Hold 30 sec each side',
      tempo:'Hold + breathe',rest:'20 sec',
-     muscles:'Lower Back, Thoracic Spine, Obliques — releases lower back tension and improves spinal rotation.',
+     muscles:'Lower Back, Obliques — releases the lower back and improves spinal rotation.',
      svg:`<img src="./images/w_yoga.jpg" alt="Spinal Twist">`,
-     breathing:'Breathe into the stretch with every inhale. With every exhale, let the twist go a tiny bit deeper. Never force.',
-     cues:['Lie on your back, arms out to the sides in a T','Bring your right knee to your chest, then let it fall over to the LEFT side','Your right shoulder stays on the floor — do not let it lift','Turn your head to look to the RIGHT if comfortable','Hold 40 seconds, breathing slowly, letting gravity deepen the twist','Bring knee back to center slowly, then switch sides'],
-     mistakes:['Forcing the knee all the way to the floor — go only as far as is comfortable','Lifting the opposite shoulder off the floor — this removes the spinal rotation','Holding your breath — breathe continuously, slowly','Moving too quickly between sides — this is a slow, restorative stretch']}
+     breathing:'Breathe slowly. Each exhale lets the twist deepen a little.',
+     cues:['Lie on your back, arms out in a T','Bring your right knee up, then let it fall across to the LEFT','Keep your right shoulder on the floor','Turn your head to the right if comfortable','Hold, breathing slowly, then switch sides'],
+     mistakes:['Forcing the knee to the floor','Lifting the opposite shoulder','Rushing between sides']}
    ]},
 
-  /* ── THURSDAY REST ── */
-  {name:'Thursday',tag:'Rest',tagClass:'rest',rest:true,
-   restMsg:'Breathing, posture, and mobility — small things with massive long-term value. You are building a foundation.',
-   restTips:[
-    'Belly breathing practice: 5 minutes lying down before sleep — build the habit',
-    'Go for a walk if you feel up to it — movement aids recovery',
-    'Stretch your hips for 10 minutes: 90/90 from Wednesday is perfect',
-    'Drink herbal tea and get to bed by 10:30 PM tonight',
-    'Notice: are your shoulders more relaxed today than Monday? That is already progress.',
-    'Eat well today — your body is rebuilding'
-   ]},
-
-  /* ── FRIDAY — Move With Intention ── */
-  {name:'Friday',tag:'Move With Intention',tagClass:'legs',
-   phase:'Phase 1 · Weeks 1–4',
-   focus:'Coordination · Hip & Ankle Mobility · Light Core',
-   cardio:'12 min easy treadmill walk (5 km/h) at the END as a cool-down walk',
+  /* ── FRIDAY — Cardio & Stretch ── */
+  {name:'Friday', tag:'Cardio & Stretch', tagClass:'legs',
+   phase:'Phase 1 · Weeks 1–2',
+   focus:'Light Cardio · Full-Body Stretch · Recovery',
+   cardio:'15 min brisk treadmill walk (5.5 km/h, 1% incline) — the main event today',
    warmup:[
-     {text:'5 belly breaths to start — hand on stomach, belly rises first', icon:'drop'},
-     {text:'Leg swings — forward and backward × 10 each leg', icon:'walk'},
-     {text:'Side-to-side leg swings × 10 each leg', icon:'walk'},
-     {text:'Gentle torso rotations × 10 each way, arms relaxed', icon:'rotate'},
+     {text:'March in place — 2 minutes to start', icon:'walk'},
+     {text:'Jumping jacks — 20 easy reps', icon:'bolt'},
+     {text:'Side lunge shifts — 8 each side', icon:'walk'},
+     {text:'Ankle circles — 10 each foot', icon:'rotate'},
+     {text:'5 deep belly breaths', icon:'drop'},
    ],
    exercises:[
-    {name:'Wall Slide (Shoulder Mobility)',sets:'3',reps:'10',
-     tempo:'4 sec slide up · 4 sec slide down',rest:'20 sec',
-     muscles:'Shoulders, Rotator Cuff, Upper Back — tests and improves shoulder mobility needed for all pressing and pulling exercises.',
-     svg:`<img src="./images/w_warmup.jpg" alt="Wall Slide">`,
-     breathing:'Breathe in as you slide up. Breathe out as you slide down. Keep it rhythmic and relaxed.',
-     cues:['Stand with your back against a wall, feet about 15 cm from the wall','Press your lower back, upper back, and head against the wall','Bend your elbows 90° and place your forearms on the wall (like a cactus shape)','Keep forearms and backs of hands touching the wall throughout','Slide your arms slowly upward — go only as high as you can while keeping contact','Slide back down — repeat'],
-     mistakes:['Forearms losing contact with the wall — this shows shoulder tightness, do not force','Lower back arching away from the wall — tuck your pelvis slightly','Chin jutting forward — keep the back of your head on the wall','Shrugging — keep your shoulders pressed DOWN as the arms move UP']},
-
-    {name:'Hip Flexor Lunge Stretch',sets:'2',reps:'Hold 40 sec each side',
+    {name:'Hip Flexor Lunge Stretch',sets:'2',reps:'Hold 30 sec each side',
      tempo:'Hold + breathe',rest:'20 sec',
-     muscles:'Hip Flexors — the most important stretch for anyone who sits. Tight hip flexors cause lower back pain and prevent glutes from activating properly.',
+     muscles:'Hip Flexors — the most important stretch for anyone who sits. Tight hip flexors cause back pain and block glute activation.',
      svg:`<img src="./images/w_lunges.jpg" alt="Hip Flexor Stretch">`,
-     breathing:'Breathe in through your nose. As you breathe out, gently push your hips forward to deepen the stretch. Breathe into the front of the hip.',
-     cues:['Kneel on your right knee, left foot forward (lunge position)','Both knees at approximately 90°','Tuck your pelvis under gently — reduce the arch in your lower back','Shift your body weight forward slightly — feel the front of your right hip stretch','Hold your arms up or on your hips, stay upright','Hold 40 seconds, breathing into the stretch. Switch sides.'],
-     mistakes:['Not feeling the stretch — tuck your pelvis more (imagine your tailbone pointing down)','Leaning forward excessively — stay upright to get the hip flexor, not the thigh','The front knee going past the toes — shuffle your front foot forward','Rushing through it — 40 seconds feels long, but it is what the hip flexor needs']},
+     breathing:'Breathe in, and as you breathe out gently push your hips forward to deepen it.',
+     cues:['Kneel on your right knee, left foot forward (lunge position)','Both knees roughly 90°','Tuck your pelvis under gently','Shift your weight forward slightly — feel the front of your right hip stretch','Stay upright, hold, then switch sides'],
+     mistakes:['Not feeling it — tuck the pelvis more','Leaning forward — stay tall','Front knee going past the toes']},
 
-    {name:'Seated Calf Stretch + Ankle Alphabet',sets:'2',reps:'30 sec calf + alphabet once each foot',
-     tempo:'Controlled',rest:'20 sec',
-     muscles:'Calves, Ankles, Plantar Fascia — ankle mobility is essential for squats. Most beginners have very stiff ankles.',
-     svg:`<img src="./images/w_stretch.jpg" alt="Calf Stretch">`,
-     breathing:'Breathe normally throughout. Breathe into any areas of tightness.',
-     cues:['Sit on the floor, legs extended. Flex your feet toward you — feel the calves stretch.','Hold the flex for 30 seconds, then point the feet away. Switch.','Now write the alphabet in the air with your big toe (one foot at a time)','Make the letters as large as possible — move from the ankle, not the knee','Your ankles may feel stiff at first — this improves over weeks','People who can squat deeply have mobile ankles. This is how you get there.'],
-     mistakes:['Only stretching, skipping the alphabet — the controlled movement is equally important','Making tiny letters — the bigger the motion, the more mobility you build','Doing this sitting in a chair with shoes on — needs to be barefoot on the floor','Skipping because it feels too easy — ankle mobility is almost always neglected']},
-
-    {name:'Standing Side Bend',sets:'2',reps:'Hold 30 sec each side',
+    {name:'Standing Hamstring Stretch',sets:'2',reps:'Hold 30 sec each leg',
      tempo:'Hold + breathe',rest:'20 sec',
-     muscles:'Lateral Core, Obliques, Lats — stretches the entire side of the body.',
-     svg:`<img src="./images/w_gym_general.jpg" alt="Side Bend">`,
-     breathing:'Breathe into the stretched side. Feel the ribcage expand with each inhale. The exhale helps you go slightly deeper.',
-     cues:['Stand tall, feet hip-width','Raise your right arm overhead','Bend gently to the LEFT — feel the entire right side of your body lengthen','Keep both feet flat, both hips level — do not lean forward or backward','Hold 30 seconds with slow breathing. Switch sides.','You should feel this from your hip all the way up to your armpit'],
-     mistakes:['Leaning forward or backward — keep your side bend purely lateral','The opposite hip shifting out — keep both hips level and square','Holding your breath — breathe continuously','Going too far too soon — start gentle, you can go deeper each week']},
+     muscles:'Hamstrings — lengthens the back of the legs, improving your hip hinge and squat depth.',
+     svg:`<img src="./images/w_stretch.jpg" alt="Hamstring Stretch">`,
+     breathing:'Breathe slowly. Do not bounce — let the muscle relax with each exhale.',
+     cues:['Place one heel on a low step, leg straight, toes up','Keep your back flat and hinge forward from the hips','Feel the stretch in the back of the raised leg','Hold gently — never force or bounce','Switch legs'],
+     mistakes:['Rounding the back instead of hinging','Bouncing','Forcing past mild tension']},
 
-    {name:'Constructive Rest Position',sets:'1',reps:'3 minutes',
-     tempo:'Breathe and release',rest:'None',
-     muscles:'Full Body Release, Nervous System — ends every Phase 1 session. Teaches your body to fully relax after movement. Builds the mind-body connection.',
-     svg:`<img src="./images/w_yoga.jpg" alt="Rest Position">`,
-     breathing:'Natural breathing only. Breathe in through your nose, out through your mouth. Let your belly rise and fall freely. Do not control it — just observe.',
-     cues:['Lie on your back. Knees bent, feet flat on the floor, hip-width apart.','Arms rest at your sides or on your belly','Close your eyes. Let your body get heavy.','Scan from head to toe: release tension in your jaw, neck, shoulders, hands, legs','Stay here for 3 full minutes — do not look at your phone','Notice your breathing slowing down naturally. Notice your back releasing toward the floor.'],
-     mistakes:['Skipping this because it feels like doing nothing — it is doing everything','Getting up too quickly — give yourself 3 full minutes','Thinking about something else — gently bring attention back to your breath and body','Holding tension anywhere — scan and consciously release']}
+    {name:'Gentle Cobra Stretch',sets:'2',reps:'Hold 20 sec',
+     tempo:'Hold + breathe',rest:'20 sec',
+     muscles:'Abs, Lower Back, Chest — a gentle backbend that opens the front of the body after cardio.',
+     svg:`<img src="./images/w_yoga.jpg" alt="Cobra Stretch">`,
+     breathing:'Breathe in as you lift, breathe out as you hold and relax into it.',
+     cues:['Lie face down, hands under your shoulders','Gently press up, lifting your chest — keep hips on the floor','Only go as high as is comfortable — a small lift is fine','Keep your shoulders relaxed away from your ears','Hold gently, then lower down'],
+     mistakes:['Pushing up too far and straining the lower back','Shrugging the shoulders','Holding the breath']},
+
+    {name:'Child\'s Pose (Relax & Reset)',sets:'1',reps:'Hold 60 sec',
+     tempo:'Rest + breathe',rest:'None',
+     muscles:'Full Body Release, Nervous System — the perfect way to finish. Calms the body and mind.',
+     svg:`<img src="./images/w_yoga.jpg" alt="Child\'s Pose">`,
+     breathing:'Natural, slow breathing. Let your body get heavy and relaxed.',
+     cues:['Kneel and sit back onto your heels','Fold forward, arms extended in front or resting by your sides','Rest your forehead on the mat','Let your whole body relax and breathe slowly','Stay for a full minute — enjoy the calm'],
+     mistakes:['Rushing out of it','Tensing anywhere — consciously relax','Skipping it because it feels easy — recovery matters']}
    ]},
 
-  /* ── SATURDAY REST ── */
-  {name:'Saturday',tag:'Rest Day',tagClass:'rest',rest:true,
-   restMsg:'Week 1 of Phase 1 done. You have started. Most people never do. That matters.',
-   restTips:[
-    'Full rest day — gentle movement only if you feel like it',
-    'A slow walk in nature is perfect today',
-    'Review how your body felt this week — what was tight, what was surprising',
-    'Practice belly breathing for 5 minutes at some point today',
-    'Prepare good food for the coming week',
-    'You are building a foundation that everything else will stand on'
+  /* ── SATURDAY — Gentle Full Body ── */
+  {name:'Saturday', tag:'Gentle Full Body', tagClass:'push',
+   phase:'Phase 1 · Weeks 1–2',
+   focus:'Light Whole Body · Confidence · Gentle Cardio',
+   cardio:'10 min easy walk (5 km/h) at the START',
+   warmup:[
+     {text:'March in place — 2 minutes', icon:'walk'},
+     {text:'Shoulder rolls — 10 each direction', icon:'rotate'},
+     {text:'Hip circles — 10 each direction', icon:'rotate'},
+     {text:'Glute bridges — 10 to wake the glutes', icon:'bolt'},
+     {text:'Leg swings — 10 each leg', icon:'walk'},
+   ],
+   exercises:[
+    {name:'Bodyweight Squat',sets:'2',reps:'12',
+     tempo:'3 down · 2 up',rest:'40 sec',
+     muscles:'Quads, Glutes — by now the squat should feel more familiar. No chair needed if you feel steady.',
+     svg:`<img src="./images/w_squat.jpg" alt="Squat">`,
+     breathing:'Breathe in going down, breathe out coming up.',
+     cues:['Feet shoulder-width, toes slightly out','Sit back and down, chest tall','Knees push outward over your toes','Go as low as is comfortable','Drive through your whole foot to stand'],
+     mistakes:['Knees caving in','Heels lifting','Chest dropping forward']},
+
+    {name:'Wall Push-Up',sets:'2',reps:'10',
+     tempo:'2 down · 2 up',rest:'40 sec',
+     muscles:'Chest, Shoulders, Triceps — the gentlest push-up. Builds pushing strength safely.',
+     svg:`<img src="./images/w_pushup.jpg" alt="Wall Push-Up">`,
+     breathing:'Breathe in as you lean toward the wall, breathe out as you push away.',
+     cues:['Stand arm-length from a wall, palms on the wall at shoulder height','Lean toward the wall by bending your elbows','Keep your body straight like a plank','Push away until your arms are nearly straight','Keep your core gently braced'],
+     mistakes:['Hips sagging','Only going halfway','Hands too wide']},
+
+    {name:'Glute Bridge',sets:'2',reps:'12',
+     tempo:'2 up · 2 down',rest:'40 sec',
+     muscles:'Glutes, Hamstrings — reinforcing the glute activation you have been building all week.',
+     svg:`<img src="./images/w_hip_thrust.jpg" alt="Glute Bridge">`,
+     breathing:'Breathe out as you lift, breathe in as you lower.',
+     cues:['Lie on your back, knees bent, feet flat','Squeeze your glutes and lift your hips','Straight line from knees to shoulders at the top','Squeeze hard at the top','Lower slowly'],
+     mistakes:['Using the lower back','Not squeezing','Rushing']},
+
+    {name:'Full-Body Stretch Sequence',sets:'1',reps:'30 sec each: quad, chest, back',
+     tempo:'Hold + breathe',rest:'None',
+     muscles:'Full Body — a gentle cool-down to finish your first weeks strong.',
+     svg:`<img src="./images/w_stretch.jpg" alt="Full-Body Stretch">`,
+     breathing:'Slow breaths in each stretch. Never force.',
+     cues:['Standing quad stretch: hold one ankle behind you, 30 sec each','Chest opener: clasp hands behind back, lift gently, 30 sec','Overhead reach: stretch both arms up and lengthen, 30 sec','Breathe deeply in each position','Finish feeling loose and relaxed'],
+     mistakes:['Bouncing','Rushing through them','Holding the breath']}
    ]},
 
-  /* ── SUNDAY REST ── */
-  {name:'Sunday',tag:'Rest Day',tagClass:'rest',rest:true,
-   restMsg:'Tomorrow starts Week 2. The exercises will feel more familiar. Your body is already adapting.',
+  /* ── SUNDAY — Rest ── */
+  {name:'Sunday', tag:'Rest Day', tagClass:'rest', rest:true,
+   restMsg:'Your one full rest day. You have moved your body 6 days this week — that is a huge achievement for someone just starting. Rest well.',
    restTips:[
-    'Light stretching — 10–15 minutes of the stretches from this week',
-    'Meal prep for the coming week — makes eating well much easier',
-    'Log your body weight in the morning (before food, after bathroom)',
-    'Think about one thing to focus on this coming week',
-    'Every session in Phase 1 is building the body awareness that makes Phases 2 and 3 safer and more effective',
-    'You are exactly where you should be'
+    'Full rest — a gentle walk is fine but nothing structured',
+    'Practice belly breathing for 5 minutes before bed',
+    'Drink at least 2 litres of water today',
+    'Eat well — your body is adapting to the new routine',
+    'Notice how much more comfortable movement already feels',
+    'Sleep 7–9 hours — recovery is where the benefits lock in'
    ]},
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
-//   PHASE 2 — MOVE (Weeks 5–8)
-//   Goal: Learn fundamental movement patterns using bodyweight only.
-//   Wall push-ups progress to incline. Glute bridges progress to single-leg.
-//   First squats and hinges introduced as movement patterns, not strength work.
-//   Sessions: 40–50 min.
+//   PHASE 2 — BUILD (Weeks 3–8)
+//   6-day split. Each day: WARM-UP block first, THEN strength exercises.
+//   Bodyweight + light dumbbells/machines.
+//   Mon Legs · Tue Back+Biceps · Wed Chest+Triceps · Thu Shoulders+Core · Fri Full Body · Sat Cardio+Core
 // ══════════════════════════════════════════════════════════════════════════════
 const DAYS_PHASE2 = [
 
-  /* ── MONDAY — Lower Body Patterns ── */
-  {name:'Monday',tag:'Lower Body Patterns',tagClass:'legs',
-   phase:'Phase 2 · Weeks 5–8',
-   focus:'Squat Pattern · Hip Hinge · Glute Activation · Balance',
-   cardio:'12 min treadmill walk (5.5 km/h, 1% incline) — slightly faster than Phase 1',
+  /* ── MONDAY — Legs & Glutes ── */
+  {name:'Monday', tag:'Legs & Glutes', tagClass:'legs',
+   phase:'Phase 2 · Weeks 3–8',
+   focus:'Quads · Glutes · Hamstrings',
+   cardio:'8 min treadmill walk (5.5 km/h) to warm up before strength',
    warmup:[
-     {text:'5 belly breaths standing — establish correct breathing', icon:'drop'},
-     {text:'Hip circles × 10 each direction — warm up the hip joint', icon:'rotate'},
-     {text:'Leg swings forward/back × 10 each leg', icon:'walk'},
-     {text:'Calf raises × 10 slow — activate lower leg', icon:'walk'},
-     {text:'Cat-cow × 6 on all fours — mobilise spine', icon:'body'},
+     {text:'5 min easy walk to warm up', icon:'walk'},
+     {text:'Hip circles — 10 each direction', icon:'rotate'},
+     {text:'Deep squat hold — 20 sec, knees pushed out', icon:'bolt'},
+     {text:'Glute bridges — 12 to activate glutes', icon:'bolt'},
+     {text:'Leg swings — 10 each leg', icon:'walk'},
    ],
    exercises:[
-    {name:'Bodyweight Squat',sets:'3',reps:'10',
-     tempo:'3-1-2-0',rest:'60 sec',
-     muscles:'Quads, Glutes, Core — NOW you introduce the squat. You have built the breathing and body awareness to do it correctly.',
-     svg:`<img src="./images/w_squat.jpg" alt="Squat">`,
-     breathing:'Breathe in as you sit down (3 seconds). Breathe out as you stand up. Apply the belly breathing from Phase 1.',
-     cues:['Feet shoulder-width, toes turned out 20–30°. Hands clasped at chest.','Breathe in. Sit back and down — imagine sitting onto a low chair.','Knees push out over your toes — never cave inward','Go until thighs are parallel to the floor (or as low as comfortable)','Drive through your whole foot to stand. Breathe out.','Your posture check from Phase 1 applies: tall spine, open chest'],
-     mistakes:['Heels rising — widen stance or turn toes out more','Knees caving inward — actively push them out','Chest falling forward — look straight ahead, not down','Standing up too fast — the tempo is 3 seconds down, 1 pause, 2 seconds up']},
+    {name:'Goblet Squat (Light Dumbbell)',sets:'3',reps:'10',
+     tempo:'3 down · 1 pause · 2 up',rest:'75 sec',
+     muscles:'Quads, Glutes, Core — hold one light dumbbell at your chest. The weight helps keep your chest up.',
+     svg:`<img src="./images/w_squat.jpg" alt="Goblet Squat">`,
+     breathing:'Breathe in going down, breathe out driving up. Brace your core gently.',
+     cues:['Hold one dumbbell (start 4 kg) vertically at your chest','Feet shoulder-width, toes slightly out','Sit back and down, knees pushing out','Go until thighs are about parallel','Drive through your whole foot, squeeze glutes at the top'],
+     mistakes:['Heels rising — widen stance or turn toes out','Knees caving in','Rounding the back — keep the dumbbell high on the chest','Rushing the descent']},
 
     {name:'Glute Bridge — Single Leg',sets:'3',reps:'10 each leg',
-     tempo:'2-2-2-0',rest:'45 sec',
-     muscles:'Glutes, Hamstrings, Core — the progression from Phase 1 glute bridge. Single leg challenges each side independently.',
+     tempo:'2 up · 2 hold · 2 down',rest:'60 sec',
+     muscles:'Glutes, Hamstrings — one leg at a time builds each glute independently.',
      svg:`<img src="./images/w_hip_thrust.jpg" alt="Single Leg Glute Bridge">`,
-     breathing:'Breathe in lying flat. Breathe OUT as you squeeze and lift. Hold and breathe shallowly. Breathe in as you lower.',
-     cues:['Start in glute bridge position — both feet on the floor.','Extend your right leg straight out. Now lift using only your LEFT glute.','Hold at the top for 2 seconds — really squeeze the working glute.','Lower slowly for 2 counts. Complete all 10 reps, then switch.','Your hips should stay level — not tilting side to side.','If this is too hard, keep toes of the raised foot lightly touching the floor'],
-     mistakes:['Hips tilting toward the raised leg — brace your core harder','Lower back arching — this is the glute, not the back','Rushing — the 2-second hold at the top is the most important part','Forgetting to breathe — exhale on the lift, breathe shallowly at the top']},
+     breathing:'Breathe out as you lift, breathe in as you lower.',
+     cues:['Lie in glute bridge position, both feet on floor','Extend one leg straight out','Lift your hips using only the working leg\'s glute','Hold 2 seconds at the top, squeeze hard','Lower slowly, complete all reps, then switch'],
+     mistakes:['Hips tilting to one side','Using the lower back','Rushing the hold']},
 
     {name:'Reverse Lunge (Bodyweight)',sets:'3',reps:'10 each leg',
-     tempo:'2-1-2-0',rest:'60 sec',
-     muscles:'Quads, Glutes, Balance — stepping backward is much safer for beginners than forward lunges. Easier on the knees.',
+     tempo:'2 down · 2 up',rest:'60 sec',
+     muscles:'Quads, Glutes, Balance — stepping backward is gentle on the knees, perfect for beginners.',
      svg:`<img src="./images/w_lunges.jpg" alt="Reverse Lunge">`,
-     breathing:'Breathe in as you step back and lower. Breathe out as you push back to standing.',
-     cues:['Stand tall, hands on hips. Step one foot straight back.','Lower your back knee toward the floor (stop 2–3 cm above it).','Front shin stays vertical — front knee does NOT go past your toes.','Push through the heel of your FRONT foot to return to standing.','Your back leg does not push — it is only for balance.','Do all 10 reps on one side, then switch'],
-     mistakes:['Front knee going past the toes — take a larger step back','Leaning forward — keep your torso upright','Back knee slamming the floor — control the descent, stop 2–3 cm above','Wobbling — focus your gaze on a point on the wall ahead for balance']},
+     breathing:'Breathe in as you step back and lower, breathe out as you return.',
+     cues:['Stand tall, step one foot straight back','Lower your back knee toward the floor','Front shin stays vertical, knee over the ankle','Push through the front heel to return','Do all reps one side, then switch'],
+     mistakes:['Front knee past the toes — step further back','Leaning forward','Back knee slamming down']},
 
-    {name:'Standing Hip Hinge (Bodyweight)',sets:'3',reps:'12',
-     tempo:'3-0-2-0',rest:'45 sec',
-     muscles:'Hamstrings, Glutes — the hip hinge pattern introduced properly. This becomes your deadlift in Phase 3.',
-     svg:`<img src="./images/w_deadlift.jpg" alt="Hip Hinge">`,
-     breathing:'Breathe in standing tall. Hold gently as you hinge. Breathe out as you stand back up.',
-     cues:['Feet hip-width. Soft bend in both knees.','Push your hips BACKWARD — like closing a car door with your bottom.','Your chest lowers as your hips go back — keep the back flat.','Feel the stretch build in the back of your legs (hamstrings).','When you feel that stretch (usually at thigh height), stop — then drive hips forward.','Squeeze your glutes hard at the top to fully complete the rep.'],
-     mistakes:['Squatting instead of hinging — hips go BACK, not DOWN','Rounding the lower back — this will become dangerous with weight, fix it now','Not feeling the hamstrings — bend your knees less and push hips further back','Going too low — stop when you feel the hamstring stretch, not when the back rounds']},
-
-    {name:'Dead Bug — Advanced',sets:'3',reps:'8 each side',
-     tempo:'4 sec lower · pause · 2 sec return',rest:'40 sec',
-     muscles:'Deep Core — you know this from Phase 1. Now focus on slower, more deliberate movement.',
-     svg:`<img src="./images/w_core.jpg" alt="Dead Bug">`,
-     breathing:'Full exhale before each rep. Continue breathing out as you lower. If your lower back lifts before you run out of breath, your range is too large.',
-     cues:['Same as Phase 1 — but now aim for more range without the back lifting','If back stays down: extend further with each rep','If back lifts at any point: stop, return, make the range smaller','Your goal by week 8: full arm extension above head and full leg extension without back lifting'],
-     mistakes:['Prioritising range over form — back contact with floor is NON-NEGOTIABLE','Rushing — each rep is 6+ seconds','Any back lifting — reduce range, do not push through it']}
+    {name:'Standing Calf Raises',sets:'3',reps:'15',
+     tempo:'2 up · 1 hold · 2 down',rest:'45 sec',
+     muscles:'Calves — build lower-leg strength and ankle stability.',
+     svg:`<img src="./images/w_walk.jpg" alt="Calf Raise">`,
+     breathing:'Breathe out rising up, in lowering down.',
+     cues:['Stand tall near a wall for balance','Rise onto the balls of your feet as high as you can','Hold 1 second at the top','Lower slowly','For more range, use the edge of a step'],
+     mistakes:['Bouncing','Half range','Rushing']}
    ]},
 
-  /* ── TUESDAY REST ── */
-  {name:'Tuesday',tag:'Active Rest',tagClass:'rest',rest:true,
-   restMsg:'Phase 2! Your first squats, your first lunges. Your body is now learning real movement patterns.',
-   restTips:[
-    '20 min walk — notice if your legs feel different after squats and lunges',
-    'Glute bridge practice at home: 20 reps before bed — reinforces the pattern',
-    'Foam roll your quads and glutes if sore (a tennis ball works too)',
-    'Drink 2.5 litres of water today',
-    'Review: did any exercise feel wrong or uncomfortable? Note it.',
-    'If something felt right and good — remember that feeling for next session'
-   ]},
-
-  /* ── WEDNESDAY — Upper Body Patterns ── */
-  {name:'Wednesday',tag:'Upper Body Patterns',tagClass:'push',
-   phase:'Phase 2 · Weeks 5–8',
-   focus:'Push Pattern · Pull Pattern · Core Stability',
-   cardio:'12 min light stationary bike (light resistance, comfortable pace)',
+  /* ── TUESDAY — Back & Biceps ── */
+  {name:'Tuesday', tag:'Back & Biceps', tagClass:'back',
+   phase:'Phase 2 · Weeks 3–8',
+   focus:'Lats · Upper Back · Biceps',
+   cardio:'8 min stationary bike to warm up',
    warmup:[
-     {text:'5 belly breaths — re-establish breathing pattern', icon:'drop'},
-     {text:'Arm circles × 10 each direction — shoulder warm-up', icon:'rotate'},
-     {text:'Shoulder rolls × 10 forward, 10 backward', icon:'rotate'},
-     {text:'Wall slides × 8 slow — open the shoulders', icon:'body'},
-     {text:'Chest opener stretch × 20 sec (arms behind, open chest)', icon:'leaf'},
+     {text:'5 min easy bike or walk', icon:'walk'},
+     {text:'Arm circles — 10 each direction', icon:'rotate'},
+     {text:'Wall slides — 8 to open the shoulders', icon:'body'},
+     {text:'Band face pulls — 12 to wake the back', icon:'rotate'},
+     {text:'Cat-cow — 6 cycles', icon:'body'},
    ],
    exercises:[
-    {name:'Incline Push-Up (Bench Height)',sets:'3',reps:'10–12',
-     tempo:'3-0-2-0',rest:'60 sec',
-     muscles:'Chest, Shoulders, Triceps — progressed from Phase 1 wall push-ups. Higher surface = easier; the goal is to work toward the floor over Phase 3.',
+    {name:'Lat Pulldown (Light)',sets:'3',reps:'12',
+     tempo:'2 down · 1 hold · 3 up',rest:'75 sec',
+     muscles:'Lats, Upper Back, Biceps — builds back width and the strength that leads toward pull-ups.',
+     svg:`<img src="./images/w_lat_pulldown.jpg" alt="Lat Pulldown">`,
+     breathing:'Breathe in at the top, breathe out as you pull down, breathe in as the bar rises slowly.',
+     cues:['Wide overhand grip, thighs locked under the pad','Pull your shoulders down first, away from your ears','Pull the bar to your upper chest — never behind the neck','Hold 1 second, squeeze your back','Let the bar rise slowly over 3 seconds','Start light — 15–20 kg'],
+     mistakes:['Pulling behind the neck','Leaning back too far','Letting the bar fly up','Pulling with only the arms — drive the elbows down']},
+
+    {name:'Seated Cable Row (Light)',sets:'3',reps:'12',
+     tempo:'2 pull · 1 hold · 3 return',rest:'75 sec',
+     muscles:'Mid Back, Rhomboids — builds back thickness and improves posture.',
+     svg:`<img src="./images/w_row.jpg" alt="Seated Cable Row">`,
+     breathing:'Reach forward and breathe in, breathe out as you pull, breathe in as you return.',
+     cues:['Sit tall, chest proud, slight forward lean to start','Pull the handle to your belly button','Drive your elbows back past your sides','Squeeze your shoulder blades together, hold 1 second','Return slowly over 3 seconds — feel the stretch'],
+     mistakes:['Rocking the torso','Pulling too high','Shrugging the shoulders','Letting the cable snap back']},
+
+    {name:'Dumbbell Bicep Curl (Light)',sets:'3',reps:'12',
+     tempo:'2 up · 1 hold · 3 down',rest:'60 sec',
+     muscles:'Biceps — builds arm shape and pulling strength.',
+     svg:`<img src="./images/w_curl.jpg" alt="Bicep Curl">`,
+     breathing:'Breathe out as you curl up, breathe in as you lower slowly.',
+     cues:['Hold dumbbells at your sides, palms forward (start 3–4 kg)','Elbows pinned to your sides — they do not move','Curl up, squeeze at the top for 1 second','Lower slowly over 3 seconds','No swinging the body'],
+     mistakes:['Swinging the body — too heavy','Elbows drifting forward','Dropping the weight fast']},
+
+    {name:'Superman Hold',sets:'3',reps:'10 · 2 sec hold each',
+     tempo:'2 up · 2 hold · 2 down',rest:'45 sec',
+     muscles:'Lower Back, Glutes — strengthens the whole back of the body.',
+     svg:`<img src="./images/w_stretch.jpg" alt="Superman">`,
+     breathing:'Breathe out as you lift, breathe in as you lower.',
+     cues:['Lie face down, arms extended overhead','Lift your arms, chest and legs off the floor together','Hold 2 seconds — squeeze your back and glutes','Lower gently','Keep your neck neutral, looking at the floor'],
+     mistakes:['Jerking up fast','Lifting only arms or only legs','Craning the neck up']}
+   ]},
+
+  /* ── WEDNESDAY — Chest & Triceps ── */
+  {name:'Wednesday', tag:'Chest & Triceps', tagClass:'push',
+   phase:'Phase 2 · Weeks 3–8',
+   focus:'Chest · Front Shoulders · Triceps',
+   cardio:'8 min treadmill walk to warm up',
+   warmup:[
+     {text:'5 min easy walk', icon:'walk'},
+     {text:'Arm circles — 10 each direction', icon:'rotate'},
+     {text:'Wall angels — 8 slow slides', icon:'body'},
+     {text:'Wall push-ups — 8 to prime the chest', icon:'bolt'},
+     {text:'Chest opener stretch — 20 sec', icon:'leaf'},
+   ],
+   exercises:[
+    {name:'Machine Chest Press (Light)',sets:'3',reps:'12',
+     tempo:'2 press · 1 hold · 2 return',rest:'75 sec',
+     muscles:'Chest, Front Shoulders, Triceps — the machine guides the movement perfectly for beginners.',
+     svg:`<img src="./images/w_chest_press.jpg" alt="Machine Chest Press">`,
+     breathing:'Breathe in before pressing, breathe out as you push forward, breathe in as handles return.',
+     cues:['Set the seat so handles are at mid-chest height','Back flat against the pad','Push forward, feeling your chest work','Squeeze the chest at full extension, hold 1 second','Return slowly for 2 seconds','Start 10–15 kg total'],
+     mistakes:['Seat too high — becomes a shoulder press','Shrugging the shoulders','Letting the weight snap back','Pushing with only the arms']},
+
+    {name:'Incline Push-Up (Bench)',sets:'3',reps:'10',
+     tempo:'3 down · 2 up',rest:'60 sec',
+     muscles:'Chest, Shoulders, Triceps — progressed from wall push-ups. Hands on a bench, feet on the floor.',
      svg:`<img src="./images/w_pushup.jpg" alt="Incline Push-Up">`,
-     breathing:'Breathe in as you lower toward the bench (3 seconds). Breathe out as you push away.',
-     cues:['Hands on a bench (or sturdy chair), slightly wider than shoulder-width','Body is a straight line from head to heels — like a plank leaning on the bench','Lower your chest toward the bench over 3 slow seconds','Push away until arms are nearly straight — small bend at the top','You should feel your chest working — if only feeling arms, bring hands wider','As this gets easier: lower the surface height (closer to the floor)'],
-     mistakes:['Hips sagging — maintain the plank line throughout','Only going halfway — chest should nearly touch the bench','Rushing the lowering — 3 seconds down is the stimulus for strength','Head dropping — keep neck neutral, look at the bench'],},
+     breathing:'Breathe in as you lower, breathe out as you push up.',
+     cues:['Hands on a bench, slightly wider than shoulders','Body straight from head to heels like a plank','Lower your chest toward the bench over 3 seconds','Push up until arms nearly straight','As it gets easy, use a lower surface'],
+     mistakes:['Hips sagging','Only going halfway','Rushing the descent']},
 
-    {name:'Resistance Band Row (or Towel Row)',sets:'3',reps:'12',
-     tempo:'2-1-3-0',rest:'60 sec',
-     muscles:'Upper Back, Rhomboids, Biceps — your first pulling exercise. Counteracts all the forward-hunching daily life causes.',
-     svg:`<img src="./images/w_row.jpg" alt="Band Row">`,
-     breathing:'Breathe in reaching forward. Breathe out as you pull. Breathe in as you return SLOWLY (3 seconds).',
-     cues:['Loop a resistance band around a door handle at chest height. Hold both ends.','Step back until there is tension in the band. Stand tall.','Pull the handles toward your body — elbows drive back past your sides.','Squeeze your shoulder blades together at the end — hold 1 second.','Return slowly over 3 full seconds — fight the band.','If no band: loop a rolled towel around a door handle and lean back'],
-     mistakes:['Shrugging shoulders up — keep them pressed DOWN throughout','Pulling too high (toward chin) — aim for your belly button','Letting the band snap back — the 3-second return builds your back','Rocking your body — stay still, only your arms move']},
+    {name:'Tricep Rope Pushdown (Light)',sets:'3',reps:'12',
+     tempo:'2 down · 1 hold · 2 up',rest:'60 sec',
+     muscles:'Triceps — shapes and strengthens the back of the arms.',
+     svg:`<img src="./images/w_curl.jpg" alt="Tricep Pushdown">`,
+     breathing:'Breathe out as you push down, breathe in as you return.',
+     cues:['Stand tall at the cable, rope attachment','Elbows pinned to your sides throughout','Push the rope down until arms are straight','Squeeze the triceps at the bottom, hold 1 second','Return slowly, elbows staying put','Start light'],
+     mistakes:['Elbows flaring out','Using the whole body','Half range of motion']},
 
-    {name:'Plank — Full (Forearms)',sets:'3',reps:'20–40 sec',
+    {name:'Plank (Full or Knees)',sets:'3',reps:'Hold 20–30 sec',
      tempo:'Hold',rest:'45 sec',
-     muscles:'Core, Shoulders, Glutes — you have earned this from Phase 1 knee plank. Maintain perfect alignment.',
-     svg:`<img src="./images/w_plank.jpg" alt:"Plank">`,
-     breathing:'In through nose, out through mouth. Slow and steady. Never hold your breath.',
-     cues:['Forearms on the floor, elbows directly under shoulders','Toes on the floor, body in a straight line from heels to head','Squeeze your glutes, pull your belly button toward your spine','Eyes look at the floor — neck neutral','Start at 20 seconds. Add 5 seconds each session until you reach 40 seconds.','Quality over duration — if hips sag, stop and rest'],
-     mistakes:['Hips sagging — this is the most common plank mistake, stop when this happens','Holding your breath — breathe continuously','Hips too high (making a triangle) — lower them to a straight line','Neck dropping or craning — keep it neutral, eyes on the floor']},
-
-    {name:'Clamshell — Elevated (Foot on Bench)',sets:'3',reps:'15 each side',
-     tempo:'2-1-2-0',rest:'40 sec',
-     muscles:'Glute Medius — progression from Phase 1 clamshell. Foot elevated increases range and difficulty.',
-     svg:`<img src="./images/w_glute.jpg" alt="Elevated Clamshell">`,
-     breathing:'Exhale as you open your knee. Inhale as you lower. One breath per rep.',
-     cues:['Lie on your side as before, but rest your feet on a low step or bench','This elevates your feet and increases the challenge on the outer glute','Keep your hips stacked — they must not roll backward','Open the top knee as high as you can without the hip rolling','Hold 1 second at the top — feel the outer glute working','Lower slowly for 2 counts'],
-     mistakes:['Hips rolling backward to gain range — hold them still','Moving too fast — 2 seconds up, 1 hold, 2 down','Not feeling the outer glute — try pressing the outer edge of your foot into the step']},
-
-    {name:'Side-Lying Hip Raise',sets:'3',reps:'12 each side',
-     tempo:'2-1-2-0',rest:'40 sec',
-     muscles:'Hip Abductors, Lateral Core — the progression from clamshell. Now the entire leg moves.',
-     svg:`<img src="./images/w_glute.jpg" alt="Side Hip Raise">`,
-     breathing:'Exhale lifting. Inhale lowering. Keep breathing throughout.',
-     cues:['Lie on your side, body in a straight line, bottom elbow on the floor','Lift your TOP leg toward the ceiling — keep toes pointing forward (not up)','Go to hip height or slightly above — hold 1 second','Lower with control for 2 counts — do not let it drop','Keep your core braced and hips stacked throughout','You should feel the outer hip/glute working by rep 8'],
-     mistakes:['Toes pointing to the ceiling (external rotation) — keep them forward','Hips tilting — keep them stacked perfectly vertical','Using momentum to swing the leg — slow and controlled','Going too high (hip tilts) — stop at hip height']}
+     muscles:'Core, Shoulders — hold a plank on toes if you can, knees if you need. Build the time.',
+     svg:`<img src="./images/w_plank.jpg" alt="Plank">`,
+     breathing:'Breathe steadily in through the nose, out through the mouth.',
+     cues:['Forearms down, elbows under shoulders','Straight line from heels (or knees) to head','Squeeze glutes, brace the core','Keep hips level — no sagging','Build from 20 toward 30 seconds'],
+     mistakes:['Hips sagging','Holding the breath','Neck dropping']}
    ]},
 
-  /* ── THURSDAY REST ── */
-  {name:'Thursday',tag:'Active Rest',tagClass:'rest',rest:true,
-   restMsg:'Upper body done! You are learning how your body moves. This is the most important phase.',
-   restTips:[
-    'Easy walk or gentle yoga — 20 minutes',
-    'Stretch your chest and shoulders: arms behind you, gently open the chest',
-    'Practice the hip hinge from Monday — even just 10 reps at home',
-    'Eat enough food — your muscles are rebuilding',
-    'Notice: are squats starting to feel more natural? By week 8 they will.',
-    'Sleep 7–9 hours'
-   ]},
-
-  /* ── FRIDAY — Full Body + Cardio ── */
-  {name:'Friday',tag:'Full Body + Cardio',tagClass:'back',
-   phase:'Phase 2 · Weeks 5–8',
-   focus:'Full Body Movement · Light Cardio · Coordination',
-   cardio:'15 min treadmill walk (5.5–6 km/h, 1–2% incline) at the END',
+  /* ── THURSDAY — Shoulders & Core ── */
+  {name:'Thursday', tag:'Shoulders & Core', tagClass:'shoulders',
+   phase:'Phase 2 · Weeks 3–8',
+   focus:'Shoulders · Core Stability',
+   cardio:'8 min bike to warm up',
    warmup:[
-     {text:'5 belly breaths — breathe in, belly rises, breathe out slowly', icon:'drop'},
-     {text:'Hip circles × 10 each direction', icon:'rotate'},
-     {text:'Leg swings forward/back × 10 each leg', icon:'walk'},
-     {text:'Arm swings × 10 across the chest', icon:'rotate'},
-     {text:'Ankle circles × 10 each foot — prep for balance work', icon:'rotate'},
+     {text:'5 min easy bike', icon:'walk'},
+     {text:'Shoulder rolls — 10 each direction', icon:'rotate'},
+     {text:'Wall angels — 8 slow slides', icon:'body'},
+     {text:'Bird-dog — 8 each side', icon:'bolt'},
+     {text:'Dead bug — 8 each side', icon:'bolt'},
    ],
    exercises:[
-    {name:'Step-Up (No Weight)',sets:'3',reps:'10 each leg',
-     tempo:'2-1-2-0',rest:'60 sec',
-     muscles:'Quads, Glutes, Balance — unilateral (one leg at a time) strength is more functional than bilateral for beginners.',
-     svg:`<img src="./images/w_lunges.jpg" alt="Step Up">`,
-     breathing:'Breathe out as you step up. Breathe in as you step back down.',
-     cues:['Find a step, box, or bench about knee height (30–40 cm)','Place your full foot on the step — not just the toes','Drive through the heel of your TOP foot to lift your body up','Bring the other foot up gently, then step back down with control','The back leg assists nothing — your top leg does all the work','Keep your torso upright throughout'],
-     mistakes:['Pushing off the back foot — the top leg should do all the work','Leaning forward — keep your chest up','Stepping down with a thud — control the descent','Looking down — look ahead for better balance']},
+    {name:'Seated Dumbbell Shoulder Press (Light)',sets:'3',reps:'12',
+     tempo:'2 up · 2 down',rest:'75 sec',
+     muscles:'Shoulders, Triceps — builds the rounded shoulder shape. Small muscle, start very light.',
+     svg:`<img src="./images/w_shoulder_press.jpg" alt="Shoulder Press">`,
+     breathing:'Breathe in at the bottom, breathe out as you press up.',
+     cues:['Sit with back support, back flat against the pad','Dumbbells at ear level, palms forward (start 3 kg)','Press up until arms nearly straight — do not lock','Lower slowly to ear level','Keep your core gently braced'],
+     mistakes:['Arching the lower back','Pressing forward instead of straight up','Going too heavy']},
 
-    {name:'Sumo Squat (Bodyweight)',sets:'3',reps:'12',
-     tempo:'3-0-2-0',rest:'60 sec',
-     muscles:'Inner Thighs, Glutes — the wide stance targets different muscles than your Monday squat. Good variety.',
+    {name:'Dumbbell Lateral Raise (Light)',sets:'3',reps:'12–15',
+     tempo:'2 up · 2 down',rest:'60 sec',
+     muscles:'Side Shoulders — creates the defined, rounded shoulder look.',
+     svg:`<img src="./images/w_lateral_raise.jpg" alt="Lateral Raise">`,
+     breathing:'Breathe out as you raise, breathe in as you lower.',
+     cues:['Small dumbbells at your sides (start 2–3 kg)','Slight forward lean from the hips','Raise arms out to shoulder height — no higher','Lead with the elbows','Lower slowly'],
+     mistakes:['Raising above shoulder height','Shrugging','Swinging the body — too heavy']},
+
+    {name:'Dead Bug',sets:'3',reps:'8 each side',
+     tempo:'4 sec lower · 2 sec return',rest:'45 sec',
+     muscles:'Deep Core — the anti-arching drill that protects your spine.',
+     svg:`<img src="./images/w_core.jpg" alt="Dead Bug">`,
+     breathing:'Exhale fully as you lower the limbs. Breathe in to reset.',
+     cues:['Lie on your back, lower back pressed to the floor','Arms to the ceiling, knees bent 90° in the air','Lower opposite arm and leg slowly','Back stays pressed down the entire time','Return and switch'],
+     mistakes:['Back lifting — smaller range','Rushing','Holding the breath']},
+
+    {name:'Side Plank (Knees or Full)',sets:'3',reps:'Hold 15–20 sec each side',
+     tempo:'Hold',rest:'45 sec',
+     muscles:'Obliques, Hips — the side core that shapes the waist and stabilises the spine.',
+     svg:`<img src="./images/w_plank.jpg" alt="Side Plank">`,
+     breathing:'Breathe steadily. Never hold your breath.',
+     cues:['Lie on your side, bottom knee down (modified) or legs straight','Forearm down, elbow under the shoulder','Lift your hips into a straight line','Hold, keeping hips stacked','Build from 15 toward 20 seconds, then switch'],
+     mistakes:['Hips sagging','Top hip rotating forward','Holding the breath']}
+   ]},
+
+  /* ── FRIDAY — Full Body ── */
+  {name:'Friday', tag:'Full Body', tagClass:'push',
+   phase:'Phase 2 · Weeks 3–8',
+   focus:'Whole Body · Glutes · Core',
+   cardio:'8 min walk to warm up',
+   warmup:[
+     {text:'5 min easy walk', icon:'walk'},
+     {text:'World\'s greatest stretch — 4 each side', icon:'leaf'},
+     {text:'Hip circles — 10 each direction', icon:'rotate'},
+     {text:'Bodyweight squats — 10 to groove the pattern', icon:'bolt'},
+     {text:'Glute bridges — 10 to activate glutes', icon:'bolt'},
+   ],
+   exercises:[
+    {name:'Sumo Squat (Light Dumbbell)',sets:'3',reps:'12',
+     tempo:'3 down · 2 up',rest:'75 sec',
+     muscles:'Inner Thighs, Glutes, Quads — the wide stance targets the inner thighs and glutes.',
      svg:`<img src="./images/w_sumo_squat.jpg" alt="Sumo Squat">`,
-     breathing:'Breathe in as you sit down. Breathe out as you stand. Belly breathing throughout.',
-     cues:['Feet wide — wider than shoulder-width. Toes turned out 45°.','Hands clasped at chest or on hips.','Sit straight down — torso stays upright.','Knees track over toes the entire time.','Drive through heels and squeeze your inner thighs at the top.','Feel this differently from Monday\'s squat — more inner thigh'],
-     mistakes:['Knees caving in — push them out firmly','Leaning forward — widen stance or raise heels slightly on plates','Heels lifting — feet firmly planted throughout']},
+     breathing:'Breathe in going down, breathe out coming up.',
+     cues:['Hold one dumbbell hanging between your legs','Feet wide, toes turned out 45°','Sit straight down, torso upright','Knees push out over your toes','Drive up, squeeze glutes and inner thighs'],
+     mistakes:['Knees caving in','Leaning forward','Heels lifting']},
 
-    {name:'Bird-Dog — Extended Hold',sets:'3',reps:'6 each side',
-     tempo:'6 sec hold each rep',rest:'40 sec',
-     muscles:'Deep Core, Glutes, Balance — longer hold = more challenge from Phase 2.',
-     svg:`<img src="./images/w_core.jpg" alt="Bird-Dog">`,
-     breathing:'Exhale as you extend. Hold, breathing shallowly. Breathe in as you return.',
-     cues:['Same as Phase 1 and Phase 2 Wednesday — but now hold each rep for 6 full seconds','Focus on feeling your deep core resist the pull of gravity','Keep hips completely level throughout the hold','Your goal by week 8: full extension with a 6-second hold and zero hip tilt'],
-     mistakes:['Hip tilting to one side during the hold — brace harder and reduce range','Back arching — lower the leg and arm slightly','Rushing — 6 seconds per rep means the set takes over 1 minute. That is correct.']},
+    {name:'Step-Up (Bodyweight)',sets:'3',reps:'10 each leg',
+     tempo:'2 up · 2 down',rest:'60 sec',
+     muscles:'Quads, Glutes, Balance — functional single-leg strength.',
+     svg:`<img src="./images/w_lunges.jpg" alt="Step Up">`,
+     breathing:'Breathe out stepping up, breathe in stepping down.',
+     cues:['Use a knee-height step or bench','Place your whole foot on the step','Drive through the top heel to lift up','Step down with control','Do not push off the bottom foot'],
+     mistakes:['Pushing off the back foot','Leaning forward','Thudding down']},
 
-    {name:'Glute Bridge — Slow Tempo',sets:'3',reps:'10',
-     tempo:'3 up · 3 hold · 3 down',rest:'40 sec',
-     muscles:'Glutes, Hamstrings — slow tempo dramatically increases difficulty without adding weight.',
-     svg:`<img src="./images/w_hip_thrust.jpg" alt="Glute Bridge Slow">`,
-     breathing:'Breathe in flat. Exhale on the 3-second lift. Hold breathing shallowly. Breathe in on the 3-second lower.',
-     cues:['Standard glute bridge position. This time, take 3 counts to lift.','Hold at the top for 3 full counts — squeeze as hard as you can.','Lower for 3 full counts — resist gravity the entire way down.','Each rep takes 9 seconds. 10 reps = 90 seconds of glute work.','By rep 7 your glutes should be burning. That is correct.'],
-     mistakes:['Rushing any part of the 3-3-3 tempo','Not squeezing at the top — the contraction is everything','Back taking over — it is GLUTES, always']},
+    {name:'Machine Chest Press (Light)',sets:'3',reps:'12',
+     tempo:'2 press · 2 return',rest:'60 sec',
+     muscles:'Chest, Shoulders, Triceps — a second dose of pushing to round out the full-body day.',
+     svg:`<img src="./images/w_chest_press.jpg" alt="Machine Chest Press">`,
+     breathing:'Breathe in before pressing, breathe out as you push.',
+     cues:['Seat set so handles are at mid-chest','Back flat against the pad','Push forward, squeeze the chest','Return slowly','Keep shoulders down'],
+     mistakes:['Seat too high','Shrugging','Snapping the weight back']},
 
-    {name:'Plank Shoulder Taps',sets:'3',reps:'16 total (8 each side)',
-     tempo:'Slow and controlled',rest:'45 sec',
-     muscles:'Core, Anti-Rotation, Shoulders — the plank gets harder when you remove a point of contact.',
-     svg:`<img src="./images/w_plank.jpg" alt="Plank Shoulder Taps">`,
-     breathing:'Breathe continuously throughout. Never hold your breath.',
-     cues:['Full plank position on hands (not forearms) — arms straight','Lift your right hand and tap your left shoulder. Replace.','Lift your left hand and tap your right shoulder. That is 1 rep each side.','The key: your hips must NOT sway side to side during the tap','The wider your feet, the easier it is — start wide and narrow over weeks'],
-     mistakes:['Hips swaying — brace your core harder, widen your feet','Moving too fast — slow, deliberate taps beat quick sloppy ones','Holding your breath']}
+    {name:'Bicycle Crunches',sets:'3',reps:'20 total (10 each side)',
+     tempo:'Controlled',rest:'45 sec',
+     muscles:'Abs, Obliques — the toning core finisher.',
+     svg:`<img src="./images/w_core.jpg" alt="Bicycle Crunches">`,
+     breathing:'Exhale on each twist, breathe in to switch.',
+     cues:['Lie on your back, hands lightly behind your head','Lift both legs, shins parallel to the floor','Bring right elbow toward left knee, extend right leg','Rotate from the torso, not just the elbow','Switch sides slowly'],
+     mistakes:['Pulling the neck','Going too fast','Not rotating the torso']}
    ]},
 
-  /* ── SAT/SUN REST ── */
-  {name:'Saturday',tag:'Rest Day',tagClass:'rest',rest:true,
-   restMsg:'Phase 2 weekend! You are squatting. You are pushing. You are pulling. Your body has changed.',
-   restTips:[
-    'Full rest day',
-    'Take your 4-week progress measurements today (waist, hips, arms, weight)',
-    'Easy walk or recreational activity you enjoy',
-    'Review Phase 2 exercises — which ones felt strong? Which felt hard?',
-    'Prepare meals for next week',
-    'You are building real movement skills. Phase 3 brings the weights.'
+  /* ── SATURDAY — Cardio & Core ── */
+  {name:'Saturday', tag:'Cardio & Core', tagClass:'legs',
+   phase:'Phase 2 · Weeks 3–8',
+   focus:'Cardio · Core · Stretch',
+   cardio:'20 min steady treadmill walk (5.5–6 km/h, 2% incline) — the main event',
+   warmup:[
+     {text:'March in place — 2 minutes', icon:'walk'},
+     {text:'Jumping jacks — 20 easy reps', icon:'bolt'},
+     {text:'Side lunge shifts — 8 each side', icon:'walk'},
+     {text:'Hip circles — 10 each direction', icon:'rotate'},
+     {text:'Cat-cow — 6 cycles', icon:'body'},
+   ],
+   exercises:[
+    {name:'Plank (Full or Knees)',sets:'3',reps:'Hold 25–35 sec',
+     tempo:'Hold',rest:'45 sec',
+     muscles:'Core, Shoulders — build your plank hold time each week.',
+     svg:`<img src="./images/w_plank.jpg" alt="Plank">`,
+     breathing:'Breathe steadily throughout.',
+     cues:['Forearms down, elbows under shoulders','Straight line, glutes squeezed, core braced','Hips level','Build the hold time gradually','Drop to knees if form breaks'],
+     mistakes:['Hips sagging','Holding the breath','Neck dropping']},
+
+    {name:'Glute Bridge — Slow Tempo',sets:'3',reps:'12',
+     tempo:'3 up · 3 hold · 3 down',rest:'45 sec',
+     muscles:'Glutes, Hamstrings — slow tempo makes bodyweight surprisingly challenging.',
+     svg:`<img src="./images/w_hip_thrust.jpg" alt="Glute Bridge">`,
+     breathing:'Breathe out lifting, breathe in lowering.',
+     cues:['Standard glute bridge, but 3 counts up','Hold 3 counts at the top, squeezing hard','3 counts to lower','Feel the glutes burn by rep 8','Keep the lower back out of it'],
+     mistakes:['Rushing the tempo','Using the back','Not squeezing']},
+
+    {name:'Bicycle Crunches',sets:'3',reps:'20 total',
+     tempo:'Controlled',rest:'40 sec',
+     muscles:'Abs, Obliques — steady core work.',
+     svg:`<img src="./images/w_core.jpg" alt="Bicycle Crunches">`,
+     breathing:'Exhale on each twist.',
+     cues:['Hands light behind the head','Legs lifted, shins parallel to floor','Elbow to opposite knee, rotating the torso','Slow and controlled','Feel the obliques working'],
+     mistakes:['Pulling the neck','Too fast','No torso rotation']},
+
+    {name:'Full-Body Cool-Down Stretch',sets:'1',reps:'30 sec each: hamstring, hip flexor, chest',
+     tempo:'Hold + breathe',rest:'None',
+     muscles:'Full Body — finish the week loose and recovered.',
+     svg:`<img src="./images/w_stretch.jpg" alt="Cool-Down Stretch">`,
+     breathing:'Slow breaths, relax into each stretch.',
+     cues:['Hamstring: heel on a step, hinge forward, 30 sec each','Hip flexor: kneeling lunge, hips forward, 30 sec each','Chest: hands clasped behind, lift gently, 30 sec','Breathe deeply throughout','Finish relaxed'],
+     mistakes:['Bouncing','Rushing','Holding the breath']}
    ]},
-  {name:'Sunday',tag:'Rest Day',tagClass:'rest',rest:true,
-   restMsg:'Phase 3 starts Monday. You will pick up your first dumbbells. You are ready.',
+
+  /* ── SUNDAY — Rest ── */
+  {name:'Sunday', tag:'Rest Day', tagClass:'rest', rest:true,
+   restMsg:'Six days of training done. Your body is getting stronger every week. Today is for full recovery.',
    restTips:[
-    '10 min stretching — hips, hamstrings, chest opener',
-    'Morning weight log',
-    'Prepare for Phase 3 — check the exercises ahead',
-    'Make sure you are eating enough to fuel Phase 3 training',
-    'You have learned to breathe, to move, to feel your body. Phase 3 builds on all of it.',
-    'You are exactly where you should be'
+    'Full rest — light walking only if you feel like it',
+    'Eat your full protein target — muscles rebuild on rest days',
+    'Foam roll or gently stretch any sore areas',
+    'Log your body weight in the morning',
+    'Plan and prep meals for the week ahead',
+    'Sleep 7–9 hours — the most important recovery tool'
    ]},
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
-//   PHASE 3 — LIFT (Weeks 9–12)
-//   Goal: Introduce machines and light dumbbells. 3–4 sets. Progressive load.
-//   All movement patterns from Phase 2 now get resistance added.
-//   Sessions: 50–60 min.
+//   PHASE 3 — PROGRESS (Weeks 9–12)
+//   6-day split. WARM-UP first, THEN heavier strength with progressive overload.
+//   Same split as Phase 2, more sets and more weight.
 // ══════════════════════════════════════════════════════════════════════════════
 const DAYS_PHASE3 = [
 
-  /* ── MONDAY — Lower Body Lift ── */
-  {name:'Monday',tag:'Lower Body Lift',tagClass:'legs',
+  /* ── MONDAY — Legs & Glutes ── */
+  {name:'Monday', tag:'Legs & Glutes', tagClass:'legs',
    phase:'Phase 3 · Weeks 9–12',
-   focus:'Goblet Squat · Leg Press · Romanian Deadlift · Glutes',
-   cardio:'12 min treadmill walk (6 km/h, 2% incline)',
+   focus:'Quads · Glutes · Hamstrings · Progressive Overload',
+   cardio:'10 min treadmill walk (6 km/h, 2% incline) to warm up',
    warmup:[
-     {text:'5 belly breaths — establish breathing before you touch any weight', icon:'drop'},
-     {text:'Bodyweight squat × 10 slow — warm up the pattern you learned', icon:'bolt'},
-     {text:'Hip hinge × 10 bodyweight — warm up the hinge pattern', icon:'body'},
-     {text:'Glute bridge × 10 fast bodyweight — activate glutes', icon:'bolt'},
-     {text:'Ankle circles × 10 each — prep for loaded squats', icon:'rotate'},
+     {text:'5 min brisk walk to warm up', icon:'walk'},
+     {text:'Hip circles — 10 each direction', icon:'rotate'},
+     {text:'Deep squat hold — 30 sec, rocking gently', icon:'bolt'},
+     {text:'Fire hydrants — 10 each side', icon:'bolt'},
+     {text:'Glute bridges — 12 to activate glutes', icon:'bolt'},
+     {text:'Leg swings — 10 each leg', icon:'walk'},
    ],
    exercises:[
-    {name:'Goblet Squat (Dumbbell — 4–6 kg)',sets:'3',reps:'10',
-     tempo:'3-1-2-0',rest:'75 sec',
-     muscles:'Quads, Glutes, Core — you know the squat pattern from Phase 2. Now add a small dumbbell at your chest.',
+    {name:'Goblet Squat (Heavier)',sets:'4',reps:'10',
+     tempo:'3 down · 1 pause · 2 up',rest:'90 sec',
+     muscles:'Quads, Glutes, Core — heavier now, 4 sets. Add weight when all sets feel controlled.',
      svg:`<img src="./images/w_squat.jpg" alt="Goblet Squat">`,
-     breathing:'Breathe in going down (3 counts). Breathe out as you drive up. Brace your core against the weight.',
-     cues:['Hold ONE dumbbell vertically at your chest with both hands (4–6 kg)','Same squat technique as Phase 2 — the dumbbell keeps your chest up naturally','Breathe in, sit back and down, knees out','Drive through your whole foot to stand, squeeze glutes at the top','Start 4 kg. Add 1 kg when all 3×10 feel comfortable and controlled.'],
-     mistakes:['Going heavier than your form allows — form does not change with weight, ever','Heels rising — still means tight ankles, widen stance or use Phase 1 stretches more','Rushing — tempo stays 3-1-2 regardless of weight','Dumbbell drifting forward — keep it close to your chest']},
+     breathing:'Breathe in going down, breathe out driving up. Brace hard against the weight.',
+     cues:['Aim for 7–10 kg this phase','First set lighter as a warm-up, then working sets','Go below parallel if your mobility allows','Same perfect form as always — form never changes with weight','Track your weight — add 1 kg when 4×10 feels easy'],
+     mistakes:['Adding weight too fast','Form breaking under load','Skipping the warm-up set','Not tracking progress']},
 
-    {name:'Leg Press (Machine — Light)',sets:'3',reps:'12–15',
-     tempo:'3-0-2-0',rest:'75 sec',
-     muscles:'Quads, Glutes — the machine is perfect for beginners. It guides movement and allows you to safely load your legs.',
-     svg:`<img src="./images/w_leg_press.jpg" alt="Leg Press">`,
-     breathing:'Breathe in as the sled comes toward you (3 counts). Breathe out as you push it away. NEVER hold your breath on leg press.',
-     cues:['Feet shoulder-width, in the middle of the platform','Lower until knees reach 90° — no deeper to start','NEVER lock your knees at the top — always keep a tiny bend','Back flat against the pad — your butt must not lift off','Start at 20–30 kg (including the sled weight). Add 5 kg when 15 reps feel easy.'],
-     mistakes:['Locking knees at the top — the most dangerous thing on this machine','Butt lifting off the pad — reduce the range of motion','Holding your breath — always keep breathing','Going too heavy too fast — add 5 kg maximum at a time']},
-
-    {name:'Dumbbell Romanian Deadlift (5–8 kg each)',sets:'3',reps:'10',
-     tempo:'3-1-2-0',rest:'75 sec',
-     muscles:'Hamstrings, Glutes — you learned the hip hinge in Phase 2. Now hold light dumbbells to add resistance.',
+    {name:'Dumbbell Romanian Deadlift',sets:'4',reps:'10',
+     tempo:'3 down · 1 hold · 2 up',rest:'90 sec',
+     muscles:'Hamstrings, Glutes — the loaded hip hinge you learned in Phase 1. Now with dumbbells.',
      svg:`<img src="./images/w_deadlift.jpg" alt="Romanian Deadlift">`,
-     breathing:'Stand tall and breathe in. Hold gently as you hinge forward (3 counts). Breathe out as you stand up.',
-     cues:['Hold a dumbbell in each hand, standing, arms in front of thighs','Same hip hinge pattern as Phase 2 — push hips back, chest stays open','Dumbbells slide down your legs — keep them close','Lower until you feel the hamstring stretch. Stop there. Do not let the back round.','Drive hips forward to stand. Squeeze glutes at the top.','Start 5 kg each. After 2 weeks, try 6 kg if form stays perfect.'],
-     mistakes:['Rounding the lower back — most important thing to prevent. Reduce weight.','Bending the knees too much (becomes a squat — different pattern)','Dumbbells swinging away from your legs','Going lower than your hamstring flexibility allows']},
+     breathing:'Breathe in at the top, hold as you hinge, breathe out as you stand.',
+     cues:['A dumbbell in each hand, in front of your thighs (start 5–8 kg)','Push hips back, dumbbells slide down your legs','Keep the back flat — never round','Lower until you feel the hamstring stretch, hold 1 second','Drive hips forward to stand, squeeze glutes'],
+     mistakes:['Rounding the lower back — reduce weight','Bending the knees too much','Letting the dumbbells drift away from the legs']},
 
-    {name:'Hip Thrust (Dumbbell on Hips — 8–10 kg)',sets:'3',reps:'12',
-     tempo:'2-2-2-0',rest:'60 sec',
-     muscles:'Glutes — you mastered the bodyweight version. Now add a dumbbell on your hips.',
+    {name:'Hip Thrust (Dumbbell)',sets:'4',reps:'12',
+     tempo:'2 up · 2 hold · 2 down',rest:'75 sec',
+     muscles:'Glutes — the single best glute builder. A dumbbell on the hips adds real challenge.',
      svg:`<img src="./images/w_hip_thrust.jpg" alt="Hip Thrust">`,
-     breathing:'Breathe in at the bottom. Breathe OUT as you squeeze and lift. Hold 2 seconds. Breathe in as you lower.',
-     cues:['Upper back against a bench, dumbbell (8–10 kg) resting in your hip crease','Fold a small towel under the dumbbell for comfort','Drive hips up — hard glute squeeze at the top — hold 2 full seconds','Lower hips but keep tension — do not let them touch the floor between reps','Start 8 kg. Work toward 10–12 kg by week 12.'],
-     mistakes:['Lower back arching — it is GLUTES doing the work, not your back','Dumbbell sliding — place it firmly in the hip crease before starting','Not squeezing at the top — the 2-second hold IS the exercise','Going too fast — 6 seconds per rep: 2 up, 2 hold, 2 down']},
+     breathing:'Breathe in at the bottom, breathe out and squeeze at the top, hold, breathe in lowering.',
+     cues:['Upper back on a bench, dumbbell in the hip crease (8–10 kg), towel for comfort','Drive hips up, hard glute squeeze, hold 2 seconds','Body forms a straight line at the top','Lower with control, keep tension','Work toward 10–12 kg by week 12'],
+     mistakes:['Using the lower back','Dumbbell sliding — place it firmly','Skipping the 2-second squeeze']},
 
-    {name:'Plank + Glute Bridge Combo',sets:'3',reps:'30 sec plank → 15 bridges',
-     tempo:'Hold then controlled',rest:'45 sec',
-     muscles:'Full Core, Glutes — a superset combining your two best core/glute exercises.',
-     svg:`<img src="./images/w_core.jpg" alt="Plank + Bridge">`,
-     breathing:'Steady breathing during plank. Exhale on each bridge lift.',
-     cues:['30 seconds full forearm plank — perfect form, no sagging','WITHOUT resting, move straight to floor for 15 glute bridges','Squeeze hard on every bridge — 2 second hold each','Rest 45 seconds, then repeat twice more','By week 12 your core and glutes will be noticeably stronger together'],
-     mistakes:['Resting between plank and bridges — go straight from one to the other','Plank hips sagging — stop the plank if form breaks, then start bridges','Bridges going fast — controlled, with the squeeze']}
+    {name:'Seated Leg Curl (Machine)',sets:'3',reps:'15',
+     tempo:'2 curl · 1 hold · 3 return',rest:'60 sec',
+     muscles:'Hamstrings — isolates the back of the legs with zero lower-back strain.',
+     svg:`<img src="./images/w_leg_press.jpg" alt="Leg Curl">`,
+     breathing:'Breathe out as you curl down, breathe in as you return slowly.',
+     cues:['Pad on the lower leg, knee aligned with the pivot','Curl both legs down, feel the hamstrings','Hold 1 second at the bottom','Return slowly over 3 seconds','Start light, add weight when 15 feels easy'],
+     mistakes:['Hips lifting off the seat','Rushing the return','Using momentum']}
    ]},
 
-  /* ── TUESDAY REST ── */
-  {name:'Tuesday',tag:'Active Rest',tagClass:'rest',rest:true,
-   restMsg:'Phase 3 — your first session with weights! Your legs will feel different. That is the correct feeling.',
-   restTips:[
-    '20 min easy walk — helps flush soreness from the first weighted session',
-    'Foam roll or massage your quads and glutes if sore',
-    'Eat your full protein target today — muscle building is happening',
-    'Take note of your starting weights — you will be tracking increases from now on',
-    'Sleep is now even more important — muscle growth is 70% sleep-dependent',
-    'If anything felt wrong or painful (not sore — painful), note it for next session'
-   ]},
-
-  /* ── WEDNESDAY — Upper Body Lift ── */
-  {name:'Wednesday',tag:'Upper Body Lift',tagClass:'push',
+  /* ── TUESDAY — Back & Biceps ── */
+  {name:'Tuesday', tag:'Back & Biceps', tagClass:'back',
    phase:'Phase 3 · Weeks 9–12',
-   focus:'Machine Chest Press · Lat Pulldown · Shoulder Press · Row',
-   cardio:'12 min stationary bike (light-moderate resistance, 70–80 rpm)',
+   focus:'Lats · Upper Back · Biceps · Progressive Overload',
+   cardio:'10 min stationary bike (moderate resistance) to warm up',
    warmup:[
-     {text:'5 belly breaths — breathing is still your foundation', icon:'drop'},
-     {text:'Wall slides × 8 slow — open shoulders before pressing', icon:'body'},
-     {text:'Band pull-aparts × 10 (or towel stretch across chest)', icon:'rotate'},
-     {text:'Incline push-up × 8 bodyweight (Phase 2 pattern)', icon:'bolt'},
-     {text:'Arm circles × 10 each direction', icon:'rotate'},
+     {text:'5 min bike at light resistance', icon:'walk'},
+     {text:'Arm circles — 10 each direction', icon:'rotate'},
+     {text:'Wall slides — 8 to open the shoulders', icon:'body'},
+     {text:'Band face pulls — 15', icon:'rotate'},
+     {text:'Open-book torso rotation — 8 each side', icon:'rotate'},
    ],
    exercises:[
-    {name:'Machine Chest Press (10–15 kg)',sets:'3',reps:'12',
-     tempo:'2-1-2-0',rest:'75 sec',
-     muscles:'Chest, Front Shoulders, Triceps — machines are ideal for beginners. The movement path is guided so you can focus on feeling the muscle.',
-     svg:`<img src="./images/w_chest_press.jpg" alt="Machine Chest Press">`,
-     breathing:'Breathe in before you push. Exhale as you press the handles forward. Breathe in as handles return.',
-     cues:['Adjust seat so handles are at mid-chest height — this matters a lot','Back flat against the pad — do not arch off it','Push forward and feel your CHEST working — not just your arms','Squeeze the chest for 1 second at full extension','Return handles slowly for 2 full counts','Start 10–15 kg. Add 2.5 kg when all 3×12 feel controlled.'],
-     mistakes:['Seat too high (becomes a shoulder press) — adjust until handles align with your nipple line','Shrugging shoulders up — keep them pressed DOWN into the pad','Letting handles snap back — control the return','Going too heavy — you should feel your chest, not just push with your arms']},
-
-    {name:'Lat Pulldown (Wide Grip — 15–20 kg)',sets:'3',reps:'12',
-     tempo:'2-1-3-0',rest:'75 sec',
-     muscles:'Lats, Upper Back, Biceps — builds back width and posture. The 3-second return (eccentric) is where the back grows.',
+    {name:'Lat Pulldown (Progressive)',sets:'4',reps:'10',
+     tempo:'2 down · 1 hold · 3 up',rest:'90 sec',
+     muscles:'Lats, Upper Back, Biceps — 4 sets now, add weight as you get stronger.',
      svg:`<img src="./images/w_lat_pulldown.jpg" alt="Lat Pulldown">`,
-     breathing:'Breathe in at the top (arms extended). Breathe out as you pull down. Breathe in as bar rises slowly.',
-     cues:['Wide overhand grip — about 1.5× shoulder width','Lock thighs firmly under the pad','Before pulling: bring your shoulders DOWN away from your ears','Pull bar to your UPPER CHEST — not behind the neck, ever','Hold 1 second at chest — feel your back muscles working','Let bar rise SLOWLY over 3 full counts — this is where your back grows'],
-     mistakes:['Pulling behind the neck — never, ever do this','Excessive backward lean — a small lean (15°) is fine; more is cheating','Letting the weight fly back up — the 3-second return builds your back','Pulling with only biceps — think of driving your ELBOWS down, not pulling with hands']},
+     breathing:'Breathe in at the top, out as you pull, in as the bar rises.',
+     cues:['Start 5 kg heavier than where Phase 2 ended','Pull to the upper chest, hold 1 second','3-second return — this is where the back grows','Drive the elbows down, not the hands','Add 2.5 kg when all 4×10 feel easy'],
+     mistakes:['Pulling behind the neck','Excessive lean','Rushing the return','Using only the arms']},
 
-    {name:'Seated Dumbbell Shoulder Press (3–5 kg each)',sets:'3',reps:'12',
-     tempo:'2-0-2-0',rest:'75 sec',
-     muscles:'Front and Side Shoulders, Triceps — builds the round shoulder shape. Small muscle group, start light.',
-     svg:`<img src="./images/w_shoulder_press.jpg" alt="Shoulder Press">`,
-     breathing:'Breathe in at the bottom (DBs at ear level). Breathe out as you press up. Core gently braced.',
-     cues:['Sit with full back support. Back flat against the pad.','Dumbbells at ear level, elbows at 90°, palms forward','Press straight up until arms are nearly straight','Lower slowly for 2 counts back to ear level','Start 3 kg each. Add 0.5–1 kg when all 3×12 feel easy.'],
-     mistakes:['Arching lower back away from the pad — stay in contact','Pressing forward instead of straight up','Going too heavy — shoulders are a small muscle group, respect that','Locking elbows at the top — keep a tiny bend']},
-
-    {name:'Seated Cable Row (15–20 kg)',sets:'3',reps:'12',
-     tempo:'2-1-3-0',rest:'75 sec',
-     muscles:'Mid Back, Rhomboids, Biceps — builds back thickness and counteracts rounded posture.',
+    {name:'Seated Cable Row (Progressive)',sets:'4',reps:'10',
+     tempo:'2 pull · 1 hold · 3 return',rest:'90 sec',
+     muscles:'Mid Back, Rhomboids — 4 sets with heavier weight for back thickness.',
      svg:`<img src="./images/w_row.jpg" alt="Seated Cable Row">`,
-     breathing:'Reach forward and breathe in. Breathe out as you pull. Breathe in as you return slowly (3 counts).',
-     cues:['Sit tall — chest proud, imagine a string lifting your sternum','Slight forward lean at the start to feel the back stretch','Pull the handle to your belly button — elbows drive BACK past your sides','Squeeze shoulder blades together at the end — hold 1 second','Return slowly over 3 full seconds — feel your back stretching','Start 15 kg. Add 2.5 kg when all 3×12 feel controlled.'],
-     mistakes:['Rocking your torso — sit still, only arms move','Pulling too high (toward chest) — belly button is the target','Shrugging shoulders — keep them DOWN','Letting cable snap back — 3 seconds, always']},
+     breathing:'Breathe in reaching forward, out as you pull, in as you return.',
+     cues:['5 kg heavier than Phase 2 finish','Pull to the belly button, elbows drive back','Squeeze shoulder blades, hold 1 second','Return slowly over 3 seconds','Sit still, only the arms move'],
+     mistakes:['Rocking the body','Pulling too high','Shrugging','Rushing the return']},
 
-    {name:'Dumbbell Bicep Curl (4–6 kg each)',sets:'3',reps:'12',
-     tempo:'2-1-3-0',rest:'60 sec',
-     muscles:'Biceps — builds arm shape and the pulling strength that helps your rows and lat pulldowns.',
+    {name:'Dumbbell Bicep Curl (Heavier)',sets:'4',reps:'10',
+     tempo:'2 up · 1 hold · 3 down',rest:'60 sec',
+     muscles:'Biceps — progressive overload for arm strength and shape.',
      svg:`<img src="./images/w_curl.jpg" alt="Bicep Curl">`,
-     breathing:'Exhale as you curl up. Inhale as you lower slowly (3 counts). The slow lowering is where the muscle grows.',
-     cues:['Hold dumbbells at your sides, palms facing forward','Elbows pinned to your sides — they do not move','Curl the dumbbells up — squeeze biceps at the top for 1 second','Lower slowly over 3 full seconds — resist gravity','Start 4 kg. Move to 5–6 kg when all reps feel easy.'],
-     mistakes:['Swinging your body — if you need to swing, reduce the weight','Elbows drifting forward at the top','Dropping the weight fast — 3 seconds down is essential','Going too heavy — form is more important than weight, always']}
+     breathing:'Breathe out curling up, breathe in lowering slowly.',
+     cues:['5–6 kg this phase','Strict form — elbows pinned, no swinging','Squeeze hard at the top','3-second lowering builds the muscle','Add weight when all sets feel easy'],
+     mistakes:['Swinging the body','Rushing the lowering','Elbows drifting forward']},
+
+    {name:'Superman Hold',sets:'3',reps:'12 · 2 sec hold',
+     tempo:'2 up · 2 hold · 2 down',rest:'45 sec',
+     muscles:'Lower Back, Glutes — a strong posterior chain protects your spine.',
+     svg:`<img src="./images/w_stretch.jpg" alt="Superman">`,
+     breathing:'Breathe out lifting, breathe in lowering.',
+     cues:['Lie face down, arms overhead','Lift arms, chest and legs together','Hold 2 seconds, squeeze back and glutes','Lower gently','Neck neutral throughout'],
+     mistakes:['Jerking up','Lifting only one end','Craning the neck']}
    ]},
 
-  /* ── THURSDAY REST ── */
-  {name:'Thursday',tag:'Active Rest',tagClass:'rest',rest:true,
-   restMsg:'Upper body done with weights for the first time! Chest, back, shoulders, biceps — all responding.',
-   restTips:[
-    'Easy walk or light yoga — 20–30 minutes',
-    'Stretch chest and shoulders — arms behind back, gently open',
-    'Check your workout log — are your weights from Monday recorded?',
-    'Drink 2.5 litres of water',
-    'Notice how your posture has changed since Phase 1 — this is real',
-    'Sleep well tonight — Thursday to Friday is your most important recovery window'
-   ]},
-
-  /* ── FRIDAY — Full Body Strength ── */
-  {name:'Friday',tag:'Full Body Strength',tagClass:'back',
+  /* ── WEDNESDAY — Chest & Triceps ── */
+  {name:'Wednesday', tag:'Chest & Triceps', tagClass:'push',
    phase:'Phase 3 · Weeks 9–12',
-   focus:'Lateral Raises · Glute Kickback · Leg Curl · Cardio Finish',
-   cardio:'15 min treadmill — 10 min walk (6 km/h) + 5 min light jog (7 km/h) — your best cardio yet',
+   focus:'Chest · Front Shoulders · Triceps · Progressive Overload',
+   cardio:'10 min treadmill walk to warm up',
    warmup:[
-     {text:'5 belly breaths — breathing is still foundation, always', icon:'drop'},
-     {text:'Hip circles × 10 each direction', icon:'rotate'},
-     {text:'Glute bridges × 10 bodyweight — activate glutes before kickbacks', icon:'bolt'},
-     {text:'Leg swings forward/back × 10 each leg', icon:'walk'},
-     {text:'Shoulder rolls × 10 each direction — prep for lateral raises', icon:'rotate'},
+     {text:'5 min brisk walk', icon:'walk'},
+     {text:'Arm circles — 10 each direction', icon:'rotate'},
+     {text:'Wall angels — 8 slow slides', icon:'body'},
+     {text:'Incline push-ups — 8 to prime the chest', icon:'bolt'},
+     {text:'Chest opener stretch — 20 sec', icon:'leaf'},
    ],
    exercises:[
-    {name:'Dumbbell Lateral Raise (3–4 kg each)',sets:'3',reps:'12–15',
-     tempo:'2-0-2-0',rest:'60 sec',
-     muscles:'Side Shoulders — creates the rounded shoulder look. One of the most visible changes with consistent training.',
-     svg:`<img src="./images/w_lateral_raise.jpg" alt="Lateral Raise">`,
-     breathing:'Exhale as you raise arms. Inhale as you lower them slowly.',
-     cues:['Stand with small dumbbells at your sides, slight forward lean from hips','Raise both arms OUT to shoulder height — not higher','Lead with your elbows — hand is slightly lower than elbow at the top','Lower slowly for 2 counts — resist the weight coming down','You should feel a burning sensation at your outer shoulders by rep 10','Start 3 kg. Even 2 kg will burn by rep 15 — do not be embarrassed by the weight'],
-     mistakes:['Raising above shoulder height — traps steal the work','Shrugging shoulders up — keep them actively pressed DOWN','Swinging body to lift — stand still, only your arms move','Going too heavy — 3 kg lateral raises are harder than they sound at 15 reps']},
+    {name:'Machine Chest Press (Progressive)',sets:'4',reps:'10',
+     tempo:'2 press · 1 hold · 2 return',rest:'90 sec',
+     muscles:'Chest, Shoulders, Triceps — 4 sets, add weight as you get stronger.',
+     svg:`<img src="./images/w_chest_press.jpg" alt="Machine Chest Press">`,
+     breathing:'Breathe in before pressing, out as you push, hold 1 second squeezing.',
+     cues:['Add 2.5–5 kg from Phase 2','Squeeze the chest hard for 1 second at full extension','Return slowly for 2 seconds','Add 2.5 kg when all 4×10 are easy','Perfect form regardless of weight'],
+     mistakes:['Adding weight too fast','Not squeezing','Shrugging','Rushing']},
 
-    {name:'Seated Leg Curl Machine (Light)',sets:'3',reps:'15',
-     tempo:'2-1-3-0',rest:'60 sec',
-     muscles:'Hamstrings — isolates the back of your legs completely, zero lower back involvement.',
-     svg:`<img src="./images/w_deadlift.jpg" alt="Leg Curl">`,
-     breathing:'Exhale as you curl your legs down. Hold 1 second. Breathe in as you let them back up slowly.',
-     cues:['Adjust machine: pad on lower leg (above ankle), knee aligned with pivot point','Curl both legs down toward the floor — feel the BACK of your thighs working','Hold at the bottom for 1 second — squeeze your hamstrings','Let legs return slowly over 3 full counts — resist the weight','Start at the minimum weight. Add 2.5 kg when 15 reps feel easy.'],
-     mistakes:['Hips lifting off the seat — the weight is too heavy','Rushing the return — the 3-second return is where hamstrings grow','Using momentum to swing legs down — start the movement controlled']},
+    {name:'Incline Push-Up (Low Bench)',sets:'3',reps:'10–12',
+     tempo:'3 down · 2 up',rest:'60 sec',
+     muscles:'Chest, Shoulders, Triceps — a lower surface makes this harder. Working toward floor push-ups.',
+     svg:`<img src="./images/w_pushup.jpg" alt="Incline Push-Up">`,
+     breathing:'Breathe in lowering, breathe out pushing up.',
+     cues:['Hands on a low bench or step (lower than Phase 2)','Body straight from head to heels','Lower chest over 3 seconds','Push up powerfully','Goal: floor push-ups by week 12 if you can'],
+     mistakes:['Hips sagging','Rushing the descent','Not challenging yourself']},
 
-    {name:'Cable Glute Kickback (5–7 kg)',sets:'3',reps:'15 each leg',
-     tempo:'2-1-2-0',rest:'60 sec',
-     muscles:'Glutes — cable adds constant tension throughout the movement that bodyweight cannot match.',
-     svg:`<img src="./images/w_glute.jpg" alt="Cable Kickback">`,
-     breathing:'Exhale as you kick back. Inhale as you bring leg forward.',
-     cues:['Ankle strap on, cable at lowest position, face the machine','Stand close, hands on the machine for support, core braced','Kick leg straight back — slowly — squeeze glute at the top','Hold 1 second at peak contraction — really feel the glute working','Bring leg forward without touching the floor, then kick back again','Start 5 kg. Add 2.5 kg when 15 reps feel controlled.'],
-     mistakes:['Swinging leg with momentum — slow and controlled every rep','Lower back arching — keep core braced, reduce range if needed','Body moving — your torso stays completely still, only your leg moves','Not squeezing at the top — the squeeze IS the exercise']},
+    {name:'Overhead Tricep Extension (Dumbbell)',sets:'3',reps:'12',
+     tempo:'2 down · 1 pause · 2 up',rest:'60 sec',
+     muscles:'Triceps — the long head of the triceps for fuller-looking arms.',
+     svg:`<img src="./images/w_curl.jpg" alt="Overhead Tricep Extension">`,
+     breathing:'Breathe in as you lower behind your head, breathe out as you extend up.',
+     cues:['Hold one dumbbell overhead with both hands','Elbows point forward and stay put','Lower the weight behind your head slowly','Extend back up, squeeze the triceps','Keep the core braced, no back arching'],
+     mistakes:['Elbows flaring out','Arching the lower back','Using too heavy a weight']},
 
-    {name:'Incline Push-Up — Low Bench',sets:'3',reps:'10–12',
-     tempo:'3-0-2-0',rest:'60 sec',
-     muscles:'Chest, Shoulders, Triceps — lower surface = harder. Working toward the floor.',
-     svg:`<img src="./images/w_pushup.jpg" alt="Low Incline Push-Up">`,
-     breathing:'Breathe in lowering (3 counts). Breathe out as you push up.',
-     cues:['Hands on a LOW bench or step (lower than Phase 2)','Body is a straight plank from head to heels — maintain this always','Lower chest toward the bench over 3 slow seconds','Push up powerfully — feel your chest and shoulders working','Goal by week 12: move to floor push-ups if you can complete 3×10 here cleanly'],
-     mistakes:['Hips sagging — plank body throughout','Rushing the lowering — the 3-second eccentric builds strength','Not challenging yourself — if all 12 feel easy, lower the surface']},
-
-    {name:'Side Plank (Full — Not Modified)',sets:'3',reps:'20–25 sec each side',
+    {name:'Plank (Full)',sets:'3',reps:'Hold 40–50 sec',
      tempo:'Hold',rest:'45 sec',
-     muscles:'Obliques, Hip Stabilizers — you progressed from modified (knee down) in Phase 2. Full side plank now.',
-     svg:`<img src="./images/w_plank.jpg" alt="Side Plank">`,
-     breathing:'In through nose, out through mouth. Continuous breathing.',
-     cues:['Lie on your side, BOTTOM FOOT stacked on top foot (not modified anymore)','Lift hips until your body forms a straight diagonal line','Top hand on hip or pointing up','Hold — breathe — do not let hips sag or rotate','Build from 20 seconds toward 30 seconds by week 12','If hips sag: drop back to modified (bottom knee on floor) and build again'],
-     mistakes:['Hips sagging — this removes the oblique challenge, stop and rest','Top hip rotating forward — keep hips perfectly stacked vertical','Holding your breath — breathe continuously']}
+     muscles:'Core — build toward a strong 50-second plank.',
+     svg:`<img src="./images/w_plank.jpg" alt="Plank">`,
+     breathing:'Breathe steadily throughout.',
+     cues:['Full plank on toes and forearms','Straight line, glutes and core tight','Build from 40 toward 50 seconds','If 50 sec is easy, add small hip taps','Quality over duration'],
+     mistakes:['Hips sagging','Holding the breath','Rushing to add time']}
    ]},
 
-  /* ── SAT/SUN REST ── */
-  {name:'Saturday',tag:'Rest Day',tagClass:'rest',rest:true,
-   restMsg:'End of Phase 3 week. You are lifting weights. Your body is genuinely stronger than it was 9 weeks ago.',
-   restTips:[
-    'Rest and recover — full day off',
-    'Take your 8-week progress photos and measurements',
-    'Review your workout log — you have numbers to compare now',
-    'Notice how your body composition is visibly changing',
-    'Treat yourself to something you enjoy — you have earned it',
-    'Think about what comes after Week 12 — you will be ready for much more'
+  /* ── THURSDAY — Shoulders & Core ── */
+  {name:'Thursday', tag:'Shoulders & Core', tagClass:'shoulders',
+   phase:'Phase 3 · Weeks 9–12',
+   focus:'Shoulders · Core · Progressive Overload',
+   cardio:'10 min bike to warm up',
+   warmup:[
+     {text:'5 min bike', icon:'walk'},
+     {text:'Shoulder rolls — 10 each direction', icon:'rotate'},
+     {text:'Wall angels — 8 slow slides', icon:'body'},
+     {text:'Band face pulls — 12', icon:'rotate'},
+     {text:'Dead bug — 8 each side', icon:'bolt'},
+   ],
+   exercises:[
+    {name:'Seated Dumbbell Shoulder Press (Heavier)',sets:'4',reps:'10',
+     tempo:'2 up · 1 hold · 2 down',rest:'90 sec',
+     muscles:'Shoulders, Triceps — build real shoulder strength with progressive overload.',
+     svg:`<img src="./images/w_shoulder_press.jpg" alt="Shoulder Press">`,
+     breathing:'Breathe in at the bottom, brace, breathe out as you press up.',
+     cues:['6–8 kg this phase','Full back support, core braced against the weight','Press up, 1-second hold at the top','Lower slowly for 2 seconds','Add 0.5–1 kg when all sets feel easy'],
+     mistakes:['Arching the lower back','Pressing forward','Locking the elbows','Going too heavy for clean reps']},
+
+    {name:'Dumbbell Lateral Raise (Progressive)',sets:'3',reps:'15',
+     tempo:'2 up · 2 down',rest:'60 sec',
+     muscles:'Side Shoulders — the most visible shoulder shaper. Strict form beats heavy weight.',
+     svg:`<img src="./images/w_lateral_raise.jpg" alt="Lateral Raise">`,
+     breathing:'Breathe out raising, breathe in lowering.',
+     cues:['3–4 kg with strict form','Raise to shoulder height, lead with elbows','Lower slowly for 2 seconds','No swinging — only the arms move','15 strict reps beats heavy sloppy reps'],
+     mistakes:['Raising above shoulder height','Shrugging','Swinging the body']},
+
+    {name:'Dead Bug — Advanced',sets:'3',reps:'8 each side',
+     tempo:'4 sec lower · pause · 2 sec return',rest:'45 sec',
+     muscles:'Deep Core — full range, slow and controlled.',
+     svg:`<img src="./images/w_core.jpg" alt="Dead Bug">`,
+     breathing:'Exhale throughout the lower, breathe in to reset.',
+     cues:['Full arm and leg extension now','Lower back stays pressed to the floor','Move even slower than Phase 2','8 perfect reps per side','Stop the moment the back lifts'],
+     mistakes:['Back lifting','Rushing','Holding the breath']},
+
+    {name:'Side Plank (Full)',sets:'3',reps:'Hold 20–30 sec each side',
+     tempo:'Hold',rest:'45 sec',
+     muscles:'Obliques, Hips — full side plank now, building the time.',
+     svg:`<img src="./images/w_plank.jpg" alt="Side Plank">`,
+     breathing:'Breathe steadily.',
+     cues:['Legs straight, feet stacked','Forearm down, elbow under the shoulder','Hips lifted into a straight line','Hold, keeping hips stacked','Build from 20 toward 30 seconds'],
+     mistakes:['Hips sagging','Top hip rotating forward','Holding the breath']}
    ]},
-  {name:'Sunday',tag:'Rest Day',tagClass:'rest',rest:true,
-   restMsg:'Final Sunday of the week. New week starts Monday. You are building something real.',
+
+  /* ── FRIDAY — Full Body ── */
+  {name:'Friday', tag:'Full Body', tagClass:'push',
+   phase:'Phase 3 · Weeks 9–12',
+   focus:'Whole Body · Glutes · Core · Progressive Overload',
+   cardio:'10 min walk to warm up',
+   warmup:[
+     {text:'5 min brisk walk', icon:'walk'},
+     {text:'World\'s greatest stretch — 4 each side', icon:'leaf'},
+     {text:'Hip circles — 10 each direction', icon:'rotate'},
+     {text:'Bodyweight squats — 10', icon:'bolt'},
+     {text:'Glute bridges — 12', icon:'bolt'},
+   ],
+   exercises:[
+    {name:'Bulgarian Split Squat (Light)',sets:'3',reps:'10 each leg',
+     tempo:'3 down · 2 up',rest:'90 sec',
+     muscles:'Quads, Glutes, Balance — one of the best single-leg exercises. Rear foot elevated on a bench.',
+     svg:`<img src="./images/w_lunges.jpg" alt="Bulgarian Split Squat">`,
+     breathing:'Breathe in lowering, breathe out driving up.',
+     cues:['Rear foot on a bench behind you, laces down','Front foot far enough that the shin stays vertical','Lower until the front thigh is parallel','Drive up through the front heel','Bodyweight or light dumbbells (4–6 kg)'],
+     mistakes:['Standing too close to the bench','The rear leg pushing','Leaning too far forward']},
+
+    {name:'Sumo Squat (Heavier Dumbbell)',sets:'3',reps:'12',
+     tempo:'3 down · 2 up',rest:'75 sec',
+     muscles:'Inner Thighs, Glutes, Quads — heavier now for real lower-body strength.',
+     svg:`<img src="./images/w_sumo_squat.jpg" alt="Sumo Squat">`,
+     breathing:'Breathe in going down, breathe out coming up. Brace the core.',
+     cues:['One heavier dumbbell (10–14 kg) between the legs','Feet wide, toes out 45°','Sit deep, torso upright','Knees push out over the toes','Drive up, squeeze glutes and inner thighs'],
+     mistakes:['Knees caving in','Leaning forward','Bouncing out of the bottom']},
+
+    {name:'Machine Chest Press (Progressive)',sets:'3',reps:'10',
+     tempo:'2 press · 1 hold · 2 return',rest:'75 sec',
+     muscles:'Chest, Shoulders, Triceps — a second push session in the week.',
+     svg:`<img src="./images/w_chest_press.jpg" alt="Machine Chest Press">`,
+     breathing:'Breathe in before pressing, out as you push, hold 1 second.',
+     cues:['Same weight as Wednesday or slightly less','Squeeze the chest at full extension','Return slowly','Shoulders down and back','Add weight when it feels easy'],
+     mistakes:['Seat too high','Shrugging','Snapping the weight back']},
+
+    {name:'Core Superset (Plank + Bicycle)',sets:'3',reps:'40 sec plank + 20 bicycle',
+     tempo:'Hold then controlled',rest:'45 sec',
+     muscles:'Full Core — two of the best core exercises back to back.',
+     svg:`<img src="./images/w_core.jpg" alt="Core Superset">`,
+     breathing:'Steady breathing in the plank, exhale on each bicycle twist.',
+     cues:['40-second full plank straight into 20 bicycle crunches — no rest between','Plank: squeeze everything, breathe steadily','Bicycle: slow, controlled, exhale each twist','Rest 45 sec, then repeat','Two more rounds'],
+     mistakes:['Rushing the bicycles','Plank hips sagging','Holding the breath']}
+   ]},
+
+  /* ── SATURDAY — Cardio & Core ── */
+  {name:'Saturday', tag:'Cardio & Core', tagClass:'legs',
+   phase:'Phase 3 · Weeks 9–12',
+   focus:'Cardio · Core · Stretch',
+   cardio:'25 min treadmill — 15 min walk (6 km/h) + intervals of light jog (7–8 km/h) — your best cardio yet',
+   warmup:[
+     {text:'5 min easy walk to start', icon:'walk'},
+     {text:'Jumping jacks — 25 reps', icon:'bolt'},
+     {text:'Side lunge shifts — 10 each side', icon:'walk'},
+     {text:'Ankle circles — 10 each foot', icon:'rotate'},
+     {text:'Cat-cow — 6 cycles', icon:'body'},
+   ],
+   exercises:[
+    {name:'Glute Kickback (Cable or Bodyweight)',sets:'3',reps:'15 each leg',
+     tempo:'2 back · 1 hold · 2 return',rest:'60 sec',
+     muscles:'Glutes — direct glute isolation with constant tension.',
+     svg:`<img src="./images/w_glute.jpg" alt="Glute Kickback">`,
+     breathing:'Breathe out as you kick back, breathe in as you return.',
+     cues:['Face the machine or wall, hands for support','Core braced, back straight — only the leg moves','Kick one leg straight back, squeeze the glute','Hold 1 second at the top','Return with control, do not touch the floor'],
+     mistakes:['Swinging with momentum','Arching the lower back','Moving the torso']},
+
+    {name:'Plank (Full)',sets:'3',reps:'Hold 45–60 sec',
+     tempo:'Hold',rest:'45 sec',
+     muscles:'Core — the peak of your plank progression.',
+     svg:`<img src="./images/w_plank.jpg" alt="Plank">`,
+     breathing:'Breathe steadily throughout.',
+     cues:['Full plank, perfect straight line','Build toward a full 60 seconds','Squeeze glutes and core the whole time','If 60 sec is easy, add slow hip taps','Never sacrifice form for time'],
+     mistakes:['Hips sagging','Holding the breath','Rushing to 60 seconds']},
+
+    {name:'Bicycle Crunches',sets:'3',reps:'24 total (12 each side)',
+     tempo:'Controlled',rest:'40 sec',
+     muscles:'Abs, Obliques — a strong toning finisher.',
+     svg:`<img src="./images/w_core.jpg" alt="Bicycle Crunches">`,
+     breathing:'Exhale on each twist.',
+     cues:['Hands light behind the head','Legs lifted, shins parallel','Elbow to opposite knee, rotate the torso','Slow and controlled','Feel the obliques'],
+     mistakes:['Pulling the neck','Going too fast','No rotation']},
+
+    {name:'Full-Body Cool-Down Stretch',sets:'1',reps:'30 sec each: hamstring, hip flexor, chest, quad',
+     tempo:'Hold + breathe',rest:'None',
+     muscles:'Full Body — end your program week loose and recovered.',
+     svg:`<img src="./images/w_stretch.jpg" alt="Cool-Down Stretch">`,
+     breathing:'Slow breaths, relax into each stretch.',
+     cues:['Hamstring: heel on a step, hinge forward','Hip flexor: kneeling lunge, hips forward','Chest: hands clasped behind, lift gently','Quad: hold one ankle behind you','30 seconds each, breathe deeply'],
+     mistakes:['Bouncing','Rushing','Holding the breath']}
+   ]},
+
+  /* ── SUNDAY — Rest ── */
+  {name:'Sunday', tag:'Rest Day', tagClass:'rest', rest:true,
+   restMsg:'The final phase, the final rest day of the week. You have trained 6 days a week and built something real. Be proud.',
    restTips:[
-    '10–15 min stretching — hips, hamstrings, chest opener',
-    'Morning weight log',
-    'Meal prep for the week — hit your protein target every day',
+    'Full rest and recovery',
+    'Take your progress photos and measurements every 4 weeks',
     'Log your current weights for each exercise — track your progressive overload',
-    'You have built the habit. Phase 3 weeks 9–12 compounds everything.',
-    'Every rep you do now is the best investment you can make in yourself'
+    'Eat well, hit your protein target',
+    'Reflect on how far you have come since week 1',
+    'Sleep 7–9 hours — you have earned the recovery'
    ]},
 ];
 
